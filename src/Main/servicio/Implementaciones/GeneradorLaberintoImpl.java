@@ -136,6 +136,7 @@ public class GeneradorLaberintoImpl implements GeneradorLaberinto {
             }
         }
 
+
         // Colocar llave (solo 1)
         int[] posLlave = encontrarPosicionValida(celdas, posicionesCaminos, numCristales + numTrampas + 1);
         if (posLlave != null) {

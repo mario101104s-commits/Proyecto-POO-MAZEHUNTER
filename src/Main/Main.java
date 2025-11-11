@@ -6,6 +6,7 @@ import Main.modelo.Constantes.TipoCelda;
 import Main.modelo.Dominio.Juego;
 import Main.modelo.Dominio.Laberinto;
 import Main.modelo.Transferencia.ResultadoJuego;
+import Main.servicio.Implementaciones.PersistenciaJASON;
 import Main.ui.consola.RenderizadorLaberinto;
 import Main.ui.util.ConsoleUtils;
 import Main.servicio.Interfaces.ServicioJuego;
@@ -13,7 +14,7 @@ import Main.servicio.Implementaciones.ServicioJuegoImpl;
 
 
 public class Main {
-    private static ServicioJuego servicioJuego = new ServicioJuegoImpl();
+    private static ServicioJuego servicioJuego = new ServicioJuegoImpl(new PersistenciaJASON());
     private static RenderizadorLaberinto renderizador = new RenderizadorLaberinto();
 
     public static void main(String[] args) {

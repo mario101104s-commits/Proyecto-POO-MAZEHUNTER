@@ -4,21 +4,21 @@ package Main.servicio.Implementaciones;
 import Main.modelo.Constantes.Direccion;
 import Main.modelo.Constantes.EstadoJuego;
 import Main.modelo.Constantes.TipoCelda;
-import Main.modelo.Dominio.Celda;
-import Main.modelo.Dominio.Juego;
-import Main.modelo.Dominio.Jugador;
-import Main.modelo.Dominio.Laberinto;
+import Main.modelo.Dominio.*;
 import Main.modelo.Transferencia.ResultadoJuego;
 import Main.servicio.Interfaces.GeneradorLaberinto;
+import Main.servicio.Interfaces.Persistencia;
 import Main.servicio.Interfaces.ServicioJuego;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
 
 public class ServicioJuegoImpl implements ServicioJuego {
+    private Persistencia persistencia;
     private GeneradorLaberinto generadorLaberinto;
 
-    public ServicioJuegoImpl() {
+    public ServicioJuegoImpl(Persistencia persistencia) {
+        this.persistencia = persistencia;
         this.generadorLaberinto = new GeneradorLaberintoImpl();
     }
 
@@ -53,9 +53,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
     @Override
     public Juego cargarJuegoGuardado(String usuario) {
-        // Por ahora retornamos null, luego implementaremos la persistencia
-        System.out.println("⚠️  Persistencia no implementada aún - Creando juego nuevo");
-        return iniciarNuevoJuego(8, 8, usuario);
+        Juego juego = persistencia.cargarJuego(usuario);
+        if (juego != null) {
+            System.out.println("✅ Juego cargado exitosamente para: " + usuario);
+        } else {
+            System.out.println("❌ No se encontró juego guardado para: " + usuario);
+        }
+        return juego;
     }
 
     @Override
@@ -93,6 +97,10 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
         // Verificar condiciones de fin de juego
         verificarEstadoJuego(juego);
+
+        // Guardar juego (Verificado automatico despues de cada movimiento) :)
+
+        guardarJuego(juego);
 
         return true;
     }
@@ -170,9 +178,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
     @Override
     public boolean guardarJuego(Juego juego) {
-        // Por ahora solo imprimimos, luego implementaremos JSON
-        System.out.println("💾 Juego guardado (simulación) para: " + juego.getUsuario());
-        return true;
+        boolean exito = persistencia.guardarJuego(juego);
+        if (exito) {
+            System.out.println("💾 Juego guardado automáticamente");
+        } else {
+            System.out.println("❌ Error guardando el juego");
+        }
+        return exito;
     }
 
     @Override
@@ -190,7 +202,18 @@ public class ServicioJuegoImpl implements ServicioJuego {
         );
         resultado.setGanado(juego.getEstado() == EstadoJuego.GANADO);
 
+        // Guardar estadísticas
+        EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), juego.getFin());
+        estadisticas.setTiempoSegundos(duracion.getSeconds());
+        estadisticas.setCristalesRecolectados(juego.getJugador().getCristales());
+        estadisticas.setTrampasActivadas(juego.getTrampasActivadas());
+        estadisticas.setVidaRestante(juego.getJugador().getVida());
+        estadisticas.setTamanioLaberinto(resultado.getTamanioLaberinto());
+        estadisticas.setGanado(resultado.isGanado());
+
+        persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);
+
         return resultado;
     }
 
