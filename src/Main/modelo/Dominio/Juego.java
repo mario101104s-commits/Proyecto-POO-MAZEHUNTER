@@ -77,4 +77,8 @@ public class Juego {
     public void setTrampasActivadas(int trampasActivadas) {
         this.trampasActivadas = trampasActivadas;
     }
+
+    public void incrementarTrampasActivadas() {
+
+    }
 }
