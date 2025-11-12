@@ -12,4 +12,5 @@ public interface ServicioJuego {
     boolean guardarJuego(Juego juego);
     ResultadoJuego terminarJuego(Juego juego);
     boolean puedeSalir(Juego juego);
+    ResultadoJuego guardarEstadisticasParciales(Juego juego);
 }

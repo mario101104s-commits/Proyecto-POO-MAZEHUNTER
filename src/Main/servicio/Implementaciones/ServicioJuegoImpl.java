@@ -108,39 +108,69 @@ public class ServicioJuegoImpl implements ServicioJuego {
     private void procesarCelda(Juego juego, Celda celda) {
         Jugador jugador = juego.getJugador();
 
+        // DEBUG INICIAL
+        System.out.println("🎯 PROCESANDO CELDA - Tipo: " + celda.getTipo() + ", Trampas: " + juego.getTrampasActivadas());
+
+        if (celda.getTipo() == TipoCelda.TRAMPA) {
+            System.out.println("🚨🚨🚨 TRAMPA ENCONTRADA - INICIANDO PROCESO 🚨🚨🚨");
+
+            // 1. Activar efecto en jugador
+            int vidaAntes = jugador.getVida();
+            jugador.activarTrampa();
+            System.out.println("🩸 Vida: " + vidaAntes + "% -> " + jugador.getVida() + "%");
+
+            // 2. INCREMENTAR CONTADOR - MÉTODO DIRECTO
+            int trampasAntes = juego.getTrampasActivadas();
+            juego.incrementarTrampasActivadas();
+            int trampasDespues = juego.getTrampasActivadas();
+            System.out.println("🔴 Trampas: " + trampasAntes + " -> " + trampasDespues);
+
+            // 3. Verificar que se incrementó
+            if (trampasDespues <= trampasAntes) {
+                System.out.println("❌ ERROR: El contador no se incrementó!");
+                // Forzar incremento
+                juego.setTrampasActivadas(trampasAntes + 1);
+                System.out.println("🔧 Contador forzado a: " + juego.getTrampasActivadas());
+            }
+
+            // 4. Convertir trampa a camino
+            celda.setTipo(TipoCelda.CAMINO);
+            System.out.println("✅ Trampa convertida a camino");
+
+            System.out.println("🎯 FIN PROCESAMIENTO TRAMPA - Trampas totales: " + juego.getTrampasActivadas());
+            return;
+        }
+
+        // Procesar otros tipos de celdas (mantener igual)
         switch (celda.getTipo()) {
             case CRISTAL:
                 jugador.recolectarCristal();
                 System.out.println("¡💎 Cristal recolectado! Total: " + jugador.getCristales());
-                celda.setTipo(TipoCelda.CAMINO); // El cristal desaparece
-                break;
-
-            case TRAMPA:
-                jugador.activarTrampa();
-                juego.incrementarTrampasActivadas();
-                System.out.println("💀 ¡Trampa activada! Vida restante: " + jugador.getVida() + "%");
-                celda.setTipo(TipoCelda.CAMINO); // La trampa se desactiva
+                celda.setTipo(TipoCelda.CAMINO);
                 break;
 
             case LLAVE:
                 jugador.recogerLlave();
-                System.out.println("🗝️ ¡Llave obtenida! Ahora puedes salir del laberinto");
-                celda.setTipo(TipoCelda.CAMINO); // La llave desaparece
+                System.out.println("🗝️ ¡Llave obtenida!");
+                celda.setTipo(TipoCelda.CAMINO);
                 break;
 
             case ENERGIA:
-                jugador.setVida(jugador.getVida() + 10); // Energía da 10% de vida
-                System.out.println("⚡ ¡Energía obtenida! Vida: " + jugador.getVida() + "%");
-                celda.setTipo(TipoCelda.CAMINO); // La energía desaparece
+                int vidaAntesEnergia = jugador.getVida();
+                jugador.setVida(jugador.getVida() + 10);
+                System.out.println("⚡ Energía! Vida: " + vidaAntesEnergia + "% → " + jugador.getVida() + "%");
+                celda.setTipo(TipoCelda.CAMINO);
                 break;
 
             case VIDA:
-                jugador.setVida(jugador.getVida() + 25); // Vida extra da 25%
-                System.out.println("➕ ¡Vida extra! Vida: " + jugador.getVida() + "%");
-                celda.setTipo(TipoCelda.CAMINO); // La vida extra desaparece
+                int vidaAntesVida = jugador.getVida();
+                jugador.setVida(jugador.getVida() + 25);
+                System.out.println("➕ Vida extra! Vida: " + vidaAntesVida + "% → " + jugador.getVida() + "%");
+                celda.setTipo(TipoCelda.CAMINO);
                 break;
         }
     }
+
 
     private void revelarCeldasAdyacentes(Laberinto laberinto, int x, int y) {
         int[][] direcciones = {{-1, 0}, {1, 0}, {0, -1}, {0, 1},
@@ -237,5 +267,37 @@ public class ServicioJuegoImpl implements ServicioJuego {
             }
         }
         return null;
+    }
+    public ResultadoJuego guardarEstadisticasParciales(Juego juego) {
+        if (juego.getEstado() != EstadoJuego.EN_CURSO) {
+            return terminarJuego(juego);
+        }
+
+        LocalDateTime ahora = LocalDateTime.now();
+        Duration duracion = Duration.between(juego.getInicio(), ahora);
+
+        ResultadoJuego resultado = new ResultadoJuego();
+        resultado.setTiempoSegundos(duracion.getSeconds());
+        resultado.setCristalesRecolectados(juego.getJugador().getCristales());
+        resultado.setTrampasActivadas(juego.getTrampasActivadas());
+        resultado.setVidaRestante(juego.getJugador().getVida());
+        resultado.setTamanioLaberinto(
+                juego.getLaberinto().getFilas() + "x" + juego.getLaberinto().getColumnas()
+        );
+        resultado.setGanado(false); // No ganó porque salió
+
+        // Guardar estadísticas parciales
+        EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), ahora);
+        estadisticas.setTiempoSegundos(duracion.getSeconds());
+        estadisticas.setCristalesRecolectados(juego.getJugador().getCristales());
+        estadisticas.setTrampasActivadas(juego.getTrampasActivadas());
+        estadisticas.setVidaRestante(juego.getJugador().getVida());
+        estadisticas.setTamanioLaberinto(resultado.getTamanioLaberinto());
+        estadisticas.setGanado(false);
+
+        persistencia.guardarEstadisticas(estadisticas);
+        guardarJuego(juego);
+
+        return resultado;
     }
 }
