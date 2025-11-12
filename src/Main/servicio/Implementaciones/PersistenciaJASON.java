@@ -252,7 +252,7 @@ public class PersistenciaJASON implements Persistencia {
             this.inicio = juego.getInicio().toString();
             this.fin = juego.getFin() != null ? juego.getFin().toString() : null;
             this.estado = juego.getEstado().name();
-            this.trampasActivadas = juego.getTrampasActivadas();
+            this.trampasActivadas = juego.getTrampasActivadas(); // ✅ Asignamos correctamente
         }
 
         public Juego toJuego() {
@@ -265,7 +265,7 @@ public class PersistenciaJASON implements Persistencia {
             Juego juego = new Juego(laberintoObj, jugadorObj, usuario, inicioObj);
             juego.setFin(finObj);
             juego.setEstado(estadoObj);
-            // Nota: trampasActivadas se manejaría con setters adicionales
+            juego.setTrampasActivadas(this.trampasActivadas); // ✅ Recuperamos correctamente
 
             return juego;
         }

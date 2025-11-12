@@ -66,19 +66,45 @@ public class Main {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🎮 DEMO COMPLETA DEL JUEGO ===");
 
+        // PREGUNTAR SI QUIERE CARGAR JUEGO GUARDADO O NUEVO
+        System.out.println("1. 🆕 Juego nuevo");
+        System.out.println("2. 📂 Cargar juego guardado");
+        int opcionInicial = ConsoleUtils.leerEntero("Seleccione opción: ");
+
+        Juego juego = null;
+
         try {
-            int filas = ConsoleUtils.leerEntero("Filas del laberinto (recomendado 8-12): ");
-            int columnas = ConsoleUtils.leerEntero("Columnas del laberinto (recomendado 8-12): ");
+            if (opcionInicial == 2) {
+                // Cargar juego guardado
+                juego = servicioJuego.cargarJuegoGuardado("demo");
+                if (juego == null) {
+                    ConsoleUtils.mostrarError("No hay juego guardado. Creando nuevo juego...");
+                    opcionInicial = 1;
+                } else {
+                    ConsoleUtils.mostrarExito("¡Juego cargado exitosamente!");
+                    ConsoleUtils.mostrarMensaje("Posición: (" + juego.getJugador().getPosX() + ", " + juego.getJugador().getPosY() + ")");
+                    ConsoleUtils.mostrarMensaje("Cristales: " + juego.getJugador().getCristales() + ", Trampas: " + juego.getTrampasActivadas());
+                    ConsoleUtils.pausar();
+                }
+            }
 
-            Juego juego = servicioJuego.iniciarNuevoJuego(filas, columnas, "demo");
+            if (opcionInicial == 1) {
+                int filas = ConsoleUtils.leerEntero("Filas del laberinto (recomendado 8-12): ");
+                int columnas = ConsoleUtils.leerEntero("Columnas del laberinto (recomendado 8-12): ");
+                juego = servicioJuego.iniciarNuevoJuego(filas, columnas, "demo");
+                ConsoleUtils.mostrarExito("Laberinto generado exitosamente!");
 
-            ConsoleUtils.mostrarExito("Laberinto generado exitosamente!");
+                // Mostrar laberinto completo una vez al inicio
+                ConsoleUtils.mostrarMensaje("\n--- Vista completa inicial ---");
+                renderizador.mostrarLaberintoCompleto(juego.getLaberinto());
+                ConsoleUtils.mostrarMensaje("\n¡Recuerda: necesitas la llave (L) para salir por la salida (X)!");
+                ConsoleUtils.pausar();
+            }
 
-            // Mostrar laberinto completo una vez al inicio
-            ConsoleUtils.mostrarMensaje("\n--- Vista completa inicial ---");
-            renderizador.mostrarLaberintoCompleto(juego.getLaberinto());
-            ConsoleUtils.mostrarMensaje("\n¡Recuerda: necesitas la llave (L) para salir por la salida (X)!");
-            ConsoleUtils.pausar();
+            if (juego == null) {
+                ConsoleUtils.mostrarError("No se pudo crear el juego");
+                return;
+            }
 
             // Bucle principal del juego
             boolean jugando = true;
@@ -88,6 +114,7 @@ public class Main {
                 // Mostrar estado actual
                 renderizador.mostrarLaberinto(juego.getLaberinto(), juego.getJugador());
                 renderizador.mostrarEstadoJugador(juego.getJugador());
+                ConsoleUtils.mostrarMensaje("💀 Trampas activadas: " + juego.getTrampasActivadas());
                 renderizador.mostrarControles();
 
                 char input = ConsoleUtils.leerCaracter("Ingrese movimiento (W/A/S/D): ");
@@ -113,8 +140,9 @@ public class Main {
                         mostrarMapa = true;
                         break;
                     case 'g':
-                        servicioJuego.guardarJuego(juego);
-                        ConsoleUtils.mostrarExito("Juego guardado. ¡Hasta pronto!");
+                        ResultadoJuego resultadoParcial = servicioJuego.guardarEstadisticasParciales(juego);
+                        ConsoleUtils.mostrarExito("Juego guardado. Estadísticas parciales:");
+                        ConsoleUtils.mostrarMensaje(resultadoParcial.toString());
                         salir = true;
                         break;
                     case 'q':
@@ -162,6 +190,7 @@ public class Main {
 
         } catch (Exception e) {
             ConsoleUtils.mostrarError("Error en el juego: " + e.getMessage());
+            e.printStackTrace();
         }
 
         ConsoleUtils.pausar();
