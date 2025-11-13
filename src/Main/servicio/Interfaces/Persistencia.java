@@ -14,6 +14,9 @@ public interface Persistencia {
     List<Usuario> cargarTodosUsuarios();
     boolean existeUsuario(String email);
 
+    void cargarUsuarios();
+    void cargarEstadisticas();
+
     // Juegos
     boolean guardarJuego(Juego juego);
     Juego cargarJuego(String usuario);
