@@ -7,6 +7,8 @@ import Main.modelo.Dominio.Juego;
 import Main.modelo.Dominio.Laberinto;
 import Main.modelo.Transferencia.ResultadoJuego;
 import Main.servicio.Implementaciones.PersistenciaJASON;
+import Main.servicio.Implementaciones.ServicioUsuarioImpl;
+import Main.servicio.Interfaces.ServicioUsuario;
 import Main.ui.consola.RenderizadorLaberinto;
 import Main.ui.util.ConsoleUtils;
 import Main.servicio.Interfaces.ServicioJuego;
@@ -14,43 +16,107 @@ import Main.servicio.Implementaciones.ServicioJuegoImpl;
 
 
 public class Main {
-    private static ServicioJuego servicioJuego = new ServicioJuegoImpl(new PersistenciaJASON());
-    private static RenderizadorLaberinto renderizador = new RenderizadorLaberinto();
+    private static PersistenciaJASON persistencia = new PersistenciaJASON();
+    private static ServicioJuego servicioJuego = new ServicioJuegoImpl(persistencia);
+    private static ServicioUsuario servicioUsuario = new ServicioUsuarioImpl(persistencia);
+
+    private static final RenderizadorLaberinto renderizador = new RenderizadorLaberinto();
+    private static String usuarioAutenticadoEmail = null;
 
     public static void main(String[] args) {
+        ConsoleUtils.limpiarConsola();
+        ConsoleUtils.mostrarMensaje("=== MAZE HUNTER, JUEGO EL LABERINTO ===");
+
         try {
+
+            persistencia.cargarUsuarios();
+            persistencia.cargarEstadisticas();
+
             boolean ejecutando = true;
             while (ejecutando) {
-                ConsoleUtils.limpiarConsola();
-                mostrarMenuPrincipal();
+                if (usuarioAutenticadoEmail == null) {
 
-                int opcion = ConsoleUtils.leerEntero("Seleccione una opción: ");
-
-                switch (opcion) {
-                    case 1:
-                        jugarDemoCompleta();
-                        break;
-                    case 2:
-                        probarGeneracionLaberinto();
-                        break;
-                    case 3:
-                        verLaberintoCompleto();
-                        break;
-                    case 4:
-                        ejecutando = false;
-                        break;
-                    default:
-                        ConsoleUtils.mostrarError("Opción inválida");
-                        ConsoleUtils.pausar();
+                    mostrarMenuAutenticacion();
+                    ejecutando = manejarMenuAutenticacion();
+                } else {
+                    mostrarMenuPrincipal();
+                    ejecutando = manejarMenuPrincipal();
                 }
             }
+            ConsoleUtils.mostrarMensaje("Gracias por Jugar");
+        } catch (Exception e) {
+            ConsoleUtils.mostrarError("Error en la aplicacion: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-            ConsoleUtils.mostrarMensaje("¡Gracias por jugar! 🎮");
+    private static void mostrarMenuAutenticacion() {
+        ConsoleUtils.limpiarConsola();
+        System.out.println("===  ACCESO AL LABERINTO ===");
+        System.out.println("1.  Iniciar seccion");
+        System.out.println("2.  Registrar Nuevo Usuario");
+        System.out.println("3.  Recuperar Contraseña");
+        System.out.println("4.  Salir de la Aplicación");
+        System.out.println("===============================");
+    }
 
+    private static boolean manejarMenuAutenticacion() {
+        int opcion = ConsoleUtils.leerEntero("Seleccione una opción: ");
+        try {
+            switch (opcion) {
+                case 1:
+                    // LLAMAR A INICIAR SECCION
+                    ConsoleUtils.mostrarAdvertencia("Opción no implementada.");
+                    break;
+                case 2:
+                    // LLAMAR REGISTRA USUARIO
+                    ConsoleUtils.mostrarAdvertencia("Opción no implementada.");
+                    break;
+                case 3:
+                    // LLAMAR A RECUPERAR CONTRASEñA
+                    ConsoleUtils.mostrarAdvertencia("Opción no implementada.");
+                    break;
+                case 4:
+                    return false;
+                default:
+                    ConsoleUtils.mostrarError("Opción inválida.");
+            }
+        } catch (Exception e) {
+            ConsoleUtils.mostrarError("Error en la operación: " + e.getMessage());
+        }
+        ConsoleUtils.pausar();
+        return true; // Continuar ejecutando
+    }
+
+    private static boolean manejarMenuPrincipal() {
+        try {
+            ConsoleUtils.limpiarConsola();
+            mostrarMenuPrincipal();
+
+            int opcion = ConsoleUtils.leerEntero("Seleccione una opción: ");
+
+            switch (opcion) {
+                case 1:
+                    jugarDemoCompleta();
+                    break;
+                case 2:
+                    probarGeneracionLaberinto();
+                    break;
+                case 3:
+                    verLaberintoCompleto();
+                    break;
+                case 4:
+
+                    return false; // Salir de la aplicación
+                default:
+                    ConsoleUtils.mostrarError("Opción inválida");
+                    ConsoleUtils.pausar();
+            }
         } catch (Exception e) {
             ConsoleUtils.mostrarError("Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }
+        return true; //
     }
 
     private static void mostrarMenuPrincipal() {
@@ -74,9 +140,11 @@ public class Main {
         Juego juego = null;
 
         try {
+            String idUsuarioJuego = (usuarioAutenticadoEmail != null) ? usuarioAutenticadoEmail : "demo";
+
             if (opcionInicial == 2) {
                 // Cargar juego guardado
-                juego = servicioJuego.cargarJuegoGuardado("demo");
+                juego = servicioJuego.cargarJuegoGuardado(idUsuarioJuego);
                 if (juego == null) {
                     ConsoleUtils.mostrarError("No hay juego guardado. Creando nuevo juego...");
                     opcionInicial = 1;
@@ -91,10 +159,9 @@ public class Main {
             if (opcionInicial == 1) {
                 int filas = ConsoleUtils.leerEntero("Filas del laberinto (recomendado 8-12): ");
                 int columnas = ConsoleUtils.leerEntero("Columnas del laberinto (recomendado 8-12): ");
-                juego = servicioJuego.iniciarNuevoJuego(filas, columnas, "demo");
+                juego = servicioJuego.iniciarNuevoJuego(filas, columnas, idUsuarioJuego);
                 ConsoleUtils.mostrarExito("Laberinto generado exitosamente!");
 
-                // Mostrar laberinto completo una vez al inicio
                 ConsoleUtils.mostrarMensaje("\n--- Vista completa inicial ---");
                 renderizador.mostrarLaberintoCompleto(juego.getLaberinto());
                 ConsoleUtils.mostrarMensaje("\n¡Recuerda: necesitas la llave (L) para salir por la salida (X)!");
@@ -207,12 +274,8 @@ public class Main {
             Juego juego = servicioJuego.iniciarNuevoJuego(filas, columnas, "test");
 
             ConsoleUtils.mostrarExito("Laberinto " + filas + "x" + columnas + " generado exitosamente!");
-
-            // Mostrar información del laberinto
             ConsoleUtils.mostrarMensaje("Entrada en: (" + juego.getJugador().getPosX() +
                     ", " + juego.getJugador().getPosY() + ")");
-
-            // Contar elementos
             Laberinto laberinto = juego.getLaberinto();
             int cristales = 0, trampas = 0, llaves = 0, energia = 0, vida = 0;
 
@@ -235,8 +298,6 @@ public class Main {
             ConsoleUtils.mostrarMensaje("   🗝️  Llaves: " + llaves);
             ConsoleUtils.mostrarMensaje("   ⚡ Energía: " + energia);
             ConsoleUtils.mostrarMensaje("   ❤️  Vida extra: " + vida);
-
-            // Mostrar el laberinto completo
             renderizador.mostrarLaberintoCompleto(laberinto);
 
         } catch (Exception e) {
@@ -245,7 +306,6 @@ public class Main {
 
         ConsoleUtils.pausar();
     }
-
     private static void verLaberintoCompleto() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 👀 VISUALIZACIÓN DE LABERINTO ===");
@@ -253,7 +313,6 @@ public class Main {
         try {
             int filas = ConsoleUtils.leerEntero("Filas: ");
             int columnas = ConsoleUtils.leerEntero("Columnas: ");
-
             Juego juego = servicioJuego.iniciarNuevoJuego(filas, columnas, "visualizacion");
             renderizador.mostrarLaberintoCompleto(juego.getLaberinto());
 
@@ -264,4 +323,3 @@ public class Main {
         ConsoleUtils.pausar();
     }
 }
-

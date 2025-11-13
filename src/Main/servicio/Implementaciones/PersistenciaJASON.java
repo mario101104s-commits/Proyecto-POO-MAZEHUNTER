@@ -117,12 +117,21 @@ public class PersistenciaJASON implements Persistencia {
         }
     }
 
+
     @Override
     public boolean existeUsuario(String email) {
         return cargarUsuario(email) != null;
     }
 
-    // ===== IMPLEMENTACIÓN DE JUEGOS =====
+    @Override
+    public void cargarUsuarios() {
+        cargarTodosUsuarios();
+    }
+
+    @Override
+    public void cargarEstadisticas() {
+        cargarTodasEstadisticas();
+    }
 
     @Override
     public boolean guardarJuego(Juego juego) {
