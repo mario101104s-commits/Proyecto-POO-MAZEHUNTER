@@ -116,6 +116,29 @@ public class PersistenciaJASON implements Persistencia {
             return new ArrayList<>();
         }
     }
+    private void guardarListaUsuarios(List<Usuario> usuarios) throws IOException {
+        try (FileWriter writer = new FileWriter(ARCHIVO_USUARIOS)) {
+            gson.toJson(usuarios, writer);
+        }
+    }
+    @Override
+    public void actualizarUsuario(Usuario usuarioActualizado) throws Exception {
+        List<Usuario> usuarios = cargarTodosUsuarios();
+        boolean encontrado = false;
+        for (int i = 0; i < usuarios.size(); i++) {
+            if (usuarios.get(i).getEmail().equalsIgnoreCase(usuarioActualizado.getEmail())) {
+                usuarios.set(i, usuarioActualizado);
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (encontrado) {
+            guardarListaUsuarios(usuarios);
+        } else {
+            throw new Exception("Error al actualizar la contraseña: Usuario no encontrado en la base de datos.");
+        }
+    }
 
 
     @Override

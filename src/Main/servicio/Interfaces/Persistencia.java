@@ -13,6 +13,7 @@ public interface Persistencia {
     Usuario cargarUsuario(String email);
     List<Usuario> cargarTodosUsuarios();
     boolean existeUsuario(String email);
+    void actualizarUsuario(Usuario usuario) throws Exception;
 
     void cargarUsuarios();
     void cargarEstadisticas();
