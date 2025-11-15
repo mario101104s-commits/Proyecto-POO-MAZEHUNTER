@@ -27,7 +27,7 @@ public class Jugador {
     }
 
     public void activarTrampa() {
-        this.vida -= 20; //
+        this.vida = Math.max(0, this.vida - 20);
     }
 
     public void recogerLlave() {
@@ -45,7 +45,7 @@ public class Jugador {
     }
 
     public void setVida(int vida) {
-        this.vida = vida;
+        this.vida = Math.max(0, Math.min(100, vida));
     }
 
     public int getCristales() {

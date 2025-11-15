@@ -16,7 +16,7 @@ public interface Persistencia {
     void actualizarUsuario(Usuario usuario) throws Exception;
 
     void cargarUsuarios();
-    void cargarEstadisticas();
+    List<EstadisticasJuego> cargarEstadisticas();
 
     // Juegos
     boolean guardarJuego(Juego juego);
@@ -27,4 +27,6 @@ public interface Persistencia {
     boolean guardarEstadisticas(EstadisticasJuego estadisticas);
     List<EstadisticasJuego> cargarEstadisticas(String usuario);
     List<EstadisticasJuego> cargarTodasEstadisticas();
+
+    List<EstadisticasJuego> cargarTodasEstadisticas(String usuario);
 }

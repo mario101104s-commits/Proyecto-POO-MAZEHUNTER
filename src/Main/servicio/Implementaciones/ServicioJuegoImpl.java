@@ -108,40 +108,25 @@ public class ServicioJuegoImpl implements ServicioJuego {
     private void procesarCelda(Juego juego, Celda celda) {
         Jugador jugador = juego.getJugador();
 
-        // DEBUG INICIAL
-        System.out.println("🎯 PROCESANDO CELDA - Tipo: " + celda.getTipo() + ", Trampas: " + juego.getTrampasActivadas());
-
+        // MANEJO ESPECÍFICO PARA TRAMPAS - SIN DEBUG
         if (celda.getTipo() == TipoCelda.TRAMPA) {
-            System.out.println("🚨🚨🚨 TRAMPA ENCONTRADA - INICIANDO PROCESO 🚨🚨🚨");
-
             // 1. Activar efecto en jugador
             int vidaAntes = jugador.getVida();
             jugador.activarTrampa();
-            System.out.println("🩸 Vida: " + vidaAntes + "% -> " + jugador.getVida() + "%");
 
-            // 2. INCREMENTAR CONTADOR - MÉTODO DIRECTO
+            // 2. Incrementar contador SILENCIOSAMENTE
             int trampasAntes = juego.getTrampasActivadas();
-            juego.incrementarTrampasActivadas();
-            int trampasDespues = juego.getTrampasActivadas();
-            System.out.println("🔴 Trampas: " + trampasAntes + " -> " + trampasDespues);
+            juego.setTrampasActivadas(trampasAntes + 1);
 
-            // 3. Verificar que se incrementó
-            if (trampasDespues <= trampasAntes) {
-                System.out.println("❌ ERROR: El contador no se incrementó!");
-                // Forzar incremento
-                juego.setTrampasActivadas(trampasAntes + 1);
-                System.out.println("🔧 Contador forzado a: " + juego.getTrampasActivadas());
-            }
-
-            // 4. Convertir trampa a camino
+            // 3. Convertir trampa a camino
             celda.setTipo(TipoCelda.CAMINO);
-            System.out.println("✅ Trampa convertida a camino");
 
-            System.out.println("🎯 FIN PROCESAMIENTO TRAMPA - Trampas totales: " + juego.getTrampasActivadas());
+            // ✅ SOLO MOSTRAR MENSAJE AL USUARIO, NO DEBUG
+            System.out.println("💀 ¡Trampa activada! Vida restante: " + jugador.getVida() + "%");
             return;
         }
 
-        // Procesar otros tipos de celdas (mantener igual)
+        // Procesar otros tipos de celdas (sin debug)
         switch (celda.getTipo()) {
             case CRISTAL:
                 jugador.recolectarCristal();
@@ -151,21 +136,19 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
             case LLAVE:
                 jugador.recogerLlave();
-                System.out.println("🗝️ ¡Llave obtenida!");
+                System.out.println("🗝️ ¡Llave obtenida! Ahora puedes salir del laberinto");
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
 
             case ENERGIA:
-                int vidaAntesEnergia = jugador.getVida();
-                jugador.setVida(jugador.getVida() + 10);
-                System.out.println("⚡ Energía! Vida: " + vidaAntesEnergia + "% → " + jugador.getVida() + "%");
+                jugador.setVida(Math.min(100, jugador.getVida() + 10)); // ✅ NO EXCEDER 100
+                System.out.println("⚡ ¡Energía obtenida! Vida: " + jugador.getVida() + "%");
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
 
             case VIDA:
-                int vidaAntesVida = jugador.getVida();
-                jugador.setVida(jugador.getVida() + 25);
-                System.out.println("➕ Vida extra! Vida: " + vidaAntesVida + "% → " + jugador.getVida() + "%");
+                jugador.setVida(Math.min(100, jugador.getVida() + 25)); // ✅ NO EXCEDER 100
+                System.out.println("➕ ¡Vida extra! Vida: " + jugador.getVida() + "%");
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
         }

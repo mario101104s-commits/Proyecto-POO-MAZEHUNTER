@@ -37,7 +37,7 @@ public class PersistenciaJASON implements Persistencia {
         // Configurar Gson para manejar LocalDateTime y para formato bonito
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()) // ✅ REGISTRAR EL ADAPTER
                 .create();
 
         // Crear directorios si no existen
@@ -97,6 +97,7 @@ public class PersistenciaJASON implements Persistencia {
         return null;
     }
 
+
     @Override
     public List<Usuario> cargarTodosUsuarios() {
         try {
@@ -106,7 +107,8 @@ public class PersistenciaJASON implements Persistencia {
             }
 
             try (FileReader reader = new FileReader(archivo)) {
-                Type listType = new TypeToken<ArrayList<Usuario>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<Usuario>>() {
+                }.getType();
                 List<Usuario> usuarios = gson.fromJson(reader, listType);
                 return usuarios != null ? usuarios : new ArrayList<>();
             }
@@ -116,11 +118,13 @@ public class PersistenciaJASON implements Persistencia {
             return new ArrayList<>();
         }
     }
+
     private void guardarListaUsuarios(List<Usuario> usuarios) throws IOException {
         try (FileWriter writer = new FileWriter(ARCHIVO_USUARIOS)) {
             gson.toJson(usuarios, writer);
         }
     }
+
     @Override
     public void actualizarUsuario(Usuario usuarioActualizado) throws Exception {
         List<Usuario> usuarios = cargarTodosUsuarios();
@@ -152,8 +156,9 @@ public class PersistenciaJASON implements Persistencia {
     }
 
     @Override
-    public void cargarEstadisticas() {
+    public List<EstadisticasJuego> cargarEstadisticas() {
         cargarTodasEstadisticas();
+        return null;
     }
 
     @Override
@@ -236,7 +241,8 @@ public class PersistenciaJASON implements Persistencia {
             }
 
             try (FileReader reader = new FileReader(archivo)) {
-                Type listType = new TypeToken<ArrayList<EstadisticasJuego>>(){}.getType();
+                Type listType = new TypeToken<ArrayList<EstadisticasJuego>>() {
+                }.getType();
                 List<EstadisticasJuego> estadisticas = gson.fromJson(reader, listType);
                 return estadisticas != null ? estadisticas : new ArrayList<>();
             }
@@ -266,6 +272,37 @@ public class PersistenciaJASON implements Persistencia {
         return todasEstadisticas;
     }
 
+
+    @Override
+    public List<EstadisticasJuego> cargarTodasEstadisticas(String usuario) {
+        try {
+            String archivoEstadisticas = DIRECTORIO_ESTADISTICAS + usuario + ".json";
+            File archivo = new File(archivoEstadisticas);
+
+            // ✅ SI el archivo no existe, retornar lista vacía, no null
+            if (!archivo.exists()) {
+                return new ArrayList<>();
+            }
+
+            try (FileReader reader = new FileReader(archivo)) {
+                Type listType = new TypeToken<ArrayList<EstadisticasJuego>>() {
+                }.getType();
+                List<EstadisticasJuego> estadisticas = gson.fromJson(reader, listType);
+
+                // ✅ GARANTIZAR que nunca retorne null
+                return estadisticas != null ? estadisticas : new ArrayList<>();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error cargando estadísticas para " + usuario + ": " + e.getMessage());
+            // ✅ SI hay error, retornar lista vacía, no null
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.err.println("Error inesperado cargando estadísticas: " + e.getMessage());
+            // ✅ CUALQUIER error retorna lista vacía
+            return new ArrayList<>();
+        }
+    }
     // ===== CLASE DTO PARA SERIALIZACIÓN DE JUEGO =====
 
     private static class JuegoDTO {
@@ -379,19 +416,18 @@ public class PersistenciaJASON implements Persistencia {
             return jugador;
         }
     }
-}
 
-// Clase adaptadora para LocalDateTime
-class LocalDateTimeAdapter implements com.google.gson.JsonSerializer<LocalDateTime>, com.google.gson.JsonDeserializer<LocalDateTime> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    class LocalDateTimeAdapter implements com.google.gson.JsonSerializer<LocalDateTime>, com.google.gson.JsonDeserializer<LocalDateTime> {
+        private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    @Override
-    public com.google.gson.JsonElement serialize(LocalDateTime src, java.lang.reflect.Type typeOfSrc, com.google.gson.JsonSerializationContext context) {
-        return new com.google.gson.JsonPrimitive(formatter.format(src));
-    }
+        @Override
+        public com.google.gson.JsonElement serialize(LocalDateTime src, java.lang.reflect.Type typeOfSrc, com.google.gson.JsonSerializationContext context) {
+            return new com.google.gson.JsonPrimitive(formatter.format(src));
+        }
 
-    @Override
-    public LocalDateTime deserialize(com.google.gson.JsonElement json, java.lang.reflect.Type typeOfT, com.google.gson.JsonDeserializationContext context) throws com.google.gson.JsonParseException {
-        return LocalDateTime.parse(json.getAsString(), formatter);
+        @Override
+        public LocalDateTime deserialize(com.google.gson.JsonElement json, java.lang.reflect.Type typeOfT, com.google.gson.JsonDeserializationContext context) throws com.google.gson.JsonParseException {
+            return LocalDateTime.parse(json.getAsString(), formatter);
+        }
     }
 }
