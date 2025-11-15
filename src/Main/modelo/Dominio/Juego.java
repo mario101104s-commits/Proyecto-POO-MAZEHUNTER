@@ -3,16 +3,57 @@ package Main.modelo.Dominio;
 import Main.modelo.Constantes.EstadoJuego;
 
 import java.time.LocalDateTime;
+/**
+ * Representa una partida activa o finalizada de Maze Hunter, encapsulando
+ * el estado del laberinto, el jugador y los metadatos de la sesión.
+ * <p>
+ * Esta clase sirve como el modelo principal que se guarda y se recupera
+ * para la persistencia del juego.
+ * </p>
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 11/11/2025
+ */
 
 public class Juego {
+    /**
+     * La estructura actual del laberinto con sus celdas y contenido.
+     */
     private Laberinto laberinto;
+    /**
+     * El estado del personaje del jugador (vida, posición, inventario).
+     */
     private Jugador jugador;
+    /**
+     * La marca de tiempo que indica cuándo comenzó la partida.
+     */
     private String usuario;
+    /**
+     * La marca de tiempo que indica cuándo inicio la partida (si no es {@code null}).
+     */
     private LocalDateTime inicio;
+    /**
+     * La marca de tiempo que indica cuándo finalizó la partida (si no es {@code null}).
+     */
     private LocalDateTime fin;
+    /**
+     * El estado actual de la partida (EN_CURSO, GANADO, PERDIDO, PAUSADO).
+     */
     private EstadoJuego estado;
+    /**
+     * El contador de trampas que el jugador ha activado durante la partida.
+     */
     private int trampasActivadas;
-
+    /**
+     * Construye una nueva instancia de Juego, inicializando los componentes principales.
+     * <p>
+     * El estado inicial es {@code EN_CURSO} y el contador de trampas es cero.
+     * </p>
+     * @param laberinto La estructura del laberinto generada.
+     * @param jugador La instancia del jugador con sus atributos iniciales.
+     * @param usuario El correo electrónico del usuario que está jugando.
+     * @param inicio La marca de tiempo del inicio de la partida.
+     */
     public Juego(Laberinto laberinto, Jugador jugador, String usuario, LocalDateTime inicio) {
         this.laberinto = laberinto;
         this.jugador = jugador;
@@ -77,7 +118,9 @@ public class Juego {
     public void setTrampasActivadas(int trampasActivadas) {
         this.trampasActivadas = trampasActivadas;
     }
-
+    /**
+     * Incrementa el contador de trampas activadas en uno.
+     */
     public void incrementarTrampasActivadas() {
 
     }

@@ -20,15 +20,36 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+/**
+ * Clase principal de la aplicación Maze Hunter.
+ * <p>
+ * Esta clase actúa como la capa de Presentación/Control de la consola,
+ * el flujo del programa, la gestión de sesiones de usuario (autenticación)
+ * y la interacción con las capas de Servicio y Persistencia.
+ * </p>
+ * @author Niyerlin Munoz y Mario Sanchez
+ * @version 1.0
+ * @since 11/11/2025
+ */
 
 public class Main {
+    // --- Dependencias ---
     private static PersistenciaJASON persistencia = new PersistenciaJASON();
     private static Cifrador cifrador = new CifradorImpl();
     private static ServicioJuego servicioJuego = new ServicioJuegoImpl(persistencia);
     private static ServicioUsuario servicioUsuario = new ServicioUsuarioImpl(persistencia);
     private static final RenderizadorLaberinto renderizador = new RenderizadorLaberinto();
+    /** Almacena el email del usuario autenticado actualmente. Es nulo si no hay sesión activa. */
     private static String usuarioAutenticadoEmail = null;
 
+    /**
+     * El metodo principal que inicia la aplicación Maze Hunter.
+     * <p>
+     * Inicializa la persistencia, maneja el bucle principal de ejecución y
+     * dirige al usuario al menú de autenticación o al menú principal.
+     * </p>
+     * @param args Argumentos de la línea de comandos (no utilizados).
+     */
     public static void main(String[] args) {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🏰 MAZE HUNTER - EL TEMPLO PERDIDO ===");
@@ -55,6 +76,9 @@ public class Main {
     }
 
     // ===== SISTEMA DE AUTENTICACIÓN =====
+    /**
+     * Muestra el menú de opciones para iniciar sesión, registrarse, recuperar contraseña o salir.
+     */
     private static void mostrarMenuAutenticacion() {
         ConsoleUtils.limpiarConsola();
         System.out.println("=== 🔐 ACCESO AL TEMPLO PERDIDO ===");
@@ -65,6 +89,11 @@ public class Main {
         System.out.println("====================================");
     }
 
+    /**
+     * Lee la opción del menú de autenticación y ejecuta la acción correspondiente.
+     *
+     * @return {@code false} si el usuario elige la opción de salir (4), {@code true} para continuar.
+     */
     private static boolean manejarMenuAutenticacion() {
         int opcion = ConsoleUtils.leerEntero("Seleccione una opción: ");
         try {
@@ -90,6 +119,10 @@ public class Main {
         return true;
     }
 
+    /**
+     * Maneja el flujo de inicio de sesión: solicita credenciales, carga el usuario,
+     * descifra la contraseña almacenada y válida el acceso.
+     */
     private static void iniciarSesion() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🗝️  INGRESO AL TEMPLO ===");
@@ -123,7 +156,13 @@ public class Main {
             ConsoleUtils.mostrarError("Error mágico al iniciar sesión: " + e.getMessage());
         }
     }
-
+    /**
+     * Válida los requisitos de seguridad de una contraseña (longitud mínima 8,
+     * mayúscula, carácter especial).
+     *
+     * @param password La contraseña en texto plano a validar.
+     * @return {@code true} si la contraseña cumple los requisitos, {@code false} en caso contrario.
+     */
     private static boolean validarContrasenia(String password) {
         if (password == null || password.length() < 8) {
             ConsoleUtils.mostrarError("❌ La contraseña mágica debe tener al menos 8 caracteres.");
@@ -144,7 +183,10 @@ public class Main {
 
         return true;
     }
-
+    /**
+     * Maneja el flujo de registro de un nuevo usuario: solicita datos, realiza
+     * validaciones de email/contraseña, cifra y guarda al nuevo {@code Usuario}.
+     */
     private static void registrarUsuario() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 📝 REGISTRO DE NUEVO HUNTER ===");
@@ -187,6 +229,10 @@ public class Main {
         }
     }
 
+    /**
+     * Maneja el flujo de recuperación de contraseña: solicita email, verifica existencia
+     * y permite al usuario establecer una nueva contraseña mágica.
+     */
     private static void recuperarContrasenia() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🔑 RECUPERACIÓN DE CONTRASEÑA MÁGICA ===");
@@ -226,6 +272,11 @@ public class Main {
     }
 
     // ===== MENÚ PRINCIPAL Y SISTEMA DE JUEGO =====
+    /**
+     * Muestra el menú principal después de la autenticación.
+     *
+     * @return {@code true} para mantener la aplicación ejecutándose, {@code false} si se cierra sesión.
+     */
     private static boolean mostrarMenuPrincipal() {
         try {
             ConsoleUtils.limpiarConsola();
@@ -264,6 +315,10 @@ public class Main {
         return true;
     }
 
+    /**
+     * Guía al usuario en la configuración e inicio de una nueva aventura.
+     * Solicita las dimensiones del laberinto y delega la creación al {@code ServicioJuego}.
+     */
     private static void iniciarNuevaAventura() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🎮 NUEVA AVENTURA EN EL TEMPLO ===");
@@ -298,6 +353,10 @@ public class Main {
         }
     }
 
+    /**
+     * Intenta cargar una partida guardada previamente para el usuario autenticado.
+     * Si tiene éxito, inicia la función de juego ({@code jugarPartida}).
+     */
     private static void cargarAventuraExistente() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 📂 CARGAR AVENTURA GUARDADA ===");
@@ -325,6 +384,12 @@ public class Main {
         }
     }
 
+    /**
+     * Contiene el bucle principal de la partida, gestionando la interfaz de juego,
+     * la entrada de comandos (WASD, G, Q, M) y las interacciones con el servicio de juego.
+     *
+     * @param juego El objeto {@code Juego} que se está jugando actualmente.
+     */
     private static void jugarPartida(Juego juego) {
         boolean jugando = true;
 
@@ -397,6 +462,12 @@ public class Main {
         }
     }
 
+    /**
+     * Muestra un resumen detallado del estado del jugador, incluyendo vida (con barra visual),
+     * cristales, llave y trampas activadas.
+     *
+     * @param juego El objeto {@code Juego} actual.
+     */
     private static void mostrarEstadoJugadorMejorado(Juego juego) {
         System.out.println("\n=== 👤 ESTADO DEL HUNTER ===");
         System.out.println("❤️  Vida: " + juego.getJugador().getVida() + "%");
@@ -417,6 +488,9 @@ public class Main {
         System.out.println("] " + juego.getJugador().getVida() + "%");
     }
 
+    /**
+     * Muestra la leyenda de los comandos disponibles durante el juego.
+     */
     private static void mostrarControlesJuego() {
         System.out.println("\n=== 🎮 CONTROLES MÁGICOS ===");
         System.out.println("W - ↑ Mover hacia arriba");
@@ -429,6 +503,12 @@ public class Main {
         System.out.println("============================");
     }
 
+    /**
+     * Convierte la entrada de un carácter (w, a, s, d) a la enumeración {@code Direccion} correspondiente.
+     *
+     * @param input El carácter de movimiento.
+     * @return La dirección del movimiento.
+     */
     private static Direccion obtenerDireccion(char input) {
         switch (input) {
             case 'w': return Direccion.ARRIBA;
@@ -439,6 +519,12 @@ public class Main {
         }
     }
 
+    /**
+     * Intenta eliminar el archivo de juego guardado para un usuario.
+     * * Utilizado cuando el usuario elige 'Salir sin guardar'.
+     *
+     * @param usuario El email del usuario.
+     */
     private static void eliminarJuegoGuardado(String usuario) {
         try {
             String archivoJuego = "datos/juegos/" + usuario + ".json";
@@ -457,6 +543,11 @@ public class Main {
         }
     }
 
+    /**
+     * Procesa y muestra el resultado final del juego (victoria o derrota) y las estadísticas finales.
+     *
+     * @param juego El objeto {@code Juego} que ha finalizado.
+     */
     private static void mostrarFinDelJuego(Juego juego) {
         ResultadoJuego resultado = servicioJuego.terminarJuego(juego);
 
@@ -475,6 +566,10 @@ public class Main {
         ConsoleUtils.pausar();
     }
 
+    /**
+     * Muestra el historial completo de aventuras registradas para el usuario autenticado
+     * y calcula un resumen estadístico (promedios, tasa de victorias, etc.).
+     */
     private static void mostrarEstadisticas() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 📊 ANALES DEL TEMPLO ===");

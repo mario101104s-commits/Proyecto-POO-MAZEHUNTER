@@ -23,16 +23,33 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Implementación concreta de la interfaz {@code Persistencia} utilizando archivos JSON.
+ * <p>
+ * Utiliza la librería Google Gson para la serialización y deserialización de objetos
+ * de dominio (Usuario, Juego, EstadisticasJuego) y maneja la estructura de directorios
+ * para el almacenamiento de archivos.
+ * </p>
+ * @author Mario Sanchez y Niyerlin Muñoz
+ * @version 1.0
+ * @since 2025-11-15
+ */
 
 public class PersistenciaJASON implements Persistencia {
+    /** El directorio base donde se almacenan todos los archivos de datos. */
     private static final String DIRECTORIO_BASE = "datos/";
+    /** La ruta completa del archivo que almacena la lista de usuarios. */
     private static final String ARCHIVO_USUARIOS = DIRECTORIO_BASE + "usuarios.json";
+    /** El directorio donde se guardan los archivos de juegos guardados por usuario. */
     private static final String DIRECTORIO_JUEGOS = DIRECTORIO_BASE + "juegos/";
+    /** El directorio donde se guardan los archivos de estadísticas por usuario. */
     private static final String DIRECTORIO_ESTADISTICAS = DIRECTORIO_BASE + "estadisticas/";
-
+    /** Instancia de Gson configurada para manejar formatos y tipos específicos. */
     private Gson gson;
-
+    /**
+     * Constructor. Inicializa la instancia de Gson con formato bonito y el adaptador
+     * para manejar {@code LocalDateTime}. Llama al metodo para crear los directorios necesarios.
+     */
     public PersistenciaJASON() {
         // Configurar Gson para manejar LocalDateTime y para formato bonito
         this.gson = new GsonBuilder()
@@ -43,7 +60,9 @@ public class PersistenciaJASON implements Persistencia {
         // Crear directorios si no existen
         crearDirectorios();
     }
-
+    /**
+     * Crea los directorios base de datos si no existen previamente.
+     */
     private void crearDirectorios() {
         try {
             Files.createDirectories(Paths.get(DIRECTORIO_BASE));
@@ -55,7 +74,13 @@ public class PersistenciaJASON implements Persistencia {
     }
 
     // ===== IMPLEMENTACIÓN DE USUARIOS =====
-
+    /**
+     * Guarda un nuevo objeto {@code Usuario} en el archivo JSON.
+     * * Verifica que el usuario no exista antes de agregarlo y rescribe el archivo completo.
+     *
+     * @param usuario El objeto Usuario a guardar.
+     * @return {@code true} si el usuario fue guardado exitosamente, {@code false} si ya existe o falló la I/O.
+     */
     @Override
     public boolean guardarUsuario(Usuario usuario) {
         try {
@@ -83,7 +108,12 @@ public class PersistenciaJASON implements Persistencia {
             return false;
         }
     }
-
+    /**
+     * Carga un usuario específico por su correo electrónico.
+     *
+     * @param email El correo electrónico del usuario a cargar.
+     * @return El objeto {@code Usuario} si se encuentra, o {@code null} en caso contrario.
+     */
     @Override
     public Usuario cargarUsuario(String email) {
         List<Usuario> usuarios = cargarTodosUsuarios();
@@ -97,7 +127,11 @@ public class PersistenciaJASON implements Persistencia {
         return null;
     }
 
-
+    /**
+     * Carga la lista completa de todos los usuarios registrados desde el archivo {@code usuarios.json}.
+     *
+     * @return Una {@code List} de todos los objetos {@code Usuario}, o una lista vacía si el archivo no existe o falla la carga.
+     */
     @Override
     public List<Usuario> cargarTodosUsuarios() {
         try {
@@ -118,13 +152,25 @@ public class PersistenciaJASON implements Persistencia {
             return new ArrayList<>();
         }
     }
-
+    /**
+     * Escribe la lista completa de usuarios al archivo {@code usuarios.json}.
+     * * Este es un metodo auxiliar privado.
+     *
+     * @param usuarios La lista de objetos Usuario a guardar.
+     * @throws IOException Si ocurre un error al escribir en el archivo.
+     */
     private void guardarListaUsuarios(List<Usuario> usuarios) throws IOException {
         try (FileWriter writer = new FileWriter(ARCHIVO_USUARIOS)) {
             gson.toJson(usuarios, writer);
         }
     }
-
+    /**
+     * Actualiza la información de un usuario existente (normalmente para cambiar la contraseña).
+     * * Busca al usuario por email, lo reemplaza en la lista y guarda la lista completa.
+     *
+     * @param usuarioActualizado El objeto {@code Usuario} con los datos actualizados.
+     * @throws Exception Si el usuario no se encuentra o si ocurre un error de I/O al guardar.
+     */
     @Override
     public void actualizarUsuario(Usuario usuarioActualizado) throws Exception {
         List<Usuario> usuarios = cargarTodosUsuarios();
@@ -144,23 +190,42 @@ public class PersistenciaJASON implements Persistencia {
         }
     }
 
-
+    /**
+     * Verifica la existencia de un usuario por su correo electrónico.
+     *
+     * @param email El correo electrónico a verificar.
+     * @return {@code true} si el usuario existe, {@code false} en caso contrario.
+     */
     @Override
     public boolean existeUsuario(String email) {
         return cargarUsuario(email) != null;
     }
-
+    /**
+     * Implementación del metodo de la interfaz {@code Persistencia} para cargar usuarios.
+     * Llama a {@link #cargarTodosUsuarios()}.
+     *
+     * @deprecated Este metodo es redundante; use {@link #cargarTodosUsuarios()} en su lugar.
+     */
     @Override
     public void cargarUsuarios() {
         cargarTodosUsuarios();
     }
-
+    /**
+     * Implementación del metodo de la interfaz {@code Persistencia} para cargar estadísticas.
+     * @return {@code null}
+     */
     @Override
     public List<EstadisticasJuego> cargarEstadisticas() {
         cargarTodasEstadisticas();
         return null;
     }
-
+    /**
+     * Guarda el estado actual de un juego serializándolo en un archivo JSON usando un DTO.
+     * * El archivo se nombra con el correo del usuario.
+     *
+     * @param juego El objeto {@code Juego} con el estado actual del laberinto y jugador.
+     * @return {@code true} si el juego fue guardado exitosamente.
+     */
     @Override
     public boolean guardarJuego(Juego juego) {
         try {
@@ -180,7 +245,12 @@ public class PersistenciaJASON implements Persistencia {
             return false;
         }
     }
-
+    /**
+     * Carga el juego guardado de un usuario por su email.
+     *
+     * @param usuario El correo electrónico del usuario.
+     * @return El objeto {@code Juego} guardado, o {@code null} si no hay partida para ese usuario.
+     */
     @Override
     public Juego cargarJuego(String usuario) {
         try {
@@ -201,7 +271,12 @@ public class PersistenciaJASON implements Persistencia {
             return null;
         }
     }
-
+    /**
+     * Verifica si existe una partida guardada para un usuario específico.
+     *
+     * @param usuario El correo electrónico del usuario.
+     * @return {@code true} si existe un archivo de juego guardado.
+     */
     @Override
     public boolean existeJuegoGuardado(String usuario) {
         String archivoJuego = DIRECTORIO_JUEGOS + usuario + ".json";
@@ -209,7 +284,14 @@ public class PersistenciaJASON implements Persistencia {
     }
 
     // ===== IMPLEMENTACIÓN DE ESTADÍSTICAS =====
-
+    /**
+     * Guarda las estadísticas de una partida.
+     * <p>
+     * Agrega las nuevas estadísticas a la lista histórica existente del usuario y rescribe el archivo.
+     * </p>
+     * @param estadisticas El objeto {@code EstadisticasJuego} a guardar.
+     * @return {@code true} si las estadísticas fueron guardadas exitosamente.
+     */
     @Override
     public boolean guardarEstadisticas(EstadisticasJuego estadisticas) {
         try {
@@ -229,7 +311,12 @@ public class PersistenciaJASON implements Persistencia {
             return false;
         }
     }
-
+    /**
+     * Carga la lista de estadísticas históricas asociadas a un usuario específico.
+     *
+     * @param usuario El correo electrónico del usuario.
+     * @return Una lista de {@code EstadisticasJuego} jugadas por ese usuario, o lista vacía si no hay archivo.
+     */
     @Override
     public List<EstadisticasJuego> cargarEstadisticas(String usuario) {
         try {
@@ -252,7 +339,11 @@ public class PersistenciaJASON implements Persistencia {
             return new ArrayList<>();
         }
     }
-
+    /**
+     * Carga todas las estadísticas de juego de todos los usuarios, recorriendo el directorio de estadísticas.
+     *
+     * @return Una lista que contiene las {@code EstadisticasJuego} de todos los usuarios.
+     */
     @Override
     public List<EstadisticasJuego> cargarTodasEstadisticas() {
         List<EstadisticasJuego> todasEstadisticas = new ArrayList<>();
@@ -272,7 +363,12 @@ public class PersistenciaJASON implements Persistencia {
         return todasEstadisticas;
     }
 
-
+    /**
+     * Carga todas las estadísticas de juego de un usuario dado.
+     *
+     * @param usuario El correo electrónico del usuario.
+     * @return Una lista de todas las {@code EstadisticasJuego} jugadas por el usuario, o lista vacía si hay error.
+     */
     @Override
     public List<EstadisticasJuego> cargarTodasEstadisticas(String usuario) {
         try {
@@ -304,7 +400,11 @@ public class PersistenciaJASON implements Persistencia {
         }
     }
     // ===== CLASE DTO PARA SERIALIZACIÓN DE JUEGO =====
-
+    /**
+     * Clase auxiliar para serializar el objeto {@code Juego}.
+     * * Necesaria para simplificar la estructura del JSON y manejar la serialización
+     * de referencias complejas como el Laberinto y el Jugador.
+     */
     private static class JuegoDTO {
         private LaberintoDTO laberinto;
         private JugadorDTO jugador;
@@ -323,7 +423,10 @@ public class PersistenciaJASON implements Persistencia {
             this.estado = juego.getEstado().name();
             this.trampasActivadas = juego.getTrampasActivadas(); // ✅ Asignamos correctamente
         }
-
+        /**
+         * Convierte el DTO de vuelta a un objeto {@code Juego} de dominio completo.
+         * @return El objeto {@code Juego} reconstruido.
+         */
         public Juego toJuego() {
             Laberinto laberintoObj = this.laberinto.toLaberinto();
             Jugador jugadorObj = this.jugador.toJugador();
@@ -339,7 +442,9 @@ public class PersistenciaJASON implements Persistencia {
             return juego;
         }
     }
-
+    /**
+     * Clase auxiliar (DTO) para serializar el objeto {@code Laberinto}.
+     */
     private static class LaberintoDTO {
         private CeldaDTO[][] celdas;
         private int filas;
@@ -369,7 +474,9 @@ public class PersistenciaJASON implements Persistencia {
             return new Laberinto(celdasObj, filas, columnas);
         }
     }
-
+    /**
+     * Clase auxiliar (DTO) para serializar el objeto {@code Celda}.
+     */
     private static class CeldaDTO {
         private String tipo;
         private int fila;
@@ -393,7 +500,9 @@ public class PersistenciaJASON implements Persistencia {
             return celda;
         }
     }
-
+    /**
+     * Clase auxiliar (DTO) para serializar el objeto {@code Jugador}.
+     */
     private static class JugadorDTO {
         private int vida;
         private int cristales;
@@ -416,7 +525,10 @@ public class PersistenciaJASON implements Persistencia {
             return jugador;
         }
     }
-
+    /**
+     * Adaptador para la librería Gson que permite serializar y deserializar correctamente
+     * los objetos {@code LocalDateTime} de Java 8, asegurando un formato ISO-8601.
+     */
     class LocalDateTimeAdapter implements com.google.gson.JsonSerializer<LocalDateTime>, com.google.gson.JsonDeserializer<LocalDateTime> {
         private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 

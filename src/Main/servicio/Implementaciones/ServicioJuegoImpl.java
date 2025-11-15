@@ -12,16 +12,42 @@ import Main.servicio.Interfaces.ServicioJuego;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
-
+/**
+ * Implementación concreta de la lógica de negocio para la gestión de partidas de Maze Hunter.
+ * <p>
+ * Se encarga de la inicialización de juegos, el manejo de movimientos, las interacciones
+ * del jugador con las celdas y la gestión del estado de la partida
+ * a través de la persistencia.
+ * </p>
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 11/11/2025
+ */
 public class ServicioJuegoImpl implements ServicioJuego {
+    /** Interfaz de persistencia utilizada para guardar y cargar juegos/estadísticas. */
     private Persistencia persistencia;
+    /** Interfaz para la generación de laberintos. */
     private GeneradorLaberinto generadorLaberinto;
 
+    /**
+     * Constructor. Inicializa el servicio de juego con la dependencia de persistencia.
+     *
+     * @param persistencia La implementación del almacén de datos.
+     */
     public ServicioJuegoImpl(Persistencia persistencia) {
         this.persistencia = persistencia;
         this.generadorLaberinto = new GeneradorLaberintoImpl();
     }
-
+    /**
+     * Inicia una nueva partida, generando un laberinto con las dimensiones especificadas.
+     *
+     * @param filas El número de filas del laberinto.
+     * @param columnas El número de columnas del laberinto.
+     * @param usuario El correo electrónico del usuario que inicia el juego.
+     * @return El nuevo objeto {@code Juego} inicializado.
+     * @throws IllegalArgumentException Si las dimensiones son menores a 5x5.
+     * @throws IllegalStateException Si la posición de entrada no se encuentra en el laberinto generado.
+     */
     @Override
     public Juego iniciarNuevoJuego(int filas, int columnas, String usuario) {
         // Validar tamaño mínimo
@@ -50,7 +76,12 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
         return juego;
     }
-
+    /**
+     * Carga el estado de un juego previamente guardado para un usuario.
+     *
+     * @param usuario El correo electrónico del usuario.
+     * @return El objeto {@code Juego} cargado, o {@code null} si no existe un juego guardado.
+     */
     @Override
     public Juego cargarJuegoGuardado(String usuario) {
         Juego juego = persistencia.cargarJuego(usuario);
@@ -61,7 +92,16 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
         return juego;
     }
-
+    /**
+     * Intenta mover al jugador en la dirección especificada.
+     *
+     * Si la posición es transitable, actualiza las coordenadas del jugador, procesa
+     * la celda destino (recolectar, sufrir daño) y revela celdas adyacentes.
+     *
+     * @param juego El objeto {@code Juego} actual.
+     * @param direccion La dirección del movimiento (Arriba, Abajo, Izquierda, Derecha).
+     * @return {@code true} si el movimiento fue exitoso, {@code false} si la celda no es válida o transitable.
+     */
     @Override
     public boolean moverJugador(Juego juego, Direccion direccion) {
         if (juego.getEstado() != EstadoJuego.EN_CURSO) {
@@ -104,7 +144,14 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
         return true;
     }
-
+    /**
+     * Ejecuta la lógica correspondiente al tipo de celda en la que cae el jugador.
+     *
+     * Esto incluye: recolectar cristales/llave, recuperar vida, o activar trampas.
+     *
+     * @param juego El objeto {@code Juego} actual.
+     * @param celda La {@code Celda} destino que debe ser procesada.
+     */
     private void procesarCelda(Juego juego, Celda celda) {
         Jugador jugador = juego.getJugador();
 
@@ -154,7 +201,14 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
     }
 
-
+    /**
+     * Marca las celdas adyacentes a la posición actual del jugador como visibles.
+     * * Esto simula el campo de visión limitado del jugador.
+     *
+     * @param laberinto El laberinto.
+     * @param x La coordenada de la fila del jugador.
+     * @param y La coordenada de la columna del jugador.
+     */
     private void revelarCeldasAdyacentes(Laberinto laberinto, int x, int y) {
         int[][] direcciones = {{-1, 0}, {1, 0}, {0, -1}, {0, 1},
                 {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
@@ -169,7 +223,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
             }
         }
     }
-
+    /**
+     * Verifica si se ha alcanzado una condición de fin de juego (Ganado o Perdido).
+     * <p>
+     * El juego termina si el jugador muere (vida < 1) o si llega a la salida teniendo la llave.
+     * </p>
+     * @param juego El objeto {@code Juego} actual.
+     */
     private void verificarEstadoJuego(Juego juego) {
         Jugador jugador = juego.getJugador();
         Laberinto laberinto = juego.getLaberinto();
@@ -189,6 +249,12 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
     }
 
+    /**
+     * Guarda el estado actual de la partida en el sistema de persistencia.
+     *
+     * @param juego El objeto {@code Juego} a guardar.
+     * @return {@code true} si el guardado fue exitoso.
+     */
     @Override
     public boolean guardarJuego(Juego juego) {
         boolean exito = persistencia.guardarJuego(juego);
@@ -199,6 +265,12 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
         return exito;
     }
+    /**
+     * Finaliza la partida, calcula las métricas de rendimiento y guarda las estadísticas finales.
+     *
+     * @param juego El objeto {@code Juego} terminado.
+     * @return Un objeto {@code ResultadoJuego} con todas las métricas finales.
+     */
 
     @Override
     public ResultadoJuego terminarJuego(Juego juego) {
@@ -230,6 +302,12 @@ public class ServicioJuegoImpl implements ServicioJuego {
         return resultado;
     }
 
+    /**
+     * Verifica si el jugador está en la celda de salida y tiene la llave.
+     *
+     * @param juego El objeto {@code Juego} actual.
+     * @return {@code true} si se cumplen ambas condiciones para salir del laberinto.
+     */
     @Override
     public boolean puedeSalir(Juego juego) {
         Celda celdaActual = juego.getLaberinto().getCelda(
@@ -240,6 +318,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 celdaActual.getTipo() == TipoCelda.SALIDA;
     }
 
+    /**
+     * Busca y retorna las coordenadas de la celda que ha sido marcada como {@code ENTRADA}
+     * en el laberinto.
+     *
+     * @param laberinto El objeto {@code Laberinto} donde buscar.
+     * @return Un array {@code int[]} con [fila, columna] de la entrada, o {@code null} si no se encuentra.
+     */
     private int[] encontrarPosicionEntrada(Laberinto laberinto) {
         for (int i = 0; i < laberinto.getFilas(); i++) {
             for (int j = 0; j < laberinto.getColumnas(); j++) {
@@ -251,6 +336,15 @@ public class ServicioJuegoImpl implements ServicioJuego {
         }
         return null;
     }
+    /**
+     * Procesa la finalización de la partida en curso (cuando el usuario decide salir) y guarda
+     * las métricas de rendimiento como estadísticas parciales.
+     * <p>
+     * Si el juego ya terminó (Ganado/Perdido), llama directamente a {@link #terminarJuego(Juego)}.
+     * </p>
+     * @param juego El objeto {@code Juego} que se está terminando parcialmente.
+     * @return Un objeto {@code ResultadoJuego} con las métricas parciales, marcando el juego como no ganado.
+     */
     public ResultadoJuego guardarEstadisticasParciales(Juego juego) {
         if (juego.getEstado() != EstadoJuego.EN_CURSO) {
             return terminarJuego(juego);

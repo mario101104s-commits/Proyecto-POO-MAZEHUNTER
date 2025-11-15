@@ -4,7 +4,26 @@ import Main.modelo.Dominio.Celda;
 import Main.modelo.Dominio.Jugador;
 import Main.modelo.Dominio.Laberinto;
 
+/**
+ * Clase de utilidad para la Interfaz de Usuario (UI) que se encarga de renderizar
+ * visualmente el estado del laberinto, la información del jugador y los controles
+ * en la consola.
+ * <p>
+ * Utiliza los símbolos de las celdas y la posición del jugador para crear la vista
+ * del juego, aplicando el concepto de campo de visión limitado.
+ * </p>
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 2025-11-15
+ */
 public class RenderizadorLaberinto {
+    /**
+     * Muestra el laberinto en la consola, aplicando el campo de visión (solo celdas
+     * visibles o visitadas) y marcando la posición actual del jugador (@).
+     *
+     * @param laberinto El objeto {@code Laberinto} a renderizar.
+     * @param jugador El objeto {@code Jugador} para determinar su posición.
+     */
 
     public void mostrarLaberinto(Laberinto laberinto, Jugador jugador) {
         System.out.println("\n=== 🗺️  LABERINTO ===");
@@ -33,11 +52,21 @@ public class RenderizadorLaberinto {
         }
     }
 
+    /**
+     * Muestra la leyenda de símbolos para la vista de juego con visión limitada.
+     * * Metodo auxiliar privado.
+     */
     private void mostrarLeyenda() {
         System.out.println("Leyenda: @ Tú | # Muro | . Camino | C Cristal | T Trampa");
         System.out.println("         L Llave | X Salida | E Energía | + Vida | ? No explorado");
     }
 
+    /**
+     * Muestra el estado actual del jugador, incluyendo vida (con una barra visual),
+     * cristales, posesión de la llave y posición.
+     *
+     * @param jugador El objeto {@code Jugador} cuyo estado se va a mostrar.
+     */
     public void mostrarEstadoJugador(Jugador jugador) {
         System.out.println("\n=== 👤 ESTADO DEL JUGADOR ===");
         System.out.println("❤️  Vida: " + jugador.getVida() + "%");
@@ -58,6 +87,12 @@ public class RenderizadorLaberinto {
         System.out.println("] " + jugador.getVida() + "%");
     }
 
+    /**
+     * Muestra la vista completa del laberinto, sin aplicar restricciones de visibilidad.
+     * * Útil para la función de "mapa completo".
+     *
+     * @param laberinto El objeto {@code Laberinto} a renderizar.
+     */
     public void mostrarLaberintoCompleto(Laberinto laberinto) {
         System.out.println("\n=== 🗺️  VISTA COMPLETA DEL LABERINTO ===");
         mostrarLeyendaCompleta();
@@ -72,12 +107,19 @@ public class RenderizadorLaberinto {
         }
     }
 
+    /**
+     * Muestra la leyenda de símbolos para la vista completa del laberinto.
+     * * Metodo auxiliar privado.
+     */
     private void mostrarLeyendaCompleta() {
         System.out.println("# Muro        . Camino      @ Jugador     C Cristal");
         System.out.println("T Trampa      L Llave       X Salida      S Entrada");
         System.out.println("E Energía     + Vida extra");
     }
 
+    /**
+     * Imprime en la consola la lista de comandos disponibles para el jugador.
+     */
     public void mostrarControles() {
         System.out.println("\n=== 🎮 CONTROLES ===");
         System.out.println("W - Mover ↑ Arriba");

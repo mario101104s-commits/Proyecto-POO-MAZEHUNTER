@@ -6,19 +6,51 @@ import Main.servicio.Interfaces.ServicioUsuario;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+/**
+ * Implementación concreta del servicio de gestión de usuarios ({@code ServicioUsuario}).
+ * <p>
+ * Maneja la lógica de negocio para el registro, la autenticación de usuarios, y la
+ * obtención de información de la cuenta, interactuando con la capa de persistencia.
+ * </p>
+ * @author Jose Berroteran
+ * @version 1.0
+ * @since 11/11/2025
+ */
 
 public class ServicioUsuarioImpl implements ServicioUsuario {
+    /** Referencia a la capa de persistencia para acceso a datos. */
     private Persistencia persistencia;
+
+    /** Formateador estándar para mostrar fechas y horas de registro de manera legible. */
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    /**
+     * Constructor por defecto. Inicializa la persistencia utilizando {@code PersistenciaJASON}.
+     * * Esto acopla la implementación directamente a un tipo de persistencia.
+     */
     public ServicioUsuarioImpl() {
         this.persistencia = new PersistenciaJASON();
     }
 
+    /**
+     * Constructor utilizado para inyección de dependencias (para pruebas o configuración modular).
+     *
+     * @param persistencia La implementación de la interfaz {@code Persistencia} a utilizar.
+     */
     public ServicioUsuarioImpl(Persistencia persistencia) {
         this.persistencia = persistencia;
     }
 
+    /**
+     * Intenta registrar un nuevo usuario en el sistema.
+     * <p>
+     * Si el email ya existe, el registro falla. En caso contrario, crea el objeto
+     * {@code Usuario} con la fecha actual y lo guarda en la persistencia.
+     * </p>
+     * @param email El correo electrónico del nuevo usuario.
+     * @param contraseniaCifrada La contraseña ya cifrada.
+     * @return {@code true} si el usuario fue registrado exitosamente, {@code false} si ya existía o falló el guardado.
+     */
     @Override
     public boolean registrarUsuario(String email, String contraseniaCifrada) {
         if (persistencia.existeUsuario(email)) {
@@ -29,23 +61,39 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
         return persistencia.guardarUsuario(nuevoUsuario);
     }
-
+    /**
+     * Verifica si las credenciales de inicio de sesión son correctas.
+     * <p>
+     * Carga el usuario por email y compara la contraseña cifrada proporcionada
+     * con la almacenada.
+     * </p>
+     * @param email El correo electrónico del usuario.
+     * @param contraseniaCifrada La contraseña ingresada por el usuario (ya cifrada).
+     * @return {@code true} si el usuario existe y las contraseñas coinciden, {@code false} en caso contrario.
+     */
     @Override
     public boolean autenticarUsuario(String email, String contraseniaCifrada) {
          Usuario usuario = persistencia.cargarUsuario(email);
          return usuario != null && usuario.getContraseniaCifrada().equals(contraseniaCifrada);
     }
-
+    /**
+     * Obtiene la fecha y hora de registro de un usuario en formato {@code ISO_LOCAL_DATE_TIME}.
+     *
+     * @param email El correo electrónico del usuario.
+     * @return La fecha de registro como String, o {@code null} si el usuario no existe.
+     */
     @Override
     public String obtenerFechaRegistro(String email) {
         Usuario usuario = persistencia.cargarUsuario(email);
         return (usuario != null) ? usuario.getFechaRegistro() : null;
     }
 
-        /**
-         * Obtiene la fecha de registro formateada legible
-         */
-
+    /**
+     * Obtiene la fecha de registro formateada de manera legible.
+     *
+     * @param email El correo electrónico del usuario.
+     * @return La fecha de registro formateada (dd/MM/yyyy HH:mm), o "No disponible" si el usuario no existe.
+     */
     @Override
     public String obtenerFechaRegistroFormateada(String email) {
         Usuario usuario = persistencia.cargarUsuario(email);
@@ -60,35 +108,44 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
             return usuario.getFechaRegistro(); // Retorna el string original si hay error
         }
     }
-
-        /**
-         * Verifica si un usuario existe
-         */
+    /**
+     * Verifica la existencia de un usuario por su correo electrónico.
+     *
+     * @param email El correo electrónico a verificar.
+     * @return {@code true} si el usuario existe, {@code false} en caso contrario.
+     */
     @Override
     public boolean existeUsuario(String email) {
         return persistencia.existeUsuario(email);
     }
 
     /**
-    * Obtiene todos los usuarios registrados
-    */
-
+     * Obtiene la lista completa de todos los usuarios registrados en el sistema.
+     *
+     * @return Una {@code List} de todos los objetos {@code Usuario}.
+     */
     @Override
     public List<Usuario> obtenerTodosUsuarios() {
         return persistencia.cargarTodosUsuarios();
     }
 
     /**
-    * Obtiene un usuario específico por email
-    \*/
+     * Obtiene un usuario específico utilizando su correo electrónico.
+     *
+     * @param email El correo electrónico del usuario.
+     * @return El objeto {@code Usuario} si se encuentra, o {@code null} si no existe.
+     */
     @Override
     public Usuario obtenerUsuario(String email) {
         return persistencia.cargarUsuario(email);
     }
 
     /**
-     * Obtiene información completa del usuario formateada
-     * */
+     * Obtiene información básica completa del usuario formateada en una cadena de texto.
+     *
+     * @param email El correo electrónico del usuario.
+     * @return Una cadena con el email y la fecha de registro formateada, o un mensaje si el usuario no es encontrado.
+     */
     @Override
     public String obtenerInformacionUsuario(String email) {
         Usuario usuario = persistencia.cargarUsuario(email);
@@ -104,7 +161,9 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
     }
 
     /**
-     * Obtiene estadísticas de usuarios
+     * Genera un resumen estadístico de los usuarios, incluyendo el total y los últimos 5 registrados.
+     *
+     * @return Una cadena con las estadísticas formateadas.
      */
     @Override
     public String obtenerEstadisticasUsuarios() {

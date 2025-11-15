@@ -1,11 +1,39 @@
 package Main.modelo.Transferencia;
-
+/**
+ * Objeto de Transferencia de Datos (DTO) que encapsula el resultado final y las métricas
+ * de rendimiento de una partida de Maze Hunter.
+ * <p>
+ * Se utiliza para comunicar los datos resumidos de la partida a la capa de presentación
+ * y para crear objetos de tipo {@code EstadisticasJuego} para la persistencia.
+ * </p>
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 11/11/2025
+ */
 public class ResultadoJuego {
+    /**
+     * El tiempo total transcurrido en la partida, medido en segundos.
+     */
     private long tiempoSegundos;
+    /**
+     * La cantidad de ítems de cristal recolectados por el jugador.
+     */
     private int cristalesRecolectados;
+    /**
+     * El número de veces que el jugador activó una trampa.
+     */
     private int trampasActivadas;
+    /**
+     * La cantidad de vida que le restaba al jugador al finalizar la partida.
+     */
     private int vidaRestante;
+    /**
+     * La dimensión del laberinto en el que se jugó la partida ).
+     */
     private String tamanioLaberinto;
+    /**
+     * Indica si la partida terminó en victoria ({@code true}) o derrota ({@code false}).
+     */
     private boolean ganado;
 
     //Getters y Setters
@@ -57,7 +85,11 @@ public class ResultadoJuego {
     public void setGanado(boolean ganado) {
         this.ganado = ganado;
     }
-
+    /**
+     * Proporciona una representación legible y formateada del resultado del juego.
+     *
+     * @return Una cadena de texto que detalla las métricas clave de la partida.
+     */
     @Override
     public String toString() {
         return String.format(
