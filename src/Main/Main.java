@@ -16,6 +16,7 @@ import Main.servicio.Interfaces.ServicioUsuario;
 import Main.ui.consola.RenderizadorLaberinto;
 import Main.ui.util.ConsoleUtils;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -348,13 +349,14 @@ public class Main {
                     continue;
 
                 case 'q': // ✅ SALIR SIN GUARDAR - CORREGIDO
-                    ConsoleUtils.mostrarAdvertencia("🚪 Saliendo sin guardar el progreso...");
+                    ConsoleUtils.mostrarAdvertencia("🚪 Saliendo sin guardar...");
                     ConsoleUtils.mostrarMensaje("⚠️  Tu progreso actual se perderá.");
                     ConsoleUtils.mostrarMensaje("¿Estás seguro? (s/n)");
                     char confirmacion = ConsoleUtils.leerCaracter("");
 
                     if (Character.toLowerCase(confirmacion) == 's') {
-                        // ✅ NO llamar a ningún método de guardado
+                        // ✅ ELIMINAR EL ARCHIVO GUARDADO para este usuario
+                        eliminarJuegoGuardado(juego.getUsuario());
                         ConsoleUtils.mostrarMensaje("❌ Progreso descartado. ¡Vuelve pronto, Hunter!");
                         jugando = false;
                     } else {
@@ -434,6 +436,24 @@ public class Main {
             case 'a': return Direccion.IZQUIERDA;
             case 'd': return Direccion.DERECHA;
             default: return Direccion.ARRIBA;
+        }
+    }
+
+    private static void eliminarJuegoGuardado(String usuario) {
+        try {
+            String archivoJuego = "datos/juegos/" + usuario + ".json";
+            File archivo = new File(archivoJuego);
+
+            if (archivo.exists()) {
+                boolean eliminado = archivo.delete();
+                if (eliminado) {
+                    System.out.println("✅ Juego guardado eliminado: " + archivoJuego);
+                } else {
+                    System.err.println("❌ No se pudo eliminar el juego guardado");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error eliminando juego guardado: " + e.getMessage());
         }
     }
 
