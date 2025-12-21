@@ -1,7 +1,7 @@
 package Main.modelo.Transferencia;
 
 import Main.modelo.Dominio.Usuario;
-import Main.servicio.Implementaciones.CifradorImpl;
+
 import Main.servicio.Implementaciones.PersistenciaJASON;
 import Main.servicio.Implementaciones.ServicioUsuarioImpl;
 import Main.servicio.Interfaces.Cifrador;
@@ -11,17 +11,22 @@ import Main.ui.util.ValidadorEmail;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.*;
-import java.util.regex.Pattern;
+
 import java.util.Base64;
+
 /**
  * Define la capa de presentación que maneja la interacción con el usuario para
  * el registro, autenticación y gestión de cuentas.
  * <p>
- * Actúa como un punto de control que utiliza los servicios de dominio ({@code ServicioUsuario})
- * y las utilidades de validación para interactuar con el usuario a través de la consola.
- * * Esta clase también implementa los métodos de cifrado para manejar directamente
+ * Actúa como un punto de control que utiliza los servicios de dominio
+ * ({@code ServicioUsuario})
+ * y las utilidades de validación para interactuar con el usuario a través de la
+ * consola.
+ * * Esta clase también implementa los métodos de cifrado para manejar
+ * directamente
  * la lógica de seguridad durante el registro e inicio de sesión.*
  * </p>
+ * 
  * @author Jose Berroteran
  * @version 1.0
  * @since 11/11/2025
@@ -31,24 +36,31 @@ public class SistemaUsuario implements Cifrador {
     private ServicioUsuario servicioUsuario;
     /** Scanner para capturar la entrada de datos del usuario desde la consola. */
     private Scanner scanner;
-    /** Instancia del implementador de cifrado (aunque la lógica está duplicada aquí, esta es la referencia). */
-    private CifradorImpl cifrador;
+
     /** Utilidad para validar y solicitar el correo electrónico al usuario. */
     ValidadorEmail validadorEmail = new ValidadorEmail();
-    /** Utilidad para validar, solicitar y gestionar la recuperación de la contraseña. */
+    /**
+     * Utilidad para validar, solicitar y gestionar la recuperación de la
+     * contraseña.
+     */
     ValidadorContrasenia validadorContrasenia = new ValidadorContrasenia();
-    /** Instancia de la persistencia para acceder directamente a la carga de usuarios (usada en recuperación). */
+    /**
+     * Instancia de la persistencia para acceder directamente a la carga de usuarios
+     * (usada en recuperación).
+     */
     PersistenciaJASON persistencia = new PersistenciaJASON();
 
-    //METODOS DE CIFRADOR
+    // METODOS DE CIFRADOR
     /** La clave secreta fija utilizada para el cifrado AES. */
     private static final String CLAVE_CIFRADO = "MiClaveSecreta12";
+
     /**
      * Cifra una cadena de texto plano (contraseña) utilizando el algoritmo AES.
      * * Es la implementación directa del metodo de la interfaz {@code Cifrador}.
      *
      * @param contrasenia La contraseña original en texto legible.
-     * @return La contraseña cifrada y codificada en Base64, o {@code null} si el cifrado falla.
+     * @return La contraseña cifrada y codificada en Base64, o {@code null} si el
+     *         cifrado falla.
      */
     public String cifrarContrasenia(String contrasenia) {
         try {
@@ -61,12 +73,14 @@ public class SistemaUsuario implements Cifrador {
             return null;
         }
     }
+
     /**
      * Descifra una cadena de texto cifrado (contraseña) codificada en Base64.
      * * Es la implementación directa del metodo de la interfaz {@code Cifrador}.
      *
      * @param contraseniaCifrada La contraseña almacenada y cifrada.
-     * @return La contraseña original en texto plano, o {@code null} si el descifrado falla.
+     * @return La contraseña original en texto plano, o {@code null} si el
+     *         descifrado falla.
      */
     public String descifrarContrasenia(String contraseniaCifrada) {
         try {
@@ -82,11 +96,13 @@ public class SistemaUsuario implements Cifrador {
     }
 
     /**
-     * Recupera la contraseña cifrada almacenada para un usuario específico utilizando la persistencia.
+     * Recupera la contraseña cifrada almacenada para un usuario específico
+     * utilizando la persistencia.
      * * Es la implementación directa del metodo de la interfaz {@code Cifrador}.
      *
      * @param email El correo electrónico del usuario.
-     * @return La contraseña cifrada del usuario si existe, o {@code null} si el usuario no es encontrado.
+     * @return La contraseña cifrada del usuario si existe, o {@code null} si el
+     *         usuario no es encontrado.
      */
     public String recuperarContraseniaCifrada(String email) {
         Usuario usuario = persistencia.cargarUsuario(email);
@@ -100,22 +116,25 @@ public class SistemaUsuario implements Cifrador {
     public SistemaUsuario() {
         this.servicioUsuario = new ServicioUsuarioImpl();
         this.scanner = new Scanner(System.in);
-        this.cifrador = new CifradorImpl();
+
     }
 
     // METODO PRINCIPAL - Registro de usuario
     /**
-     * Guía al usuario a través del proceso de registro, validando el email y la contraseña,
+     * Guía al usuario a través del proceso de registro, validando el email y la
+     * contraseña,
      * cifrando la contraseña y guardando el usuario.
      *
-     * @return {@code true} si el usuario fue registrado exitosamente, {@code false} en caso contrario.
+     * @return {@code true} si el usuario fue registrado exitosamente, {@code false}
+     *         en caso contrario.
      */
     public boolean registrarUsuario() {
         System.out.println("\n=== REGISTRO DE USUARIO ===");
 
         // 1. Validar email
         String email = validadorEmail.solicitarEmail();
-        if (email == null) return false;
+        if (email == null)
+            return false;
 
         // 2. Verificar si el email ya existe
         if (servicioUsuario.existeUsuario(email)) {
@@ -130,7 +149,8 @@ public class SistemaUsuario implements Cifrador {
 
         // 3. Validar contraseña
         String contrasenia = validadorContrasenia.solicitarContrasenia();
-        if (contrasenia == null) return false;
+        if (contrasenia == null)
+            return false;
 
         // 4. Cifrar contraseña
         String contraseniaCifrada = cifrarContrasenia(contrasenia);
@@ -154,9 +174,11 @@ public class SistemaUsuario implements Cifrador {
 
     // METODO PARA AUTENTICAR
     /**
-     * Solicita los Datos al usuario y verifica su existencia y validez de contraseña.
+     * Solicita los Datos al usuario y verifica su existencia y validez de
+     * contraseña.
      *
-     * @return {@code true} si las credenciales son correctas y el usuario está autenticado, {@code false} en caso contrario.
+     * @return {@code true} si las credenciales son correctas y el usuario está
+     *         autenticado, {@code false} en caso contrario.
      */
     public boolean autenticarUsuario() {
         System.out.println("\n=== INICIAR SESIÓN ===");

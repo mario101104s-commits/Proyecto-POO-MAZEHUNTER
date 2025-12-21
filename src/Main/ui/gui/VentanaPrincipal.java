@@ -22,14 +22,13 @@ import javafx.stage.Stage;
 
 public class VentanaPrincipal {
 
-    private Stage stage;
     private BorderPane root;
     private ControladorAutenticacion controladorAuth;
     private ControladorJuego controladorJuego;
     private Usuario usuarioActual;
 
     public VentanaPrincipal(Stage stage) {
-        this.stage = stage;
+
         this.root = new BorderPane();
         inicializarControladores();
         mostrarPantallaLogin();

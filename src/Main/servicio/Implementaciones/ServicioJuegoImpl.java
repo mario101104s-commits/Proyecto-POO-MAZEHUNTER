@@ -5,7 +5,7 @@ import Main.modelo.Constantes.EstadoJuego;
 import Main.modelo.Constantes.TipoCelda;
 import Main.modelo.Dominio.*;
 import Main.modelo.Transferencia.ResultadoJuego;
-import Main.servicio.Interfaces.GeneradorLaberinto;
+
 import Main.servicio.Interfaces.Persistencia;
 import Main.servicio.Interfaces.ServicioJuego;
 
@@ -32,8 +32,6 @@ public class ServicioJuegoImpl implements ServicioJuego {
      * Interfaz de persistencia utilizada para guardar y cargar juegos/estadísticas.
      */
     private Persistencia persistencia;
-    /** Interfaz para la generación de laberintos. */
-    private GeneradorLaberinto generadorLaberinto;
 
     /**
      * Constructor. Inicializa el servicio de juego con la dependencia de
@@ -43,7 +41,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
      */
     public ServicioJuegoImpl(Persistencia persistencia) {
         this.persistencia = persistencia;
-        this.generadorLaberinto = new GeneradorLaberintoImpl();
+
     }
 
     /**
@@ -227,7 +225,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // MANEJO ESPECÍFICO PARA TRAMPAS - SIN DEBUG
         if (celda.getTipo() == TipoCelda.TRAMPA) {
             // 1. Activar efecto en jugador
-            int vidaAntes = jugador.getVida();
+
             jugador.activarTrampa();
 
             // 2. Incrementar contador SILENCIOSAMENTE
@@ -280,6 +278,8 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 juego.incrementarLlavesExplosionRecolectadasTotal(); // Registrar estadística
                 System.out.println("🔑 ¡Llave de explosión obtenida! Total: " + jugador.getLlavesExplosion());
                 celda.setTipo(TipoCelda.CAMINO);
+                break;
+            default:
                 break;
         }
     }

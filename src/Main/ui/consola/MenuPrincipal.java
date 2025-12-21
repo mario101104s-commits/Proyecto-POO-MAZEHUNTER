@@ -211,7 +211,7 @@ public class MenuPrincipal {
 
                 // Calcular promedios
                 double promedioCristales = (double) totalCristales / estadisticas.size();
-                double promedioTrampas = (double) totalTrampas / estadisticas.size();
+
                 double promedioTiempo = (double) totalTiempo / estadisticas.size();
                 double tasaVictorias = (partidasGanadas * 100.0) / estadisticas.size();
 

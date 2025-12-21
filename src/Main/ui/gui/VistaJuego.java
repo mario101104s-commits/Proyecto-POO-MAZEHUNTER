@@ -7,7 +7,7 @@ import Main.modelo.Dominio.Celda;
 import Main.modelo.Dominio.Juego;
 import Main.modelo.Dominio.Jugador;
 import Main.modelo.Dominio.Laberinto;
-import javafx.application.Platform;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -21,7 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+
 import javafx.scene.paint.Color;
 import java.util.Optional;
 
@@ -238,6 +238,8 @@ public class VistaJuego extends BorderPane {
                 }
             }
             case ESCAPE -> mostrarMenuPausa();
+            default -> {
+            }
         }
 
         if (movio) {
