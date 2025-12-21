@@ -58,6 +58,16 @@ public class ControladorJuego {
         return GeneradorLaberintoFactory.getRangoColumnas(dificultad);
     }
 
+    // Genera un número aleatorio de filas según la dificultad
+    public int generarFilasAleatorias(String dificultad) {
+        return GeneradorLaberintoFactory.generarFilasAleatorias(dificultad);
+    }
+
+    // Genera un número aleatorio de columnas según la dificultad
+    public int generarColumnasAleatorias(String dificultad) {
+        return GeneradorLaberintoFactory.generarColumnasAleatorias(dificultad);
+    }
+
     // ===== MÉTODOS DE JUEGO =====
 
     // Inicia un nuevo juego con las dimensiones especificadas usando la estrategia

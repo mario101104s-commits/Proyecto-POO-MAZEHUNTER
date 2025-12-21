@@ -3,9 +3,13 @@ package Main.estrategia.factory;
 import Main.estrategia.generacion.GeneradorLaberintoDificultad;
 import Main.servicio.Interfaces.GeneradorLaberinto;
 
+import java.util.Random;
+
 // Factory para crear estrategias de generación de laberintos
-// Sistema de dificultades definitivo
+// Sistema de dificultades definitivo con generación aleatoria de dimensiones
 public class GeneradorLaberintoFactory {
+
+    private static Random random = new Random();
 
     // Tipos de dificultad disponibles
     public static final String FACIL = "FACIL";
@@ -63,6 +67,34 @@ public class GeneradorLaberintoFactory {
                 return "36-65";
             default:
                 return "26-35";
+        }
+    }
+
+    // Genera un número aleatorio de filas según la dificultad
+    public static int generarFilasAleatorias(String dificultad) {
+        switch (dificultad.toUpperCase()) {
+            case FACIL:
+                return 5 + random.nextInt(11); // 5-15
+            case MEDIA:
+                return 16 + random.nextInt(10); // 16-25
+            case DIFICIL:
+                return 26 + random.nextInt(20); // 26-45
+            default:
+                return 16 + random.nextInt(10); // 16-25
+        }
+    }
+
+    // Genera un número aleatorio de columnas según la dificultad
+    public static int generarColumnasAleatorias(String dificultad) {
+        switch (dificultad.toUpperCase()) {
+            case FACIL:
+                return 10 + random.nextInt(16); // 10-25
+            case MEDIA:
+                return 26 + random.nextInt(10); // 26-35
+            case DIFICIL:
+                return 36 + random.nextInt(30); // 36-65
+            default:
+                return 26 + random.nextInt(10); // 26-35
         }
     }
 }
