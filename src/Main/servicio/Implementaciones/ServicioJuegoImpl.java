@@ -175,6 +175,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         jugador.setVida(Math.max(0, jugador.getVida() - 35));
         jugador.decrementarBombas();
         jugador.decrementarLlavesExplosion();
+        juego.incrementarLlavesExplosionUsadas(); // Registrar estadística
 
         // Destruir muros rojos adyacentes
         destruirMurosRojosAdyacentes(juego);
@@ -190,8 +191,11 @@ public class ServicioJuegoImpl implements ServicioJuego {
         int y = juego.getJugador().getPosY();
         Laberinto lab = juego.getLaberinto();
 
-        // Arriba, Abajo, Izquierda, Derecha
-        int[][] direcciones = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+        // 8 Direcciones: Arriba, Abajo, Izquierda, Derecha y Diagonales
+        int[][] direcciones = {
+                { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 },
+                { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }
+        };
 
         for (int[] dir : direcciones) {
             int nx = x + dir[0];
@@ -203,6 +207,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
                     celda.setTipo(TipoCelda.CAMINO);
                     celda.setVisitada(true);
                     celda.setVisible(true);
+                    juego.incrementarMurosRojosDestruidos(); // Registrar estadística
                 }
             }
         }
@@ -265,12 +270,14 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
             case BOMBA:
                 jugador.recolectarBomba();
+                juego.incrementarBombasRecolectadasTotal(); // Registrar estadística
                 System.out.println("💣 ¡Bomba recolectada! Total: " + jugador.getBombas());
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
 
             case LLAVE_EXPLOSION:
                 jugador.recolectarLlaveExplosion();
+                juego.incrementarLlavesExplosionRecolectadasTotal(); // Registrar estadística
                 System.out.println("🔑 ¡Llave de explosión obtenida! Total: " + jugador.getLlavesExplosion());
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
@@ -367,6 +374,11 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 juego.getLaberinto().getFilas() + "x" + juego.getLaberinto().getColumnas());
         resultado.setGanado(juego.getEstado() == EstadoJuego.GANADO);
 
+        // Nuevas estadísticas
+        resultado.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
+        resultado.setMurosDestruidos(juego.getMurosRojosDestruidos());
+        resultado.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
+
         // Guardar estadísticas
         EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), juego.getFin());
         estadisticas.setTiempoSegundos(duracion.getSeconds());
@@ -375,6 +387,11 @@ public class ServicioJuegoImpl implements ServicioJuego {
         estadisticas.setVidaRestante(juego.getJugador().getVida());
         estadisticas.setTamanioLaberinto(resultado.getTamanioLaberinto());
         estadisticas.setGanado(resultado.isGanado());
+
+        // Nuevas estadísticas en persistencia
+        estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
+        estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
+        estadisticas.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
 
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);
@@ -449,6 +466,11 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 juego.getLaberinto().getFilas() + "x" + juego.getLaberinto().getColumnas());
         resultado.setGanado(false); // No ganó porque salió
 
+        // Nuevas estadísticas
+        resultado.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
+        resultado.setMurosDestruidos(juego.getMurosRojosDestruidos());
+        resultado.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
+
         // Guardar estadísticas parciales
         EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), ahora);
         estadisticas.setTiempoSegundos(duracion.getSeconds());
@@ -457,6 +479,11 @@ public class ServicioJuegoImpl implements ServicioJuego {
         estadisticas.setVidaRestante(juego.getJugador().getVida());
         estadisticas.setTamanioLaberinto(resultado.getTamanioLaberinto());
         estadisticas.setGanado(false);
+
+        // Nuevas estadísticas en persistencia
+        estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
+        estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
+        estadisticas.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
 
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);

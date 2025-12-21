@@ -2,12 +2,16 @@ package Main.modelo.Dominio;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 /**
- * Almacena los datos de rendimiento clave y el resultado final de una partida de Maze Hunter.
- *<p>
- * Esta clase es utilizada por el sistema de persistencia para guardar un registro
+ * Almacena los datos de rendimiento clave y el resultado final de una partida
+ * de Maze Hunter.
+ * <p>
+ * Esta clase es utilizada por el sistema de persistencia para guardar un
+ * registro
  * historico de las partidas jugadas por cada usuario.
- *</p>
+ * </p>
+ * 
  * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
@@ -27,7 +31,8 @@ public class EstadisticasJuego {
      */
     private long tiempoSegundos;
     /**
-     * Número de items de cristal que el jugador logro recolectar durante la partida.
+     * Número de items de cristal que el jugador logro recolectar durante la
+     * partida.
      */
     private int cristalesRecolectados;
     /**
@@ -44,24 +49,33 @@ public class EstadisticasJuego {
      */
     private String tamanioLaberinto;
     /**
-     * Indica si la partida termino en victoria ({@code true}) o derrota ({@code false}).
+     * Indica si la partida termino en victoria ({@code true}) o derrota
+     * ({@code false}).
      */
     private boolean ganado;
 
+    // Nuevas estadísticas
+    private int bombasRecolectadas;
+    private int murosDestruidos;
+    private int llavesExplosionUsadas;
+
     /**
-     * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la fecha.
+     * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la
+     * fecha.
      *
-     * Los demas campos de rendimiento deben ser establecidos posteriormente a traves de sus setters.
+     * Los demas campos de rendimiento deben ser establecidos posteriormente a
+     * traves de sus setters.
      *
      * @param usuario El email del usuario que jugo la partida.
-     * @param fecha La marca de tiempo del inicio o fin del registro de estadísticas.
+     * @param fecha   La marca de tiempo del inicio o fin del registro de
+     *                estadísticas.
      */
     public EstadisticasJuego(String usuario, LocalDateTime fecha) {
         this.usuario = usuario;
         this.fecha = fecha;
     }
 
-    //Getters y Setters
+    // Getters y Setters
 
     public String getUsuario() {
         return usuario;
@@ -127,6 +141,30 @@ public class EstadisticasJuego {
         this.ganado = ganado;
     }
 
+    public int getBombasRecolectadas() {
+        return bombasRecolectadas;
+    }
+
+    public void setBombasRecolectadas(int bombasRecolectadas) {
+        this.bombasRecolectadas = bombasRecolectadas;
+    }
+
+    public int getMurosDestruidos() {
+        return murosDestruidos;
+    }
+
+    public void setMurosDestruidos(int murosDestruidos) {
+        this.murosDestruidos = murosDestruidos;
+    }
+
+    public int getLlavesExplosionUsadas() {
+        return llavesExplosionUsadas;
+    }
+
+    public void setLlavesExplosionUsadas(int llavesExplosionUsadas) {
+        this.llavesExplosionUsadas = llavesExplosionUsadas;
+    }
+
     /**
      * Formatea la fecha de la partida a un formato de cadena legible.
      *
@@ -138,9 +176,11 @@ public class EstadisticasJuego {
     }
 
     /**
-     * Proporciona una representacion en cadena concisa de las estadísticas principales.
+     * Proporciona una representacion en cadena concisa de las estadísticas
+     * principales.
      *
-     * @return Un string con el resumen de la fecha, el resultado, el tamaño del laberinto y los cristales recolectados.
+     * @return Un string con el resumen de la fecha, el resultado, el tamaño del
+     *         laberinto y los cristales recolectados.
      */
     @Override
     public String toString() {
@@ -149,7 +189,7 @@ public class EstadisticasJuego {
                 getFechaFormateada(),
                 ganado ? "GANADO" : "PERDIDO",
                 tamanioLaberinto,
-                "Cristales: " + cristalesRecolectados
-        );
+                "Cristales: " + cristalesRecolectados + " | Bombas: " + bombasRecolectadas +
+                        " | Muros: " + murosDestruidos);
     }
 }

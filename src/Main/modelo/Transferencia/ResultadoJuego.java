@@ -1,11 +1,15 @@
 package Main.modelo.Transferencia;
+
 /**
- * Objeto de Transferencia de Datos (DTO) que encapsula el resultado final y las métricas
+ * Objeto de Transferencia de Datos (DTO) que encapsula el resultado final y las
+ * métricas
  * de rendimiento de una partida de Maze Hunter.
  * <p>
- * Se utiliza para comunicar los datos resumidos de la partida a la capa de presentación
+ * Se utiliza para comunicar los datos resumidos de la partida a la capa de
+ * presentación
  * y para crear objetos de tipo {@code EstadisticasJuego} para la persistencia.
  * </p>
+ * 
  * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
@@ -32,11 +36,17 @@ public class ResultadoJuego {
      */
     private String tamanioLaberinto;
     /**
-     * Indica si la partida terminó en victoria ({@code true}) o derrota ({@code false}).
+     * Indica si la partida terminó en victoria ({@code true}) o derrota
+     * ({@code false}).
      */
     private boolean ganado;
 
-    //Getters y Setters
+    // Nuevas estadísticas
+    private int bombasRecolectadas;
+    private int murosDestruidos;
+    private int llavesExplosionUsadas;
+
+    // Getters y Setters
 
     public long getTiempoSegundos() {
         return tiempoSegundos;
@@ -85,6 +95,31 @@ public class ResultadoJuego {
     public void setGanado(boolean ganado) {
         this.ganado = ganado;
     }
+
+    public int getBombasRecolectadas() {
+        return bombasRecolectadas;
+    }
+
+    public void setBombasRecolectadas(int bombasRecolectadas) {
+        this.bombasRecolectadas = bombasRecolectadas;
+    }
+
+    public int getMurosDestruidos() {
+        return murosDestruidos;
+    }
+
+    public void setMurosDestruidos(int murosDestruidos) {
+        this.murosDestruidos = murosDestruidos;
+    }
+
+    public int getLlavesExplosionUsadas() {
+        return llavesExplosionUsadas;
+    }
+
+    public void setLlavesExplosionUsadas(int llavesExplosionUsadas) {
+        this.llavesExplosionUsadas = llavesExplosionUsadas;
+    }
+
     /**
      * Proporciona una representación legible y formateada del resultado del juego.
      *
@@ -99,13 +134,14 @@ public class ResultadoJuego {
                         "💀 Trampas: %d\n" +
                         "❤️  Vida: %d%%\n" +
                         "📏 Tamaño: %s\n" +
+                        "💣 Bombas: %d\n" +
+                        "💥 Muros destruidos: %d\n" +
+                        "🔑 Llaves usadas: %d\n" +
                         "🏆 Estado: %s",
                 tiempoSegundos, cristalesRecolectados, trampasActivadas,
-                vidaRestante, tamanioLaberinto, ganado ? "GANADO" : "PERDIDO"
-        );
+                vidaRestante, tamanioLaberinto, bombasRecolectadas, murosDestruidos, llavesExplosionUsadas,
+                ganado ? "GANADO" : "PERDIDO");
     }
 
     ;
 }
-
-

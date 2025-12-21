@@ -53,6 +53,12 @@ public class Juego {
      */
     private boolean nieblaDeGuerra;
 
+    // Estadísticas acumulativas
+    private int bombasRecolectadasTotal;
+    private int llavesExplosionRecolectadasTotal;
+    private int llavesExplosionUsadas;
+    private int murosRojosDestruidos;
+
     /**
      * Construye una nueva instancia de Juego, inicializando los componentes
      * principales.
@@ -72,7 +78,13 @@ public class Juego {
         this.inicio = inicio;
         this.estado = EstadoJuego.EN_CURSO;
         this.trampasActivadas = 0;
+        this.trampasActivadas = 0;
         this.nieblaDeGuerra = true; // Por defecto activada
+
+        this.bombasRecolectadasTotal = 0;
+        this.llavesExplosionRecolectadasTotal = 0;
+        this.llavesExplosionUsadas = 0;
+        this.murosRojosDestruidos = 0;
     }
 
     public Laberinto getLaberinto() {
@@ -144,5 +156,37 @@ public class Juego {
      */
     public void incrementarTrampasActivadas() {
 
+    }
+
+    public int getBombasRecolectadasTotal() {
+        return bombasRecolectadasTotal;
+    }
+
+    public void incrementarBombasRecolectadasTotal() {
+        this.bombasRecolectadasTotal++;
+    }
+
+    public int getLlavesExplosionRecolectadasTotal() {
+        return llavesExplosionRecolectadasTotal;
+    }
+
+    public void incrementarLlavesExplosionRecolectadasTotal() {
+        this.llavesExplosionRecolectadasTotal++;
+    }
+
+    public int getLlavesExplosionUsadas() {
+        return llavesExplosionUsadas;
+    }
+
+    public void incrementarLlavesExplosionUsadas() {
+        this.llavesExplosionUsadas++;
+    }
+
+    public int getMurosRojosDestruidos() {
+        return murosRojosDestruidos;
+    }
+
+    public void incrementarMurosRojosDestruidos() {
+        this.murosRojosDestruidos++;
     }
 }
