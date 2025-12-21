@@ -5,13 +5,17 @@ import Main.modelo.Dominio.Jugador;
 import Main.modelo.Dominio.Laberinto;
 
 /**
- * Clase de utilidad para la Interfaz de Usuario (UI) que se encarga de renderizar
- * visualmente el estado del laberinto, la información del jugador y los controles
+ * Clase de utilidad para la Interfaz de Usuario (UI) que se encarga de
+ * renderizar
+ * visualmente el estado del laberinto, la información del jugador y los
+ * controles
  * en la consola.
  * <p>
- * Utiliza los símbolos de las celdas y la posición del jugador para crear la vista
+ * Utiliza los símbolos de las celdas y la posición del jugador para crear la
+ * vista
  * del juego, aplicando el concepto de campo de visión limitado.
  * </p>
+ * 
  * @author Mario Sanchez
  * @version 1.0
  * @since 2025-11-15
@@ -21,11 +25,13 @@ public class RenderizadorLaberinto {
      * Muestra el laberinto en la consola, aplicando el campo de visión (solo celdas
      * visibles o visitadas) y marcando la posición actual del jugador (@).
      *
-     * @param laberinto El objeto {@code Laberinto} a renderizar.
-     * @param jugador El objeto {@code Jugador} para determinar su posición.
+     * @param laberinto      El objeto {@code Laberinto} a renderizar.
+     * @param jugador        El objeto {@code Jugador} para determinar su posición.
+     * @param nieblaDeGuerra Si es true, aplica niebla de guerra; si es false,
+     *                       muestra todo.
      */
 
-    public void mostrarLaberinto(Laberinto laberinto, Jugador jugador) {
+    public void mostrarLaberinto(Laberinto laberinto, Jugador jugador, boolean nieblaDeGuerra) {
         System.out.println("\n=== 🗺️  LABERINTO ===");
         mostrarLeyenda();
         System.out.println("=====================================");
@@ -37,14 +43,17 @@ public class RenderizadorLaberinto {
                 // Si el jugador está en esta celda, mostrar jugador
                 if (i == jugador.getPosX() && j == jugador.getPosY()) {
                     System.out.print("@ ");
+                } else if (!nieblaDeGuerra) {
+                    // Sin niebla de guerra: mostrar todo
+                    System.out.print(celda.getSimbolo() + " ");
                 } else if (celda.isVisible()) {
-                    // Mostrar celda visible
+                    // Con niebla: mostrar celda visible
                     System.out.print(celda.getSimbolo() + " ");
                 } else if (celda.isVisitada()) {
-                    // Mostrar celda visitada pero no visible actualmente
+                    // Con niebla: mostrar celda visitada pero no visible actualmente
                     System.out.print(". ");
                 } else {
-                    // Celda no explorada
+                    // Con niebla: celda no explorada
                     System.out.print("? ");
                 }
             }
@@ -88,7 +97,8 @@ public class RenderizadorLaberinto {
     }
 
     /**
-     * Muestra la vista completa del laberinto, sin aplicar restricciones de visibilidad.
+     * Muestra la vista completa del laberinto, sin aplicar restricciones de
+     * visibilidad.
      * * Útil para la función de "mapa completo".
      *
      * @param laberinto El objeto {@code Laberinto} a renderizar.

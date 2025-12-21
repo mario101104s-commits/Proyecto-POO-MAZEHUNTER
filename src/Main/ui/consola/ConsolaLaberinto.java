@@ -27,7 +27,7 @@ public class ConsolaLaberinto {
             ConsoleUtils.limpiarConsola();
 
             // Mostrar interfaz de juego
-            renderizador.mostrarLaberinto(juego.getLaberinto(), juego.getJugador());
+            renderizador.mostrarLaberinto(juego.getLaberinto(), juego.getJugador(), juego.isNieblaDeGuerra());
             mostrarEstadoJugador(juego);
             mostrarControles();
 

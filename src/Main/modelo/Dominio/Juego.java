@@ -3,6 +3,7 @@ package Main.modelo.Dominio;
 import Main.modelo.Constantes.EstadoJuego;
 
 import java.time.LocalDateTime;
+
 /**
  * Representa una partida activa o finalizada de Maze Hunter, encapsulando
  * el estado del laberinto, el jugador y los metadatos de la sesión.
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * Esta clase sirve como el modelo principal que se guarda y se recupera
  * para la persistencia del juego.
  * </p>
+ * 
  * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
@@ -29,11 +31,13 @@ public class Juego {
      */
     private String usuario;
     /**
-     * La marca de tiempo que indica cuándo inicio la partida (si no es {@code null}).
+     * La marca de tiempo que indica cuándo inicio la partida (si no es
+     * {@code null}).
      */
     private LocalDateTime inicio;
     /**
-     * La marca de tiempo que indica cuándo finalizó la partida (si no es {@code null}).
+     * La marca de tiempo que indica cuándo finalizó la partida (si no es
+     * {@code null}).
      */
     private LocalDateTime fin;
     /**
@@ -45,14 +49,21 @@ public class Juego {
      */
     private int trampasActivadas;
     /**
-     * Construye una nueva instancia de Juego, inicializando los componentes principales.
+     * Indica si el juego tiene niebla de guerra activada (true) o no (false).
+     */
+    private boolean nieblaDeGuerra;
+
+    /**
+     * Construye una nueva instancia de Juego, inicializando los componentes
+     * principales.
      * <p>
      * El estado inicial es {@code EN_CURSO} y el contador de trampas es cero.
      * </p>
+     * 
      * @param laberinto La estructura del laberinto generada.
-     * @param jugador La instancia del jugador con sus atributos iniciales.
-     * @param usuario El correo electrónico del usuario que está jugando.
-     * @param inicio La marca de tiempo del inicio de la partida.
+     * @param jugador   La instancia del jugador con sus atributos iniciales.
+     * @param usuario   El correo electrónico del usuario que está jugando.
+     * @param inicio    La marca de tiempo del inicio de la partida.
      */
     public Juego(Laberinto laberinto, Jugador jugador, String usuario, LocalDateTime inicio) {
         this.laberinto = laberinto;
@@ -61,6 +72,7 @@ public class Juego {
         this.inicio = inicio;
         this.estado = EstadoJuego.EN_CURSO;
         this.trampasActivadas = 0;
+        this.nieblaDeGuerra = true; // Por defecto activada
     }
 
     public Laberinto getLaberinto() {
@@ -118,6 +130,15 @@ public class Juego {
     public void setTrampasActivadas(int trampasActivadas) {
         this.trampasActivadas = trampasActivadas;
     }
+
+    public boolean isNieblaDeGuerra() {
+        return nieblaDeGuerra;
+    }
+
+    public void setNieblaDeGuerra(boolean nieblaDeGuerra) {
+        this.nieblaDeGuerra = nieblaDeGuerra;
+    }
+
     /**
      * Incrementa el contador de trampas activadas en uno.
      */
