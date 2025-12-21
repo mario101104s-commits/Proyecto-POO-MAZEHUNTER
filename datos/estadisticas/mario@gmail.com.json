@@ -1,0 +1,12 @@
+[
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T14:14:57.515934",
+    "tiempoSegundos": 35,
+    "cristalesRecolectados": 3,
+    "trampasActivadas": 2,
+    "vidaRestante": 70,
+    "tamanioLaberinto": "8x8",
+    "ganado": true
+  }
+]
