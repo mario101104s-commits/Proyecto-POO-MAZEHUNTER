@@ -62,23 +62,58 @@ public class MenuPrincipal {
         ConsoleUtils.mostrarMensaje("=== 🎮 NUEVA AVENTURA EN EL TEMPLO ===");
 
         try {
-            ConsoleUtils.mostrarMensaje("🏗️  Configuración del laberinto mágico:");
-            int filas = ConsoleUtils.leerEntero("Filas (8-15 recomendado): ");
-            int columnas = ConsoleUtils.leerEntero("Columnas (8-15 recomendado): ");
+            // Selección de dificultad
+            ConsoleUtils.mostrarMensaje("\n🎯 Seleccione la dificultad:");
+            ConsoleUtils
+                    .mostrarMensaje("1. 🟢 FÁCIL   - Filas: 5-15,  Columnas: 10-25  | Trampas: 2-3,  Energías: 2-3");
+            ConsoleUtils
+                    .mostrarMensaje("2. 🟡 MEDIA   - Filas: 16-25, Columnas: 26-35  | Trampas: 4-5,  Energías: 4-5");
+            ConsoleUtils
+                    .mostrarMensaje("3. 🔴 DIFÍCIL - Filas: 26-45, Columnas: 36-65  | Trampas: 6-18, Energías: 6-18");
 
-            // Validar dimensiones
-            if (!controladorJuego.validarDimensiones(filas, columnas)) {
-                ConsoleUtils.mostrarError("❌ El laberinto debe ser entre 5x5 y 20x20.");
-                ConsoleUtils.pausar();
-                return;
+            int opcionDificultad = ConsoleUtils.leerEntero("\nOpción (1-3): ");
+
+            String dificultad;
+            switch (opcionDificultad) {
+                case 1:
+                    dificultad = "FACIL";
+                    break;
+                case 2:
+                    dificultad = "MEDIA";
+                    break;
+                case 3:
+                    dificultad = "DIFICIL";
+                    break;
+                default:
+                    ConsoleUtils.mostrarAdvertencia("Opción inválida, usando MEDIA por defecto");
+                    dificultad = "MEDIA";
             }
 
+            // Establecer la dificultad en el controlador
+            controladorJuego.setEstrategiaGeneracion(dificultad);
+            ConsoleUtils.mostrarExito("\n✅ " + controladorJuego.getDescripcionEstrategia());
+
+            // Obtener rangos válidos para la dificultad seleccionada
+            String rangoFilas = controladorJuego.getRangoFilas(dificultad);
+            String rangoColumnas = controladorJuego.getRangoColumnas(dificultad);
+
+            ConsoleUtils.mostrarMensaje("\n🏗️  Configuración del laberinto:");
+            ConsoleUtils.mostrarMensaje("📏 Filas permitidas: " + rangoFilas);
+            ConsoleUtils.mostrarMensaje("📐 Columnas permitidas: " + rangoColumnas);
+
+            int filas = ConsoleUtils.leerEntero("\nNúmero de filas: ");
+            int columnas = ConsoleUtils.leerEntero("Número de columnas: ");
+
+            // El generador validará las dimensiones automáticamente
             Juego juego = controladorJuego.iniciarNuevoJuego(filas, columnas, emailUsuario);
             ConsoleUtils.mostrarExito("🔮 ¡Laberinto mágico generado! El templo te espera...");
             ConsoleUtils.pausar();
 
             consolaLaberinto.jugarPartida(juego);
 
+        } catch (IllegalArgumentException e) {
+            ConsoleUtils.mostrarError("❌ " + e.getMessage());
+            ConsoleUtils.pausar();
         } catch (Exception e) {
             ConsoleUtils.mostrarError("Error al crear la aventura: " + e.getMessage());
             ConsoleUtils.pausar();
