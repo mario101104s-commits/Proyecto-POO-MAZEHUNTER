@@ -91,6 +91,11 @@ public class ControladorJuego {
         return servicioJuego.moverJugador(juego, direccion);
     }
 
+    // Intenta activar una explosión para destruir muros rojos
+    public boolean activarExplosion(Juego juego) {
+        return servicioJuego.activarExplosion(juego);
+    }
+
     // Guarda el estado actual del juego
     public boolean guardarJuego(Juego juego) {
         return servicioJuego.guardarJuego(juego);

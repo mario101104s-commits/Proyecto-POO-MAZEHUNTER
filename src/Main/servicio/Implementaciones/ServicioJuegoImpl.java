@@ -162,6 +162,52 @@ public class ServicioJuegoImpl implements ServicioJuego {
         return true;
     }
 
+    @Override
+    public boolean activarExplosion(Juego juego) {
+        Jugador jugador = juego.getJugador();
+
+        // Validar requisitos
+        if (jugador.getLlavesExplosion() < 1 || jugador.getBombas() < 1) {
+            return false;
+        }
+
+        // Aplicar costos
+        jugador.setVida(Math.max(0, jugador.getVida() - 35));
+        jugador.decrementarBombas();
+        jugador.decrementarLlavesExplosion();
+
+        // Destruir muros rojos adyacentes
+        destruirMurosRojosAdyacentes(juego);
+
+        // Guardar estado
+        guardarJuego(juego);
+
+        return true;
+    }
+
+    private void destruirMurosRojosAdyacentes(Juego juego) {
+        int x = juego.getJugador().getPosX();
+        int y = juego.getJugador().getPosY();
+        Laberinto lab = juego.getLaberinto();
+
+        // Arriba, Abajo, Izquierda, Derecha
+        int[][] direcciones = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+
+        for (int[] dir : direcciones) {
+            int nx = x + dir[0];
+            int ny = y + dir[1];
+
+            if (lab.esPosicionValida(nx, ny)) {
+                Celda celda = lab.getCelda(nx, ny);
+                if (celda.getTipo() == TipoCelda.MURO_ROJO) {
+                    celda.setTipo(TipoCelda.CAMINO);
+                    celda.setVisitada(true);
+                    celda.setVisible(true);
+                }
+            }
+        }
+    }
+
     /**
      * Ejecuta la lógica correspondiente al tipo de celda en la que cae el jugador.
      *
@@ -214,6 +260,18 @@ public class ServicioJuegoImpl implements ServicioJuego {
             case VIDA:
                 jugador.setVida(Math.min(100, jugador.getVida() + 25)); // ✅ NO EXCEDER 100
                 System.out.println("➕ ¡Vida extra! Vida: " + jugador.getVida() + "%");
+                celda.setTipo(TipoCelda.CAMINO);
+                break;
+
+            case BOMBA:
+                jugador.recolectarBomba();
+                System.out.println("💣 ¡Bomba recolectada! Total: " + jugador.getBombas());
+                celda.setTipo(TipoCelda.CAMINO);
+                break;
+
+            case LLAVE_EXPLOSION:
+                jugador.recolectarLlaveExplosion();
+                System.out.println("🔑 ¡Llave de explosión obtenida! Total: " + jugador.getLlavesExplosion());
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
         }

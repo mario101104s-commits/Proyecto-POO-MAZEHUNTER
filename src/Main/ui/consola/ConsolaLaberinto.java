@@ -79,6 +79,22 @@ public class ConsolaLaberinto {
                     }
                     break;
 
+                case 'k': // Activar explosión
+                    boolean explosionExitosa = controladorJuego.activarExplosion(juego);
+
+                    if (explosionExitosa) {
+                        ConsoleUtils.mostrarExito("💥 ¡EXPLOSIÓN! Muros rojos destruidos");
+                        ConsoleUtils.mostrarAdvertencia("⚡ -35 vida | -1 bomba | -1 llave");
+                    } else {
+                        if (juego.getJugador().getLlavesExplosion() < 1) {
+                            ConsoleUtils.mostrarError("❌ Necesitas una llave de explosión");
+                        } else if (juego.getJugador().getBombas() < 1) {
+                            ConsoleUtils.mostrarError("❌ Necesitas una bomba");
+                        }
+                    }
+                    ConsoleUtils.pausar();
+                    continue;
+
                 default:
                     ConsoleUtils.mostrarError("❌ Movimiento inválido. Use las teclas mágicas correctas.");
                     ConsoleUtils.pausar();
@@ -100,6 +116,8 @@ public class ConsolaLaberinto {
         System.out.println("❤️  Vida: " + juego.getJugador().getVida() + "%");
         System.out.println("💎 Cristales: " + juego.getJugador().getCristales());
         System.out.println("🗝️  Llave: " + (juego.getJugador().isTieneLlave() ? "SÍ ✅" : "NO ❌"));
+        System.out.println("💣 Bombas: " + juego.getJugador().getBombas());
+        System.out.println("🔑 Llaves explosión: " + juego.getJugador().getLlavesExplosion());
         System.out.println("💀 Trampas activadas: " + juego.getTrampasActivadas());
 
         // Barra de vida visual
@@ -123,6 +141,7 @@ public class ConsolaLaberinto {
         System.out.println("S - ↓ Mover hacia abajo");
         System.out.println("D - → Mover hacia derecha");
         System.out.println("M - 🗺️  Ver mapa completo del templo");
+        System.out.println("K - 💥 Activar explosión (requiere bomba + llave)");
         System.out.println("G - 💾 Guardar y salir (guarda progreso)");
         System.out.println("Q - 🚪 Salir sin guardar (pierde progreso)");
         System.out.println("============================");

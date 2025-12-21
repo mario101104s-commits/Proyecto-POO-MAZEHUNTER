@@ -39,12 +39,20 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
                 if (random.nextDouble() < 0.6) {
                     celdas[i][j] = new Celda(TipoCelda.CAMINO, i, j);
                 } else {
-                    celdas[i][j] = new Celda(TipoCelda.MURO, i, j);
+                    // Determinar si es muro normal o rojo (solo en interior)
+                    boolean esBorde = (i == 0 || i == filas - 1 || j == 0 || j == columnas - 1);
+                    if (esBorde) {
+                        celdas[i][j] = new Celda(TipoCelda.MURO, i, j);
+                    } else {
+                        // 30% muros rojos, 70% muros normales
+                        TipoCelda tipoMuro = (random.nextDouble() < 0.3) ? TipoCelda.MURO_ROJO : TipoCelda.MURO;
+                        celdas[i][j] = new Celda(tipoMuro, i, j);
+                    }
                 }
             }
         }
 
-        // Asegurar bordes
+        // Asegurar bordes con muros normales
         for (int i = 0; i < filas; i++) {
             celdas[i][0].setTipo(TipoCelda.MURO);
             celdas[i][columnas - 1].setTipo(TipoCelda.MURO);
@@ -129,37 +137,49 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
         // Calcular cantidades según dificultad y filas
         int numTrampas = calcularTrampas(filas);
         int numEnergias = calcularEnergias(filas);
+        int numBombas = calcularBombas();
+        int numLlavesExplosion = calcularLlavesExplosion();
         int numCristales = Math.max(5, posicionesCaminos.size() / 15); // Cristales proporcionales
 
         // Colocar cristales
+        int contadorPos = 1;
         for (int i = 0; i < numCristales; i++) {
-            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, i + 1);
-            if (pos != null) {
+            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+            if (pos != null)
                 celdas[pos[0]][pos[1]].setTipo(TipoCelda.CRISTAL);
-            }
         }
 
         // Colocar trampas
         for (int i = 0; i < numTrampas; i++) {
-            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, i + numCristales + 1);
-            if (pos != null) {
+            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+            if (pos != null)
                 celdas[pos[0]][pos[1]].setTipo(TipoCelda.TRAMPA);
-            }
         }
 
-        // Colocar llave
-        int[] posLlave = encontrarPosicionValida(celdas, posicionesCaminos, numCristales + numTrampas + 1);
-        if (posLlave != null) {
+        // Colocar llave salida
+        int[] posLlave = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+        if (posLlave != null)
             celdas[posLlave[0]][posLlave[1]].setTipo(TipoCelda.LLAVE);
-        }
 
         // Colocar energías
         for (int i = 0; i < numEnergias; i++) {
-            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos,
-                    numCristales + numTrampas + 1 + i);
-            if (pos != null) {
+            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+            if (pos != null)
                 celdas[pos[0]][pos[1]].setTipo(TipoCelda.ENERGIA);
-            }
+        }
+
+        // Colocar bombas
+        for (int i = 0; i < numBombas; i++) {
+            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.BOMBA);
+        }
+
+        // Colocar llaves de explosión
+        for (int i = 0; i < numLlavesExplosion; i++) {
+            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.LLAVE_EXPLOSION);
         }
     }
 
@@ -192,6 +212,32 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
                 if (filas >= 31 && filas <= 40)
                     return 12;
                 return 18; // 41-45
+            default:
+                return 3;
+        }
+    }
+
+    private int calcularBombas() {
+        switch (dificultad.toUpperCase()) {
+            case "FACIL":
+                return 5;
+            case "MEDIA":
+                return 15;
+            case "DIFICIL":
+                return 20;
+            default:
+                return 15;
+        }
+    }
+
+    private int calcularLlavesExplosion() {
+        switch (dificultad.toUpperCase()) {
+            case "FACIL":
+                return 1;
+            case "MEDIA":
+                return 3;
+            case "DIFICIL":
+                return 4;
             default:
                 return 3;
         }

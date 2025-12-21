@@ -66,7 +66,8 @@ public class RenderizadorLaberinto {
      * * Metodo auxiliar privado.
      */
     private void mostrarLeyenda() {
-        System.out.println("Leyenda: @ Tú | # Muro | . Camino | C Cristal | T Trampa");
+        System.out.println("Leyenda: @ Tú | # Muro | % Muro Rojo | . Camino");
+        System.out.println("         C Cristal | T Trampa | B Bomba | K Llave Exp");
         System.out.println("         L Llave | X Salida | E Energía | + Vida | ? No explorado");
     }
 
@@ -122,9 +123,10 @@ public class RenderizadorLaberinto {
      * * Metodo auxiliar privado.
      */
     private void mostrarLeyendaCompleta() {
-        System.out.println("# Muro        . Camino      @ Jugador     C Cristal");
-        System.out.println("T Trampa      L Llave       X Salida      S Entrada");
-        System.out.println("E Energía     + Vida extra");
+        System.out.println("# Muro        % Muro Rojo   . Camino      @ Jugador");
+        System.out.println("C Cristal     T Trampa      B Bomba       K Llave Exp");
+        System.out.println("L Llave       X Salida      S Entrada     E Energía");
+        System.out.println("+ Vida extra");
     }
 
     /**

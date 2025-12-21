@@ -19,6 +19,8 @@ public interface ServicioJuego {
 
     boolean moverJugador(Juego juego, Direccion direccion);
 
+    boolean activarExplosion(Juego juego);
+
     boolean guardarJuego(Juego juego);
 
     ResultadoJuego terminarJuego(Juego juego);

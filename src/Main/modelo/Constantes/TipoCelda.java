@@ -1,11 +1,13 @@
 package Main.modelo.Constantes;
 
 /**
- * Esta clase define los diferentes tipo de celdas que puede componer el laberinto.
+ * Esta clase define los diferentes tipo de celdas que puede componer el
+ * laberinto.
  * <p>
  * Cada constante almacena propiedades clave como el simbolo que representa,
  * si es transitable y una descripcion para el usuario.
  * </p>
+ * 
  * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
@@ -32,14 +34,21 @@ public enum TipoCelda {
     /** El punto de inicio del jugador en el laberinto. */
     ENTRADA('S', true, "Entrada"),
     /** La posición actual del jugador en el mapa. */
-    JUGADOR('@', true, "Jugador");
+    JUGADOR('@', true, "Jugador"),
+    /** Bomba que se puede recolectar para usar en explosiones. */
+    BOMBA('B', true, "Bomba"),
+    /** Muro rojo que puede ser destruido con explosiones. */
+    MURO_ROJO('%', false, "Muro rojo"),
+    /** Llave de explosión necesaria para activar bombas. */
+    LLAVE_EXPLOSION('K', true, "Llave de explosión");
 
     /**
      * El carácter que se utiliza para dibujar la celda en la consola.
      */
     private final char simbolo;
     /**
-     * Indica si el jugador puede moverse a esta celda (true) o si es un muro (false).
+     * Indica si el jugador puede moverse a esta celda (true) o si es un muro
+     * (false).
      */
     private final boolean transitable;
     /**
@@ -50,7 +59,7 @@ public enum TipoCelda {
     /**
      * Constructor para inicializar un tipo de celda con sus propiedades.
      *
-     * @param simbolo El carácter de representación en el mapa.
+     * @param simbolo     El carácter de representación en el mapa.
      * @param transitable Indica si el jugador puede pasar sobre esta celda.
      * @param descripcion La explicación del tipo de celda.
      */
@@ -59,19 +68,26 @@ public enum TipoCelda {
         this.transitable = transitable;
         this.descripcion = descripcion;
     }
+
     /**
      * @return El carácter que representa esta celda en la consola.
      */
-    public char getSimbolo() { return simbolo; }
+    public char getSimbolo() {
+        return simbolo;
+    }
 
     /**
-     * @return {@code true} si la celda permite el paso del jugador, {@code false} si es un muro.
+     * @return {@code true} si la celda permite el paso del jugador, {@code false}
+     *         si es un muro.
      */
-    public boolean isTransitable() { return transitable; }
+    public boolean isTransitable() {
+        return transitable;
+    }
 
     /**
      * @return La descripción detallada del tipo de celda.
      */
-    public String getDescripcion() { return descripcion; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 }
-
