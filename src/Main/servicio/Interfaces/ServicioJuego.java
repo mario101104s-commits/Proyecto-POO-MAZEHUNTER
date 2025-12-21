@@ -1,5 +1,6 @@
 package Main.servicio.Interfaces;
 
+import Main.estrategia.contexto.ConfiguracionJuego;
 import Main.modelo.Dominio.EstadisticasJuego;
 import Main.modelo.Dominio.Juego;
 import Main.modelo.Constantes.Direccion;
@@ -10,7 +11,7 @@ import java.util.List;
 // Define el contrato de la capa de servicio para gestión del juego
 public interface ServicioJuego {
 
-    Juego iniciarNuevoJuego(int filas, int columnas, String usuario);
+    Juego iniciarNuevoJuego(int filas, int columnas, String usuario, ConfiguracionJuego configuracion);
 
     Juego cargarJuegoGuardado(String usuario);
 

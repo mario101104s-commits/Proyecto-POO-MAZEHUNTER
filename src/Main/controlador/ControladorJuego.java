@@ -1,5 +1,7 @@
 package Main.controlador;
 
+import Main.estrategia.contexto.ConfiguracionJuego;
+import Main.estrategia.factory.GeneradorLaberintoFactory;
 import Main.modelo.Constantes.Direccion;
 import Main.modelo.Constantes.EstadoJuego;
 import Main.modelo.Dominio.EstadisticasJuego;
@@ -10,16 +12,58 @@ import Main.servicio.Interfaces.ServicioJuego;
 import java.util.List;
 
 // Controlador que maneja toda la lógica del juego
+// Integrado con patrón Strategy para generación de laberintos
 public class ControladorJuego {
     private ServicioJuego servicioJuego;
+    private ConfiguracionJuego configuracionJuego;
 
     public ControladorJuego(ServicioJuego servicioJuego) {
         this.servicioJuego = servicioJuego;
+        this.configuracionJuego = new ConfiguracionJuego();
     }
 
-    // Inicia un nuevo juego con las dimensiones especificadas
+    // ===== MÉTODOS PARA PATRÓN STRATEGY =====
+
+    // Cambia la estrategia de generación de laberintos
+    public void setEstrategiaGeneracion(String tipo) {
+        configuracionJuego.setEstrategiaGeneracion(tipo);
+    }
+
+    // Obtiene la descripción de la estrategia actual
+    public String getDescripcionEstrategia() {
+        return configuracionJuego.getDescripcionActual();
+    }
+
+    // Obtiene el tipo actual de estrategia
+    public String getTipoEstrategiaActual() {
+        return configuracionJuego.getTipoActual();
+    }
+
+    // Obtiene todas las estrategias disponibles
+    public String[] getEstrategiasDisponibles() {
+        return new String[] {
+                GeneradorLaberintoFactory.FACIL,
+                GeneradorLaberintoFactory.MEDIA,
+                GeneradorLaberintoFactory.DIFICIL
+        };
+    }
+
+    // Obtiene los rangos de filas para una dificultad
+    public String getRangoFilas(String dificultad) {
+        return GeneradorLaberintoFactory.getRangoFilas(dificultad);
+    }
+
+    // Obtiene los rangos de columnas para una dificultad
+    public String getRangoColumnas(String dificultad) {
+        return GeneradorLaberintoFactory.getRangoColumnas(dificultad);
+    }
+
+    // ===== MÉTODOS DE JUEGO =====
+
+    // Inicia un nuevo juego con las dimensiones especificadas usando la estrategia
+    // actual
     public Juego iniciarNuevoJuego(int filas, int columnas, String emailUsuario) {
-        return servicioJuego.iniciarNuevoJuego(filas, columnas, emailUsuario);
+        return servicioJuego.iniciarNuevoJuego(filas, columnas, emailUsuario, configuracionJuego);
     }
 
     // Carga un juego guardado

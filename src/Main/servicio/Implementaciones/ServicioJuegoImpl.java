@@ -59,13 +59,15 @@ public class ServicioJuegoImpl implements ServicioJuego {
      *                                  el laberinto generado.
      */
     @Override
-    public Juego iniciarNuevoJuego(int filas, int columnas, String usuario) {
+    public Juego iniciarNuevoJuego(int filas, int columnas, String usuario,
+            Main.estrategia.contexto.ConfiguracionJuego configuracion) {
         // Validar tamaño mínimo
         if (filas < 5 || columnas < 5) {
             throw new IllegalArgumentException("El laberinto debe ser de al menos 5x5");
         }
 
-        Laberinto laberinto = generadorLaberinto.generar(filas, columnas);
+        // Usar la estrategia de generación de la configuración
+        Laberinto laberinto = configuracion.generarLaberinto(filas, columnas);
 
         // Encontrar posición de entrada para el jugador
         int[] posicionInicial = encontrarPosicionEntrada(laberinto);
