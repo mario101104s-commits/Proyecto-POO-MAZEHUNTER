@@ -16,6 +16,7 @@ import java.util.List;
 public class ControladorJuego {
     private ServicioJuego servicioJuego;
     private ConfiguracionJuego configuracionJuego;
+    private Juego juegoActual;
 
     public ControladorJuego(ServicioJuego servicioJuego) {
         this.servicioJuego = servicioJuego;
@@ -73,12 +74,18 @@ public class ControladorJuego {
     // Inicia un nuevo juego con las dimensiones especificadas usando la estrategia
     // actual
     public Juego iniciarNuevoJuego(int filas, int columnas, String emailUsuario) {
-        return servicioJuego.iniciarNuevoJuego(filas, columnas, emailUsuario, configuracionJuego);
+        this.juegoActual = servicioJuego.iniciarNuevoJuego(filas, columnas, emailUsuario, configuracionJuego);
+        return this.juegoActual;
     }
 
     // Carga un juego guardado
     public Juego cargarJuegoGuardado(String emailUsuario) {
-        return servicioJuego.cargarJuegoGuardado(emailUsuario);
+        this.juegoActual = servicioJuego.cargarJuegoGuardado(emailUsuario);
+        return this.juegoActual;
+    }
+
+    public Juego getJuego() {
+        return this.juegoActual;
     }
 
     // Verifica si existe un juego guardado

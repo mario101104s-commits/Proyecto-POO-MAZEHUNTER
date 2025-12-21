@@ -35,6 +35,11 @@ public class ControladorAutenticacion {
         return null;
     }
 
+    // Obtiene un usuario por su email
+    public Usuario obtenerUsuario(String email) {
+        return servicioUsuario.obtenerUsuario(email);
+    }
+
     // Registra un nuevo usuario
     public boolean registrarUsuario(String email, String contrasenia) {
         if (servicioUsuario.existeUsuario(email)) {
