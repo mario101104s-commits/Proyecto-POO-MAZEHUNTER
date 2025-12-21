@@ -166,12 +166,20 @@ public class Juego {
         this.bombasRecolectadasTotal++;
     }
 
+    public void setBombasRecolectadasTotal(int bombasRecolectadasTotal) {
+        this.bombasRecolectadasTotal = bombasRecolectadasTotal;
+    }
+
     public int getLlavesExplosionRecolectadasTotal() {
         return llavesExplosionRecolectadasTotal;
     }
 
     public void incrementarLlavesExplosionRecolectadasTotal() {
         this.llavesExplosionRecolectadasTotal++;
+    }
+
+    public void setLlavesExplosionRecolectadasTotal(int llavesExplosionRecolectadasTotal) {
+        this.llavesExplosionRecolectadasTotal = llavesExplosionRecolectadasTotal;
     }
 
     public int getLlavesExplosionUsadas() {
@@ -182,11 +190,19 @@ public class Juego {
         this.llavesExplosionUsadas++;
     }
 
+    public void setLlavesExplosionUsadas(int llavesExplosionUsadas) {
+        this.llavesExplosionUsadas = llavesExplosionUsadas;
+    }
+
     public int getMurosRojosDestruidos() {
         return murosRojosDestruidos;
     }
 
     public void incrementarMurosRojosDestruidos() {
         this.murosRojosDestruidos++;
+    }
+
+    public void setMurosRojosDestruidos(int murosRojosDestruidos) {
+        this.murosRojosDestruidos = murosRojosDestruidos;
     }
 }

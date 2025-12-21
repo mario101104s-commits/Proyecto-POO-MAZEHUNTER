@@ -7,7 +7,10 @@
     "trampasActivadas": 2,
     "vidaRestante": 70,
     "tamanioLaberinto": "8x8",
-    "ganado": true
+    "ganado": true,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "llavesExplosionUsadas": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -17,7 +20,10 @@
     "trampasActivadas": 1,
     "vidaRestante": 80,
     "tamanioLaberinto": "6x6",
-    "ganado": true
+    "ganado": true,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "llavesExplosionUsadas": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -27,7 +33,10 @@
     "trampasActivadas": 2,
     "vidaRestante": 45,
     "tamanioLaberinto": "5x10",
-    "ganado": true
+    "ganado": true,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "llavesExplosionUsadas": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -37,6 +46,22 @@
     "trampasActivadas": 1,
     "vidaRestante": 55,
     "tamanioLaberinto": "10x15",
-    "ganado": true
+    "ganado": true,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "llavesExplosionUsadas": 0
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T17:47:37.132676",
+    "tiempoSegundos": 194,
+    "cristalesRecolectados": 6,
+    "trampasActivadas": 4,
+    "vidaRestante": 0,
+    "tamanioLaberinto": "16x31",
+    "ganado": false,
+    "bombasRecolectadas": 5,
+    "murosDestruidos": 3,
+    "llavesExplosionUsadas": 2
   }
 ]
