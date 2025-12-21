@@ -93,19 +93,32 @@ public class MenuPrincipal {
             controladorJuego.setEstrategiaGeneracion(dificultad);
             ConsoleUtils.mostrarExito("\n✅ " + controladorJuego.getDescripcionEstrategia());
 
-            // Obtener rangos válidos para la dificultad seleccionada
-            String rangoFilas = controladorJuego.getRangoFilas(dificultad);
-            String rangoColumnas = controladorJuego.getRangoColumnas(dificultad);
+            // Preguntar sobre niebla de guerra
+            ConsoleUtils.mostrarMensaje("\n🌫️  ¿Desea jugar con niebla de guerra?");
+            ConsoleUtils.mostrarMensaje("(La niebla oculta las zonas no exploradas con '?')");
+            ConsoleUtils.mostrarMensaje("1. Sí - Con niebla de guerra (🌫️  más desafío)");
+            ConsoleUtils.mostrarMensaje("2. No - Sin niebla de guerra (🗺️  ver todo el mapa)");
 
-            ConsoleUtils.mostrarMensaje("\n🏗️  Configuración del laberinto:");
-            ConsoleUtils.mostrarMensaje("📏 Filas permitidas: " + rangoFilas);
-            ConsoleUtils.mostrarMensaje("📐 Columnas permitidas: " + rangoColumnas);
+            int opcionNiebla = ConsoleUtils.leerEntero("\nOpción (1-2): ");
+            boolean nieblaDeGuerra = (opcionNiebla == 1);
 
-            int filas = ConsoleUtils.leerEntero("\nNúmero de filas: ");
-            int columnas = ConsoleUtils.leerEntero("Número de columnas: ");
+            if (nieblaDeGuerra) {
+                ConsoleUtils.mostrarExito("✅ Niebla de guerra activada - ¡Explora con cuidado!");
+            } else {
+                ConsoleUtils.mostrarExito("✅ Niebla de guerra desactivada - Verás todo el mapa");
+            }
+
+            // Generar dimensiones aleatorias según la dificultad
+            int filas = controladorJuego.generarFilasAleatorias(dificultad);
+            int columnas = controladorJuego.generarColumnasAleatorias(dificultad);
+
+            ConsoleUtils.mostrarMensaje("\n🏗️  Generando laberinto...");
+            ConsoleUtils.mostrarExito("📏 Dimensiones generadas: " + filas + " filas x " + columnas + " columnas");
+            ConsoleUtils.pausar();
 
             // El generador validará las dimensiones automáticamente
             Juego juego = controladorJuego.iniciarNuevoJuego(filas, columnas, emailUsuario);
+            juego.setNieblaDeGuerra(nieblaDeGuerra); // Establecer la configuración de niebla
             ConsoleUtils.mostrarExito("🔮 ¡Laberinto mágico generado! El templo te espera...");
             ConsoleUtils.pausar();
 

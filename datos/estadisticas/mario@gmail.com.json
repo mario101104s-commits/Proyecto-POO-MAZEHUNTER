@@ -18,5 +18,15 @@
     "vidaRestante": 80,
     "tamanioLaberinto": "6x6",
     "ganado": true
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T17:27:50.43083",
+    "tiempoSegundos": 73,
+    "cristalesRecolectados": 5,
+    "trampasActivadas": 2,
+    "vidaRestante": 45,
+    "tamanioLaberinto": "5x10",
+    "ganado": true
   }
 ]

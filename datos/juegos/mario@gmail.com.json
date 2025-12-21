@@ -43,6 +43,34 @@
           "columna": 5,
           "visitada": false,
           "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 0,
+          "columna": 6,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 0,
+          "columna": 7,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 0,
+          "columna": 8,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 0,
+          "columna": 9,
+          "visitada": false,
+          "visible": true
         }
       ],
       [
@@ -61,224 +89,292 @@
           "visible": true
         },
         {
-          "tipo": "MURO",
+          "tipo": "CAMINO",
           "fila": 1,
           "columna": 2,
-          "visitada": false,
+          "visitada": true,
           "visible": true
         },
         {
-          "tipo": "CAMINO",
+          "tipo": "MURO",
           "fila": 1,
           "columna": 3,
-          "visitada": true,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 1,
-          "columna": 4,
-          "visitada": true,
+          "visitada": false,
           "visible": true
         },
         {
           "tipo": "ENTRADA",
           "fila": 1,
+          "columna": 4,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 1,
           "columna": 5,
           "visitada": true,
-          "visible": true
-        }
-      ],
-      [
-        {
-          "tipo": "MURO",
-          "fila": 2,
-          "columna": 0,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 2,
-          "columna": 1,
-          "visitada": true,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 2,
-          "columna": 2,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 2,
-          "columna": 3,
-          "visitada": true,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 2,
-          "columna": 4,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 2,
-          "columna": 5,
-          "visitada": true,
-          "visible": true
-        }
-      ],
-      [
-        {
-          "tipo": "MURO",
-          "fila": 3,
-          "columna": 0,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 3,
-          "columna": 1,
-          "visitada": true,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 3,
-          "columna": 2,
-          "visitada": true,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 3,
-          "columna": 3,
-          "visitada": true,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 3,
-          "columna": 4,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 3,
-          "columna": 5,
-          "visitada": true,
-          "visible": true
-        }
-      ],
-      [
-        {
-          "tipo": "MURO",
-          "fila": 4,
-          "columna": 0,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 4,
-          "columna": 1,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 4,
-          "columna": 2,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 4,
-          "columna": 3,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "MURO",
-          "fila": 4,
-          "columna": 4,
-          "visitada": false,
-          "visible": true
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 4,
-          "columna": 5,
-          "visitada": true,
-          "visible": true
-        }
-      ],
-      [
-        {
-          "tipo": "MURO",
-          "fila": 5,
-          "columna": 0,
-          "visitada": false,
-          "visible": false
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 5,
-          "columna": 1,
-          "visitada": false,
-          "visible": false
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 5,
-          "columna": 2,
-          "visitada": false,
-          "visible": false
-        },
-        {
-          "tipo": "CRISTAL",
-          "fila": 5,
-          "columna": 3,
-          "visitada": false,
-          "visible": false
-        },
-        {
-          "tipo": "CAMINO",
-          "fila": 5,
-          "columna": 4,
-          "visitada": false,
           "visible": true
         },
         {
           "tipo": "SALIDA",
-          "fila": 5,
+          "fila": 1,
+          "columna": 6,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 1,
+          "columna": 7,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 1,
+          "columna": 8,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 1,
+          "columna": 9,
+          "visitada": false,
+          "visible": true
+        }
+      ],
+      [
+        {
+          "tipo": "MURO",
+          "fila": 2,
+          "columna": 0,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
+          "columna": 1,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
+          "columna": 2,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
+          "columna": 3,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
+          "columna": 4,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
           "columna": 5,
           "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
+          "columna": 6,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 2,
+          "columna": 7,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 2,
+          "columna": 8,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 2,
+          "columna": 9,
+          "visitada": false,
+          "visible": true
+        }
+      ],
+      [
+        {
+          "tipo": "MURO",
+          "fila": 3,
+          "columna": 0,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 1,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 2,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 3,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 4,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 5,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 6,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 7,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "CAMINO",
+          "fila": 3,
+          "columna": 8,
+          "visitada": true,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 3,
+          "columna": 9,
+          "visitada": false,
+          "visible": true
+        }
+      ],
+      [
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 0,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 1,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 2,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 3,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 4,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 5,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 6,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 7,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 8,
+          "visitada": false,
+          "visible": true
+        },
+        {
+          "tipo": "MURO",
+          "fila": 4,
+          "columna": 9,
+          "visitada": false,
           "visible": true
         }
       ]
     ],
-    "filas": 6,
-    "columnas": 6
+    "filas": 5,
+    "columnas": 10
   },
   "jugador": {
-    "vida": 80,
-    "cristales": 0,
+    "vida": 45,
+    "cristales": 5,
     "tieneLlave": true,
-    "posX": 5,
-    "posY": 5
+    "posX": 1,
+    "posY": 6
   },
   "usuario": "mario@gmail.com",
-  "inicio": "2025-12-21T15:37:21.019225",
-  "fin": "2025-12-21T15:37:40.932067",
+  "inicio": "2025-12-21T17:26:37.059444",
+  "fin": "2025-12-21T17:27:50.430830",
   "estado": "GANADO",
-  "trampasActivadas": 1
+  "trampasActivadas": 2
 }
