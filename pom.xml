@@ -30,6 +30,20 @@
             <version>${javafx.version}</version>
         </dependency>
 
+        <!-- JavaFX Graphics (Contiene Canvas) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- JavaFX Base -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
         <!-- Google Gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
