@@ -62,5 +62,3 @@ La transición de consola a GUI se realizó manteniendo la coherencia estética 
 - **Solubilidad (BFS)**: Se añadió un algoritmo de *Breadth-First Search* en el generador para garantizar que cada laberinto tenga al menos una ruta válida hacia la salida.
 - **Timer en Tiempo Real**: Implementación de un `Timeline` que actualiza el HUD cada segundo, calculando la duración desde el inicio de la partida.
 
----
-*Documento generado por Antigravity para el proyecto Maze Hunter.*

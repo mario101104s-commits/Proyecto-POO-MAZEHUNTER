@@ -118,26 +118,13 @@ Proyecto-POO-MAZEHUNTER/
    - Refactorización a **Maven** para una gestión profesional de dependencias.
    - Creación del tema visual **"Lost Temple"**.
    - Garantía de solubilidad mediante algoritmos de grafos (**BFS**).
+   - Implementación del patrón **Strategy** para la generación de laberintos.
+   - Implementación del patrón **DTO** para la persistencia de datos.
 
 ---
 
-## 🚀 Mejoras Futuras (Roadmap)
 
-- [ ] **Modo Multijugador**: Cooperativo o competitivo en red local.
-- [ ] **Editor de Niveles**: Herramienta para que los usuarios creen sus propios templos.
-- [ ] **Sistema de Sonido**: Efectos ambientales y música dinámica.
-- [ ] **Enemigos Inteligentes**: Implementación de algoritmos de persecución (A*).
-- [ ] **Logros y Trofeos**: Sistema de recompensas por objetivos cumplidos.
 
----
-
-## 👥 Equipo de Desarrollo
-
-- **Mario Sanchez** - *Arquitectura, GUI & Lógica de Solubilidad*
-- **Jose Berroteran** - *Lógica de Dominio & Entidades*
-- **Niyerlin Muñoz** - *Persistencia & Control de Calidad*
-
----
 
 ## 📝 Licencia y Versión
 **Versión 2.0 (Beta)** - Diciembre 2025.
