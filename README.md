@@ -123,9 +123,21 @@ Proyecto-POO-MAZEHUNTER/
 
 ---
 
+## 🛡️ Mecánicas de Supervivencia
 
+Para dominar el Templo Perdido, es vital entender cómo interactúan tus recursos:
+- **Gestión de Energía**: Cada paso consume una pequeña cantidad de energía. Si se agota, tu velocidad se reducirá drásticamente y comenzarás a perder vida por agotamiento. ¡Busca los rayos ⚡ para recargar!
+- **Salud y Trampas**: Las trampas 💀 están ocultas en las sombras. Si caes en una, perderás una porción de vida. Puedes recuperar salud recolectando corazones ❤️ esparcidos por el laberinto.
+- **Uso Táctico de Bombas**: No desperdicies tus fósforos 🔥. Úsalos solo cuando un muro rojo % bloquee el camino más corto hacia la llave o la salida.
 
+---
 
+## 📊 Sistema de Puntuación y Anales
+
+Tu desempeño se registra en los **Anales del Templo** basándose en:
+- **Cristales Recolectados**: Cada cristal 💎 otorga puntos de bonificación.
+- **Eficiencia Temporal**: El cronómetro en tiempo real no es solo decorativo; terminar el laberinto en el menor tiempo posible multiplica tu puntuación final.
+- **Dificultad**: Jugar en niveles más altos (Medio o Difícil) otorga un multiplicador de puntos base significativamente mayor.
 ## 📝 Licencia y Versión
 **Versión 2.0 (Beta)** - Diciembre 2025.
 Desarrollado para la cátedra de Programación Orientada a Objetos.
