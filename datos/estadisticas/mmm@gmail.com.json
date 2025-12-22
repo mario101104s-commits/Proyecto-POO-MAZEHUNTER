@@ -1,0 +1,15 @@
+[
+  {
+    "usuario": "mmm@gmail.com",
+    "fecha": "2025-12-21T19:25:52.764385",
+    "tiempoSegundos": 31,
+    "cristalesRecolectados": 0,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "25x31",
+    "ganado": false,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "llavesExplosionUsadas": 0
+  }
+]

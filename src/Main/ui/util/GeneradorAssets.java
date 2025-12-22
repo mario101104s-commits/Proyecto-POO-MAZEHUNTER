@@ -21,7 +21,7 @@ public class GeneradorAssets {
         generarImagen(rutaDestino + "/cristal.png", Color.MAGENTA, "💎");
         generarImagen(rutaDestino + "/bomba.png", Color.BLACK, "💣");
         generarImagen(rutaDestino + "/llave.png", Color.YELLOW, "🔑");
-        generarImagen(rutaDestino + "/llave_explosion.png", Color.ORANGE, "🗝️");
+        generarImagen(rutaDestino + "/fosforo.png", Color.ORANGE, "🗝️");
         generarImagen(rutaDestino + "/salida.png", Color.GREEN, "🚪");
         generarImagen(rutaDestino + "/trampa.png", new Color(100, 0, 0), "💀");
         generarImagen(rutaDestino + "/energia.png", Color.BLUE, "⚡");

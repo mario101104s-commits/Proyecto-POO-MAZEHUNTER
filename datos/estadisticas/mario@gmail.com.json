@@ -10,7 +10,7 @@
     "ganado": true,
     "bombasRecolectadas": 0,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -23,7 +23,7 @@
     "ganado": true,
     "bombasRecolectadas": 0,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -36,7 +36,7 @@
     "ganado": true,
     "bombasRecolectadas": 0,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -49,7 +49,7 @@
     "ganado": true,
     "bombasRecolectadas": 0,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -62,7 +62,7 @@
     "ganado": false,
     "bombasRecolectadas": 5,
     "murosDestruidos": 3,
-    "llavesExplosionUsadas": 2
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -75,7 +75,7 @@
     "ganado": false,
     "bombasRecolectadas": 2,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -88,7 +88,7 @@
     "ganado": true,
     "bombasRecolectadas": 2,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -101,7 +101,7 @@
     "ganado": true,
     "bombasRecolectadas": 0,
     "murosDestruidos": 0,
-    "llavesExplosionUsadas": 0
+    "fosforosUsados": 0
   },
   {
     "usuario": "mario@gmail.com",
@@ -114,6 +114,58 @@
     "ganado": true,
     "bombasRecolectadas": 6,
     "murosDestruidos": 3,
-    "llavesExplosionUsadas": 1
+    "fosforosUsados": 0
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T20:04:08.293083",
+    "tiempoSegundos": 28,
+    "cristalesRecolectados": 1,
+    "trampasActivadas": 1,
+    "vidaRestante": 90,
+    "tamanioLaberinto": "17x27",
+    "ganado": false,
+    "bombasRecolectadas": 1,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T20:04:23.26253",
+    "tiempoSegundos": 11,
+    "cristalesRecolectados": 0,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "19x29",
+    "ganado": false,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T20:09:09.088596",
+    "tiempoSegundos": 73,
+    "cristalesRecolectados": 9,
+    "trampasActivadas": 1,
+    "vidaRestante": 55,
+    "tamanioLaberinto": "18x27",
+    "ganado": true,
+    "bombasRecolectadas": 8,
+    "murosDestruidos": 2,
+    "fosforosUsados": 0
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T20:33:52.961871",
+    "tiempoSegundos": 62,
+    "cristalesRecolectados": 2,
+    "trampasActivadas": 0,
+    "vidaRestante": 65,
+    "tamanioLaberinto": "24x33",
+    "ganado": true,
+    "bombasRecolectadas": 4,
+    "murosDestruidos": 4,
+    "fosforosUsados": 1
   }
 ]

@@ -197,7 +197,7 @@ public class MenuPrincipal {
                     ConsoleUtils.mostrarMensaje("   ❤️  Vida final: " + stats.getVidaRestante() + "%");
                     ConsoleUtils.mostrarMensaje("   💣 Bombas: " + stats.getBombasRecolectadas());
                     ConsoleUtils.mostrarMensaje("   💥 Muros destruidos: " + stats.getMurosDestruidos());
-                    ConsoleUtils.mostrarMensaje("   🔑 Llaves usadas: " + stats.getLlavesExplosionUsadas());
+                    ConsoleUtils.mostrarMensaje("   🔑 Fósforos usados: " + stats.getFosforosUsados());
                     ConsoleUtils.mostrarMensaje("   ⏱️  Tiempo: " + stats.getTiempoSegundos() + " segundos");
                     ConsoleUtils.mostrarMensaje("   📅 Fecha: " + stats.getFechaFormateada());
                     ConsoleUtils.mostrarMensaje("   ─────────────────────────");

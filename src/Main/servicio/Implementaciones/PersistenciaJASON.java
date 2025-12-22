@@ -461,8 +461,8 @@ public class PersistenciaJASON implements Persistencia {
         private boolean nieblaDeGuerra;
         // Estadísticas acumulativas
         private int bombasRecolectadasTotal;
-        private int llavesExplosionRecolectadasTotal;
-        private int llavesExplosionUsadas;
+        private int fosforosRecolectadosTotal;
+        private int fosforosUsados;
         private int murosRojosDestruidos;
 
         public JuegoDTO(Juego juego) {
@@ -476,8 +476,8 @@ public class PersistenciaJASON implements Persistencia {
             this.nieblaDeGuerra = juego.isNieblaDeGuerra();
 
             this.bombasRecolectadasTotal = juego.getBombasRecolectadasTotal();
-            this.llavesExplosionRecolectadasTotal = juego.getLlavesExplosionRecolectadasTotal();
-            this.llavesExplosionUsadas = juego.getLlavesExplosionUsadas();
+            this.fosforosRecolectadosTotal = juego.getFosforosRecolectadosTotal();
+            this.fosforosUsados = juego.getFosforosUsados();
             this.murosRojosDestruidos = juego.getMurosRojosDestruidos();
         }
 
@@ -512,8 +512,8 @@ public class PersistenciaJASON implements Persistencia {
 
             // Asumiendo que añadiré los setters en Juego.java:
             juego.setBombasRecolectadasTotal(this.bombasRecolectadasTotal);
-            juego.setLlavesExplosionRecolectadasTotal(this.llavesExplosionRecolectadasTotal);
-            juego.setLlavesExplosionUsadas(this.llavesExplosionUsadas);
+            juego.setFosforosRecolectadosTotal(this.fosforosRecolectadosTotal);
+            juego.setFosforosUsados(this.fosforosUsados);
             juego.setMurosRojosDestruidos(this.murosRojosDestruidos);
 
             return juego;
@@ -590,7 +590,7 @@ public class PersistenciaJASON implements Persistencia {
         private int posX;
         private int posY;
         private int bombas;
-        private int llavesExplosion;
+        private int fosforos;
 
         public JugadorDTO(Jugador jugador) {
             this.vida = jugador.getVida();
@@ -599,7 +599,7 @@ public class PersistenciaJASON implements Persistencia {
             this.posX = jugador.getPosX();
             this.posY = jugador.getPosY();
             this.bombas = jugador.getBombas();
-            this.llavesExplosion = jugador.getLlavesExplosion();
+            this.fosforos = jugador.getFosforos();
         }
 
         public Jugador toJugador() {
@@ -607,7 +607,7 @@ public class PersistenciaJASON implements Persistencia {
             jugador.setPosX(posX);
             jugador.setPosY(posY);
             jugador.setBombas(bombas);
-            jugador.setLlavesExplosion(llavesExplosion);
+            jugador.setFosforos(fosforos);
             return jugador;
         }
     }

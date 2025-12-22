@@ -63,7 +63,7 @@ public class VistaJuego extends BorderPane {
     private void cargarImagenes() {
         imagenes = new HashMap<>();
         String[] nombres = { "jugador", "muro", "muro_rojo", "suelo", "cristal", "bomba",
-                "llave", "llave_explosion", "salida", "trampa", "energia", "vida", "niebla" };
+                "llave", "fosforo", "salida", "trampa", "energia", "vida", "niebla" };
 
         for (String nombre : nombres) {
             try {
@@ -190,7 +190,7 @@ public class VistaJuego extends BorderPane {
                     case CRISTAL -> imagenes.get("cristal");
                     case BOMBA -> imagenes.get("bomba");
                     case LLAVE -> imagenes.get("llave");
-                    case LLAVE_EXPLOSION -> imagenes.get("llave_explosion");
+                    case FOSFORO -> imagenes.get("fosforo");
                     case SALIDA -> imagenes.get("salida");
                     case TRAMPA -> imagenes.get("trampa"); // Podría ser invisible si no se ha pisado
                     case ENERGIA -> imagenes.get("energia");
@@ -218,7 +218,7 @@ public class VistaJuego extends BorderPane {
         lblVida.setText("Vida: " + j.getVida() + "%");
         lblCristales.setText("💎 " + j.getCristales());
         lblBombas.setText("💣 " + j.getBombas());
-        lblLlaves.setText("🔑 " + j.getLlavesExplosion() + (j.isTieneLlave() ? " + SALIDA" : ""));
+        lblLlaves.setText("🔑 " + j.getFosforos() + (j.isTieneLlave() ? " + SALIDA" : ""));
     }
 
     private void manejarTeclado(KeyEvent event) {

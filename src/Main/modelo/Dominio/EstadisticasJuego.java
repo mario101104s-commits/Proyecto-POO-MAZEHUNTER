@@ -57,7 +57,7 @@ public class EstadisticasJuego {
     // Nuevas estadísticas
     private int bombasRecolectadas;
     private int murosDestruidos;
-    private int llavesExplosionUsadas;
+    private int fosforosUsados;
 
     /**
      * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la
@@ -157,12 +157,12 @@ public class EstadisticasJuego {
         this.murosDestruidos = murosDestruidos;
     }
 
-    public int getLlavesExplosionUsadas() {
-        return llavesExplosionUsadas;
+    public int getFosforosUsados() {
+        return fosforosUsados;
     }
 
-    public void setLlavesExplosionUsadas(int llavesExplosionUsadas) {
-        this.llavesExplosionUsadas = llavesExplosionUsadas;
+    public void setFosforosUsados(int fosforosUsados) {
+        this.fosforosUsados = fosforosUsados;
     }
 
     /**

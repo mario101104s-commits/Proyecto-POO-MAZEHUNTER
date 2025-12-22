@@ -40,7 +40,7 @@ public enum TipoCelda {
     /** Muro rojo que puede ser destruido con explosiones. */
     MURO_ROJO('%', false, "Muro rojo"),
     /** Llave de explosión necesaria para activar bombas. */
-    LLAVE_EXPLOSION('K', true, "Llave de explosión");
+    FOSFORO('K', true, "Fósforo");
 
     /**
      * El carácter que se utiliza para dibujar la celda en la consola.

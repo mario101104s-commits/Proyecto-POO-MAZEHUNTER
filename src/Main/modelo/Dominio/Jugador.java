@@ -34,7 +34,7 @@ public class Jugador {
     /**
      * Cantidad de llaves de explosión recolectadas por el jugador.
      */
-    private int llavesExplosion;
+    private int fosforos;
     /**
      * La coordenada X (columna) actual del jugador en el laberinto.
      */
@@ -61,7 +61,7 @@ public class Jugador {
         this.cristales = cristales;
         this.tieneLlave = tieneLlave;
         this.bombas = 0;
-        this.llavesExplosion = 0;
+        this.fosforos = 0;
         this.posX = 0;
         this.posY = 0;
     }
@@ -118,18 +118,18 @@ public class Jugador {
     }
 
     /**
-     * Incrementa en uno el contador de llaves de explosión recolectadas.
+     * Incrementa en uno el contador de fósforos recolectados.
      */
-    public void recolectarLlaveExplosion() {
-        this.llavesExplosion++;
+    public void recolectarFosforo() {
+        this.fosforos++;
     }
 
     /**
-     * Decrementa en uno el contador de llaves de explosión.
+     * Decrementa en uno el contador de fósforos.
      */
-    public void decrementarLlavesExplosion() {
-        if (this.llavesExplosion > 0) {
-            this.llavesExplosion--;
+    public void decrementarFosforos() {
+        if (this.fosforos > 0) {
+            this.fosforos--;
         }
     }
 
@@ -199,11 +199,11 @@ public class Jugador {
         this.bombas = bombas;
     }
 
-    public int getLlavesExplosion() {
-        return llavesExplosion;
+    public int getFosforos() {
+        return fosforos;
     }
 
-    public void setLlavesExplosion(int llavesExplosion) {
-        this.llavesExplosion = llavesExplosion;
+    public void setFosforos(int fosforos) {
+        this.fosforos = fosforos;
     }
 }

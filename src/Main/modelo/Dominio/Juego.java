@@ -55,8 +55,8 @@ public class Juego {
 
     // Estadísticas acumulativas
     private int bombasRecolectadasTotal;
-    private int llavesExplosionRecolectadasTotal;
-    private int llavesExplosionUsadas;
+    private int fosforosRecolectadosTotal;
+    private int fosforosUsados;
     private int murosRojosDestruidos;
 
     /**
@@ -82,8 +82,8 @@ public class Juego {
         this.nieblaDeGuerra = true; // Por defecto activada
 
         this.bombasRecolectadasTotal = 0;
-        this.llavesExplosionRecolectadasTotal = 0;
-        this.llavesExplosionUsadas = 0;
+        this.fosforosRecolectadosTotal = 0;
+        this.fosforosUsados = 0;
         this.murosRojosDestruidos = 0;
     }
 
@@ -170,28 +170,28 @@ public class Juego {
         this.bombasRecolectadasTotal = bombasRecolectadasTotal;
     }
 
-    public int getLlavesExplosionRecolectadasTotal() {
-        return llavesExplosionRecolectadasTotal;
+    public int getFosforosRecolectadosTotal() {
+        return fosforosRecolectadosTotal;
     }
 
-    public void incrementarLlavesExplosionRecolectadasTotal() {
-        this.llavesExplosionRecolectadasTotal++;
+    public void incrementarFosforosRecolectadosTotal() {
+        this.fosforosRecolectadosTotal++;
     }
 
-    public void setLlavesExplosionRecolectadasTotal(int llavesExplosionRecolectadasTotal) {
-        this.llavesExplosionRecolectadasTotal = llavesExplosionRecolectadasTotal;
+    public void setFosforosRecolectadosTotal(int fosforosRecolectadosTotal) {
+        this.fosforosRecolectadosTotal = fosforosRecolectadosTotal;
     }
 
-    public int getLlavesExplosionUsadas() {
-        return llavesExplosionUsadas;
+    public int getFosforosUsados() {
+        return fosforosUsados;
     }
 
-    public void incrementarLlavesExplosionUsadas() {
-        this.llavesExplosionUsadas++;
+    public void incrementarFosforosUsados() {
+        this.fosforosUsados++;
     }
 
-    public void setLlavesExplosionUsadas(int llavesExplosionUsadas) {
-        this.llavesExplosionUsadas = llavesExplosionUsadas;
+    public void setFosforosUsados(int fosforosUsados) {
+        this.fosforosUsados = fosforosUsados;
     }
 
     public int getMurosRojosDestruidos() {

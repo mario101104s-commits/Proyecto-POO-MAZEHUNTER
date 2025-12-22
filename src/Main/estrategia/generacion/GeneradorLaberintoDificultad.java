@@ -138,7 +138,7 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
         int numTrampas = calcularTrampas(filas);
         int numEnergias = calcularEnergias(filas);
         int numBombas = calcularBombas();
-        int numLlavesExplosion = calcularLlavesExplosion();
+        int numFosforos = calcularFosforos();
         int numCristales = Math.max(5, posicionesCaminos.size() / 15); // Cristales proporcionales
 
         // Colocar cristales
@@ -175,11 +175,11 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
                 celdas[pos[0]][pos[1]].setTipo(TipoCelda.BOMBA);
         }
 
-        // Colocar llaves de explosión
-        for (int i = 0; i < numLlavesExplosion; i++) {
+        // Colocar fósforos
+        for (int i = 0; i < numFosforos; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
             if (pos != null)
-                celdas[pos[0]][pos[1]].setTipo(TipoCelda.LLAVE_EXPLOSION);
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.FOSFORO);
         }
     }
 
@@ -230,7 +230,7 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
         }
     }
 
-    private int calcularLlavesExplosion() {
+    private int calcularFosforos() {
         switch (dificultad.toUpperCase()) {
             case "FACIL":
                 return 1;

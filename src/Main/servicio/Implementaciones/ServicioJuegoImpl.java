@@ -165,15 +165,15 @@ public class ServicioJuegoImpl implements ServicioJuego {
         Jugador jugador = juego.getJugador();
 
         // Validar requisitos
-        if (jugador.getLlavesExplosion() < 1 || jugador.getBombas() < 1) {
+        if (jugador.getFosforos() < 1 || jugador.getBombas() < 1) {
             return false;
         }
 
         // Aplicar costos
         jugador.setVida(Math.max(0, jugador.getVida() - 35));
         jugador.decrementarBombas();
-        jugador.decrementarLlavesExplosion();
-        juego.incrementarLlavesExplosionUsadas(); // Registrar estadística
+        jugador.decrementarFosforos();
+        juego.incrementarFosforosUsados(); // Registrar estadística
 
         // Destruir muros rojos adyacentes
         destruirMurosRojosAdyacentes(juego);
@@ -273,10 +273,10 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
 
-            case LLAVE_EXPLOSION:
-                jugador.recolectarLlaveExplosion();
-                juego.incrementarLlavesExplosionRecolectadasTotal(); // Registrar estadística
-                System.out.println("🔑 ¡Llave de explosión obtenida! Total: " + jugador.getLlavesExplosion());
+            case FOSFORO:
+                jugador.recolectarFosforo();
+                juego.incrementarFosforosRecolectadosTotal(); // Registrar estadística
+                System.out.println("🔑 ¡Fósforo obtenido! Total: " + jugador.getFosforos());
                 celda.setTipo(TipoCelda.CAMINO);
                 break;
             default:
@@ -377,7 +377,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // Nuevas estadísticas
         resultado.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
         resultado.setMurosDestruidos(juego.getMurosRojosDestruidos());
-        resultado.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
+        resultado.setFosforosUsados(juego.getFosforosUsados());
 
         // Guardar estadísticas
         EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), juego.getFin());
@@ -391,7 +391,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // Nuevas estadísticas en persistencia
         estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
         estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
-        estadisticas.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
+        estadisticas.setFosforosUsados(juego.getFosforosUsados());
 
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);
@@ -469,7 +469,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // Nuevas estadísticas
         resultado.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
         resultado.setMurosDestruidos(juego.getMurosRojosDestruidos());
-        resultado.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
+        resultado.setFosforosUsados(juego.getFosforosUsados());
 
         // Guardar estadísticas parciales
         EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), ahora);
@@ -483,7 +483,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // Nuevas estadísticas en persistencia
         estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
         estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
-        estadisticas.setLlavesExplosionUsadas(juego.getLlavesExplosionUsadas());
+        estadisticas.setFosforosUsados(juego.getFosforosUsados());
 
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);

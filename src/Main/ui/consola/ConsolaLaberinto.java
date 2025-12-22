@@ -86,7 +86,7 @@ public class ConsolaLaberinto {
                         ConsoleUtils.mostrarExito("💥 ¡EXPLOSIÓN! Muros rojos destruidos");
                         ConsoleUtils.mostrarAdvertencia("⚡ -35 vida | -1 bomba | -1 llave");
                     } else {
-                        if (juego.getJugador().getLlavesExplosion() < 1) {
+                        if (juego.getJugador().getFosforos() < 1) {
                             ConsoleUtils.mostrarError("❌ Necesitas una llave de explosión");
                         } else if (juego.getJugador().getBombas() < 1) {
                             ConsoleUtils.mostrarError("❌ Necesitas una bomba");
@@ -117,7 +117,7 @@ public class ConsolaLaberinto {
         System.out.println("💎 Cristales: " + juego.getJugador().getCristales());
         System.out.println("🗝️  Llave: " + (juego.getJugador().isTieneLlave() ? "SÍ ✅" : "NO ❌"));
         System.out.println("💣 Bombas: " + juego.getJugador().getBombas());
-        System.out.println("🔑 Llaves explosión: " + juego.getJugador().getLlavesExplosion());
+        System.out.println("🔑 Fósforos: " + juego.getJugador().getFosforos());
         System.out.println("💀 Trampas activadas: " + juego.getTrampasActivadas());
 
         // Barra de vida visual

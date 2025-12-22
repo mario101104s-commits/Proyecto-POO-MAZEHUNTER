@@ -44,7 +44,7 @@ public class ResultadoJuego {
     // Nuevas estadísticas
     private int bombasRecolectadas;
     private int murosDestruidos;
-    private int llavesExplosionUsadas;
+    private int fosforosUsados;
 
     // Getters y Setters
 
@@ -112,12 +112,12 @@ public class ResultadoJuego {
         this.murosDestruidos = murosDestruidos;
     }
 
-    public int getLlavesExplosionUsadas() {
-        return llavesExplosionUsadas;
+    public int getFosforosUsados() {
+        return fosforosUsados;
     }
 
-    public void setLlavesExplosionUsadas(int llavesExplosionUsadas) {
-        this.llavesExplosionUsadas = llavesExplosionUsadas;
+    public void setFosforosUsados(int fosforosUsados) {
+        this.fosforosUsados = fosforosUsados;
     }
 
     /**
@@ -136,10 +136,10 @@ public class ResultadoJuego {
                         "📏 Tamaño: %s\n" +
                         "💣 Bombas: %d\n" +
                         "💥 Muros destruidos: %d\n" +
-                        "🔑 Llaves usadas: %d\n" +
+                        "🔑 Fósforos usados: %d\n" +
                         "🏆 Estado: %s",
                 tiempoSegundos, cristalesRecolectados, trampasActivadas,
-                vidaRestante, tamanioLaberinto, bombasRecolectadas, murosDestruidos, llavesExplosionUsadas,
+                vidaRestante, tamanioLaberinto, bombasRecolectadas, murosDestruidos, fosforosUsados,
                 ganado ? "GANADO" : "PERDIDO");
     }
 

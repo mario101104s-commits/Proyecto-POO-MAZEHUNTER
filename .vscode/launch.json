@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "MainApp",
+            "request": "launch",
+            "mainClass": "Main.MainApp",
+            "projectName": "MazeHunter"
+        },
+        {
+            "type": "java",
+            "name": "MainApp",
+            "request": "launch",
+            "mainClass": "Main.MainApp",
+            "projectName": "Proyecto-POO-MAZEHUNTER_4762a0ca"
+        },
+        {
+            "type": "java",
+            "name": "Jugar Maze Hunter",
+            "request": "launch",
+            "mainClass": "Main.Main",
+            "projectName": "MazeHunter",
+            "console": "integratedTerminal"
+        }
+    ]
+}
