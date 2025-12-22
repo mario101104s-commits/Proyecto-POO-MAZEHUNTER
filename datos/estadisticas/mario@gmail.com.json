@@ -167,5 +167,44 @@
     "bombasRecolectadas": 4,
     "murosDestruidos": 4,
     "fosforosUsados": 1
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T21:03:40.271958",
+    "tiempoSegundos": 20,
+    "cristalesRecolectados": 0,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "20x27",
+    "ganado": false,
+    "bombasRecolectadas": 0,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T21:06:50.337978",
+    "tiempoSegundos": 112,
+    "cristalesRecolectados": 11,
+    "trampasActivadas": 2,
+    "vidaRestante": 25,
+    "tamanioLaberinto": "26x41",
+    "ganado": false,
+    "bombasRecolectadas": 6,
+    "murosDestruidos": 3,
+    "fosforosUsados": 1
+  },
+  {
+    "usuario": "mario@gmail.com",
+    "fecha": "2025-12-21T21:07:57.112663",
+    "tiempoSegundos": 178,
+    "cristalesRecolectados": 14,
+    "trampasActivadas": 2,
+    "vidaRestante": 25,
+    "tamanioLaberinto": "26x41",
+    "ganado": false,
+    "bombasRecolectadas": 7,
+    "murosDestruidos": 3,
+    "fosforosUsados": 1
   }
 ]
