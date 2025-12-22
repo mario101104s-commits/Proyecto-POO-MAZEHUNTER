@@ -1,127 +1,101 @@
-# MazeHunter - El Templo Perdido 🏰
+# MazeHunter - El Templo Perdido 🏰 (Fase 2 - Beta)
 
-Juego de laberinto implementado en Java con patrón **Modelo-Vista-Controlador (MVC)**.
+**Maze Hunter** es una aventura de exploración de laberintos implementada en Java, diseñada bajo los más altos estándares de ingeniería de software, incluyendo el patrón **Modelo-Vista-Controlador (MVC)**, principios **SOLID** y patrones de diseño avanzados.
 
-## 📋 Requisitos
+---
 
-- Java JDK 8 o superior
-- Librería GSON 2.10.1 (incluida en `lib/`)
+## 🎮 Guía de Juego: Cómo Sobrevivir al Templo
 
-## 🏗️ Arquitectura MVC
+### 🏆 Objetivo de Victoria
+Para escapar con éxito del Templo Perdido, debes seguir estos pasos:
+1. **Explora**: Muévete por el laberinto usando **WASD**.
+2. **Encuentra la Llave 🗝️**: Es indispensable para desbloquear el portal de salida.
+3. **Escapa 🚪**: Una vez tengas la llave, busca la salida para ganar la partida.
 
-### Modelo
-- **Paquete**: `Main.modelo`
-- **Responsabilidad**: Entidades de dominio (Usuario, Juego, Jugador, Laberinto)
-- **Características**: POJOs puros sin lógica de negocio
+### 🎒 Objetos y Elementos
+| Objeto | Icono | Efecto |
+| :--- | :---: | :--- |
+| **Cristal** | 💎 | Aumenta tu puntuación en los Anales del Templo. |
+| **Energía** | ⚡ | Restaura tu barra de energía para seguir moviéndote. |
+| **Vida** | ❤️ | Recupera salud perdida por trampas. |
+| **Bomba** | 💣 | Permite destruir **Muros Rojos (%)** pulsando la tecla **K**. |
+| **Fósforo** | 🔥 | Recurso necesario para poder activar las bombas. |
+| **Trampa** | 💀 | ¡Peligro! Reduce tu vida si pasas sobre ella. |
+| **Muro Rojo**| % | Muros especiales que solo pueden ser destruidos con bombas. |
 
-### Vista
-- **Paquete**: `Main.ui.consola`
-- **Responsabilidad**: Presentación e interacción con el usuario
-- **Clases principales**:
-  - `AutenticacionConsola` - UI de login/registro
-  - `MenuPrincipal` - UI del menú principal
-  - `ConsolaLaberinto` - UI del juego
+---
 
-### Controlador
-- **Paquete**: `Main.controlador`
-- **Responsabilidad**: Lógica de negocio y coordinación
-- **Clases principales**:
-  - `ControladorAutenticacion` - Lógica de autenticación
-  - `ControladorJuego` - Lógica del juego
+## 🌟 Características Principales (Fase 2)
 
-### Servicios
-- **Paquete**: `Main.servicio`
-- **Responsabilidad**: Operaciones de negocio y persistencia
-- **Interfaces**: Cifrador, ServicioUsuario, ServicioJuego, Persistencia
+### 🎨 Estética "Lost Temple"
+- **Interfaz Premium**: Rediseño completo basado en CSS con una temática de templo antiguo (piedra y oro).
+- **HUD Mejorado**: Barra de vida con porcentaje, contador de fósforos, cronómetro en tiempo real y estado de la llave.
 
-## 🚀 Compilación y Ejecución
+### 🧠 Inteligencia y Lógica
+- **Solubilidad Garantizada**: Algoritmo **BFS (Breadth-First Search)** que asegura que cada laberinto generado sea completable.
+- **Patrón Strategy**: Sistema de dificultades que escala el tamaño y los desafíos del mapa.
+- **Niebla de Guerra**: Visibilidad limitada que añade misterio y dificultad a la exploración.
 
-### Opción 1: Usar el script (Recomendado)
+---
+
+## 🏗️ Arquitectura y Patrones
+- **MVC**: Separación total entre Modelo, Vista y Controlador.
+- **Strategy**: Encapsulamiento de algoritmos de generación de laberintos para permitir diferentes dificultades y estilos.
+- **SOLID**: Código mantenible, escalable y desacoplado.
+- **DTO**: Uso de objetos de transferencia para una persistencia JSON impecable.
+
+---
+
+## 🚀 Instalación y Ejecución
+### Ejecución Rápida
 ```bash
 ./run.sh
 ```
-
-### Opción 2: Comandos manuales
+### Compilación con Maven
 ```bash
-# Compilar
-javac -cp "lib/gson-2.10.1.jar" -d out -sourcepath src $(find src -name "*.java")
-
-# Ejecutar
-java -cp "out:lib/gson-2.10.1.jar" Main.Main
+mvn clean compile
+mvn javafx:run
 ```
 
-### Opción 3: Desde IntelliJ IDEA
-1. Abrir el proyecto en IntelliJ IDEA
-2. Asegurarse de que GSON esté en las librerías del proyecto
-3. Ejecutar `Main.Main`
+---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura Detallada del Proyecto
 
 ```
 Proyecto-POO-MAZEHUNTER/
-├── src/Main/
-│   ├── controlador/           # 🆕 Controladores MVC
-│   │   ├── ControladorAutenticacion.java
-│   │   └── ControladorJuego.java
-│   ├── modelo/                # Modelo de dominio
-│   │   ├── Dominio/
-│   │   ├── Transferencia/
-│   │   └── Constantes/
-│   ├── servicio/              # Capa de servicios
-│   │   ├── Interfaces/
-│   │   └── Implementaciones/
-│   ├── ui/                    # Vistas
-│   │   ├── consola/
-│   │   └── util/
-│   └── Main.java              # Punto de entrada
-├── lib/
-│   └── gson-2.10.1.jar        # Dependencia GSON
-├── datos/                     # Archivos de persistencia
-├── out/                       # Clases compiladas
-└── run.sh                     # Script de ejecución
+├── src/
+│   ├── Main/
+│   │   ├── controlador/           # Lógica de coordinación MVC
+│   │   │   ├── ControladorAutenticacion.java  # Gestión de usuarios
+│   │   │   └── ControladorJuego.java          # Gestión de la partida
+│   │   ├── modelo/                # Modelo de datos y lógica de negocio
+│   │   │   ├── Dominio/           # Entidades (Juego, Jugador, Laberinto, Celda)
+│   │   │   ├── Transferencia/     # DTOs para persistencia y estadísticas
+│   │   │   └── Constantes/        # Enums (TipoCelda, EstadoJuego, Direccion)
+│   │   ├── estrategia/            # Patrones de comportamiento
+│   │   │   └── generacion/        # Algoritmos (BFS + Solubilidad)
+│   │   ├── servicio/              # Capa de servicios e infraestructura
+│   │   │   ├── Interfaces/        # Abstracciones de servicios
+│   │   │   └── Implementaciones/  # JSON, Cifrado AES, Lógica concreta
+│   │   ├── ui/                    # Capa de presentación (Vistas)
+│   │   │   ├── gui/               # Interfaz JavaFX (Lost Temple Theme)
+│   │   │   ├── consola/           # Interfaz de texto legacy
+│   │   │   └── util/              # Generador de Assets y estilos CSS
+│   │   └── resources/             # Recursos estáticos
+│   │       └── imagenes/          # Texturas (Piedra, Oro, Trampas)
+│   ├── module-info.java           # Configuración de módulos Java
+│   └── Main.java                  # Lanzador con reflexión (Fix warnings)
+├── datos/                         # Almacenamiento persistente (JSON)
+│   ├── usuarios.json              # Base de datos de usuarios
+│   ├── juegos/                    # Partidas guardadas
+│   └── estadisticas/              # Historial de los Anales
+├── tools/                         # Maven local y dependencias
+├── pom.xml                        # Configuración de Maven
+└── run.sh                         # Script de ejecución rápida
 ```
 
-## 🎮 Cómo Jugar
+---
 
-1. **Registro/Login**: Crea una cuenta o inicia sesión
-2. **Nueva Aventura**: Configura el tamaño del laberinto (5x5 a 20x20)
-3. **Controles**:
-   - `W` - Mover arriba
-   - `A` - Mover izquierda
-   - `S` - Mover abajo
-   - `D` - Mover derecha
-   - `M` - Ver mapa completo
-   - `G` - Guardar y salir
-   - `Q` - Salir sin guardar
-4. **Objetivo**: Encuentra la llave 🗝️ y llega a la salida 🚪
-
-## 🎯 Características
-
-- ✅ Patrón MVC correctamente implementado
-- ✅ Sistema de autenticación con cifrado AES
-- ✅ Generación procedural de laberintos
-- ✅ Sistema de guardado/carga de partidas
-- ✅ Estadísticas de jugador
-- ✅ Múltiples elementos: cristales, trampas, energía, vida
-- ✅ Persistencia en JSON
-
-## 📊 Cambios del Patrón MVC
-
-El proyecto fue refactorizado para seguir correctamente el patrón MVC:
-
-- **Antes**: Main.java con 658 líneas mezclando Vista + Controlador
-- **Después**: Main.java con 75 líneas como punto de entrada limpio
-- **Nuevos**: 2 controladores, 3 vistas implementadas
-- **Refactorizados**: 6 servicios corregidos
-
-Ver `walkthrough.md` para detalles completos de la refactorización.
-
-## 👥 Autores
-
-- Mario Sanchez
-- Jose Berroteran
-- Niyerlin Muñoz
-
-## 📝 Versión
-
-1.0 - Implementación con Patrón MVC (Diciembre 2025)
+## 📝 Licencia y Versión
+**Versión 2.0 (Beta)** - Diciembre 2025.
+Desarrollado para la cátedra de Programación Orientada a Objetos.
