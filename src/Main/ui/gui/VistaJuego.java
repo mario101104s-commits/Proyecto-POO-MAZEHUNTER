@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -23,6 +24,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.paint.Color;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import java.util.HashMap;
@@ -38,21 +44,33 @@ public class VistaJuego extends BorderPane {
     private boolean niebla = true;
 
     private Label lblVida;
+    private ProgressBar pbVida;
     private Label lblCristales;
     private Label lblBombas;
+    private Label lblFosforos;
     private Label lblLlaves;
+    private Label lblTiempo;
+    private Timeline timer;
 
     private static final int TILE_SIZE = 32;
 
     public VistaJuego(ControladorJuego controlador, Runnable onExit) {
         this.controlador = controlador;
         this.onExit = onExit;
+        this.niebla = controlador.getJuego().isNieblaDeGuerra();
         cargarImagenes();
         inicializarGUI();
         dibujar();
 
         this.setFocusTraversable(true);
         this.setOnKeyPressed(this::manejarTeclado);
+        inicializarTimer();
+    }
+
+    private void inicializarTimer() {
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> actualizarHUD()));
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.play();
     }
 
     public void setNiebla(boolean niebla) {
@@ -78,24 +96,56 @@ public class VistaJuego extends BorderPane {
     private void inicializarGUI() {
         // HUD Superior
         HBox hud = new HBox(20);
-        hud.setStyle("-fx-background-color: #222; -fx-padding: 10; -fx-alignment: center-left;");
+        hud.setStyle("-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); " +
+                "-fx-padding: 10; " +
+                "-fx-alignment: center-left; " +
+                "-fx-border-color: #DAA520; " +
+                "-fx-border-width: 0 0 2 0;");
 
         lblVida = crearLabelHUD("Vida: 100%");
+        pbVida = new ProgressBar(1.0);
+        pbVida.setPrefWidth(100);
+        pbVida.setStyle("-fx-accent: #e74c3c;");
+
         lblCristales = crearLabelHUD("💎 0");
         lblBombas = crearLabelHUD("💣 0");
-        lblLlaves = crearLabelHUD("🔑 0");
+        lblFosforos = crearLabelHUD("🔥 0");
+        lblLlaves = crearLabelHUD("🔑 No");
+        lblTiempo = crearLabelHUD("⏱️ 00:00");
 
         // Espaciador para empujar el botón a la derecha
         javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button btnMenu = new Button("⚙️ Menú");
-        btnMenu.setStyle("-fx-background-color: #444; -fx-text-fill: white; -fx-cursor: hand;");
+        btnMenu.setStyle("-fx-background-color: linear-gradient(to bottom, #555, #222); " +
+                "-fx-text-fill: #DAA520; " +
+                "-fx-font-weight: bold; " +
+                "-fx-border-color: #DAA520; " +
+                "-fx-cursor: hand;");
+        btnMenu.setOnMouseEntered(e -> btnMenu.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #777, #444); -fx-text-fill: #FFD700; -fx-font-weight: bold; -fx-border-color: #FFD700; -fx-cursor: hand;"));
+        btnMenu.setOnMouseExited(e -> btnMenu.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #555, #222); -fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-border-color: #DAA520; -fx-cursor: hand;"));
         btnMenu.setFocusTraversable(false); // Para no robar foco del teclado
         btnMenu.setOnAction(e -> mostrarMenuPausa());
 
-        hud.getChildren().addAll(lblVida, lblCristales, lblBombas, lblLlaves, spacer, btnMenu);
+        hud.getChildren().addAll(lblVida, pbVida, lblCristales, lblBombas, lblFosforos, lblLlaves, lblTiempo, spacer,
+                btnMenu);
         this.setTop(hud);
+
+        // HUD Inferior (Instrucciones)
+        HBox instructionsHud = new HBox(30);
+        instructionsHud.setStyle("-fx-background-color: linear-gradient(to top, #332b1a, #1a150a); " +
+                "-fx-padding: 8; " +
+                "-fx-alignment: center; " +
+                "-fx-border-color: #DAA520; " +
+                "-fx-border-width: 2 0 0 0;");
+        Label lblMov = crearLabelHUD("🎮 WASD: Mover");
+        Label lblBomba = crearLabelHUD("💣 K: Activar Bomba");
+        Label lblEsc = crearLabelHUD("⚙️ ESC: Pausa");
+        instructionsHud.getChildren().addAll(lblMov, lblBomba, lblEsc);
+        this.setBottom(instructionsHud);
 
         // Canvas Central con ScrollPane
         Laberinto lab = controlador.getJuego().getLaberinto();
@@ -156,7 +206,7 @@ public class VistaJuego extends BorderPane {
 
     private Label crearLabelHUD(String text) {
         Label l = new Label(text);
-        l.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        l.setStyle("-fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'Serif';");
         return l;
     }
 
@@ -216,9 +266,20 @@ public class VistaJuego extends BorderPane {
     private void actualizarHUD() {
         Jugador j = controlador.getJuego().getJugador();
         lblVida.setText("Vida: " + j.getVida() + "%");
+        pbVida.setProgress(j.getVida() / 100.0);
         lblCristales.setText("💎 " + j.getCristales());
         lblBombas.setText("💣 " + j.getBombas());
-        lblLlaves.setText("🔑 " + j.getFosforos() + (j.isTieneLlave() ? " + SALIDA" : ""));
+        lblFosforos.setText("🔥 " + j.getFosforos());
+        lblLlaves.setText("🔑 " + (j.isTieneLlave() ? "Sí" : "No") + (j.isTieneLlave() ? " (Busca la SALIDA)" : ""));
+
+        // Actualizar Tiempo
+        LocalDateTime inicio = controlador.getJuego().getInicio();
+        if (inicio != null) {
+            long segundos = ChronoUnit.SECONDS.between(inicio, LocalDateTime.now());
+            long min = segundos / 60;
+            long seg = segundos % 60;
+            lblTiempo.setText(String.format("⏱️ %02d:%02d", min, seg));
+        }
     }
 
     private void manejarTeclado(KeyEvent event) {

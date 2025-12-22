@@ -51,7 +51,8 @@ public class VentanaPrincipal {
     private void mostrarPantallaLogin() {
         VBox layout = new VBox(15);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #222; -fx-padding: 20;");
+        layout.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-padding: 20; -fx-border-color: #DAA520; -fx-border-width: 2;");
 
         Label title = new Label("🏰 MAZE HUNTER");
         title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: gold;");
@@ -102,31 +103,39 @@ public class VentanaPrincipal {
     private void mostrarMenuPrincipal() {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #333;");
+        layout.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-border-color: #DAA520; -fx-border-width: 2;");
 
         Label bienvenido = new Label("Bienvenido, " + (usuarioActual != null ? usuarioActual.getEmail() : "Hunter"));
         bienvenido.setStyle("-fx-font-size: 24px; -fx-text-fill: white;");
 
         Button btnJugar = new Button("🏹 Nueva Partida");
         Button btnCargar = new Button("📂 Cargar Partida");
+        Button btnAnales = new Button("📜 Anales del Templo");
+        Button btnLogout = new Button("🔑 Cerrar Sesión");
         Button btnSalir = new Button("🚪 Salir");
 
         estilizarBoton(btnJugar);
         estilizarBoton(btnCargar);
+        estilizarBoton(btnAnales);
+        estilizarBoton(btnLogout);
         estilizarBoton(btnSalir);
 
         btnJugar.setOnAction(e -> mostrarSelectorDificultad());
         btnCargar.setOnAction(e -> cargarJuego());
+        btnAnales.setOnAction(e -> mostrarAnales());
+        btnLogout.setOnAction(e -> cerrarSesion());
         btnSalir.setOnAction(e -> System.exit(0));
 
-        layout.getChildren().addAll(bienvenido, btnJugar, btnCargar, btnSalir);
+        layout.getChildren().addAll(bienvenido, btnJugar, btnCargar, btnAnales, btnLogout, btnSalir);
         root.setCenter(layout);
     }
 
     private void mostrarSelectorDificultad() {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #222;");
+        layout.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-border-color: #DAA520; -fx-border-width: 2;");
 
         Label lbl = new Label("Selecciona Dificultad");
         lbl.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
@@ -204,12 +213,44 @@ public class VentanaPrincipal {
         vistaJuego.requestFocus(); // Para capturar teclado
     }
 
+    private void mostrarAnales() {
+        java.util.List<Main.modelo.Dominio.EstadisticasJuego> stats = controladorJuego
+                .obtenerEstadisticas(usuarioActual.getEmail());
+        VistaAnales vistaAnales = new VistaAnales(stats, () -> mostrarMenuPrincipal());
+        root.setCenter(vistaAnales);
+    }
+
+    private void cerrarSesion() {
+        this.usuarioActual = null;
+        mostrarPantallaLogin();
+    }
+
     private void estilizarBoton(Button btn) {
-        btn.setStyle("-fx-background-color: #555; -fx-text-fill: white; -fx-font-size: 14px; -fx-min-width: 200px;");
-        btn.setOnMouseEntered(e -> btn.setStyle(
-                "-fx-background-color: #777; -fx-text-fill: white; -fx-font-size: 14px; -fx-min-width: 200px;"));
-        btn.setOnMouseExited(e -> btn.setStyle(
-                "-fx-background-color: #555; -fx-text-fill: white; -fx-font-size: 14px; -fx-min-width: 200px;"));
+        String baseStyle = "-fx-background-color: linear-gradient(to bottom, #555, #222); " +
+                "-fx-text-fill: #DAA520; " +
+                "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-min-width: 220px; " +
+                "-fx-border-color: #DAA520; " +
+                "-fx-border-width: 1; " +
+                "-fx-border-radius: 5; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;";
+
+        String hoverStyle = "-fx-background-color: linear-gradient(to bottom, #777, #444); " +
+                "-fx-text-fill: #FFD700; " +
+                "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-min-width: 220px; " +
+                "-fx-border-color: #FFD700; " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 5; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;";
+
+        btn.setStyle(baseStyle);
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(baseStyle));
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
