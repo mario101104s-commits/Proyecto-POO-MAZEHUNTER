@@ -62,11 +62,16 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
             celdas[filas - 1][j].setTipo(TipoCelda.MURO);
         }
 
-        // Asegurar conectividad
+        // Asegurar conectividad básica
         asegurarConectividad(celdas, filas, columnas);
 
         // Colocar elementos según dificultad
         colocarElementosSegunDificultad(celdas, filas, columnas);
+
+        // Verificar solubilidad y forzar si es necesario
+        if (!esSoluble(celdas, filas, columnas)) {
+            forzarCamino(celdas, filas, columnas);
+        }
 
         return new Laberinto(celdas, filas, columnas);
     }
@@ -233,13 +238,13 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
     private int calcularFosforos() {
         switch (dificultad.toUpperCase()) {
             case "FACIL":
-                return 1;
+                return 3; // 1 + 2
             case "MEDIA":
-                return 3;
+                return 5; // 3 + 2
             case "DIFICIL":
-                return 4;
+                return 6; // 4 + 2
             default:
-                return 3;
+                return 5;
         }
     }
 
@@ -251,5 +256,92 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
             }
         }
         return null;
+    }
+
+    private boolean esSoluble(Celda[][] celdas, int filas, int columnas) {
+        int startX = -1, startY = -1;
+        int endX = -1, endY = -1;
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (celdas[i][j].getTipo() == TipoCelda.ENTRADA) {
+                    startX = i;
+                    startY = j;
+                } else if (celdas[i][j].getTipo() == TipoCelda.SALIDA) {
+                    endX = i;
+                    endY = j;
+                }
+            }
+        }
+
+        if (startX == -1 || endX == -1)
+            return false;
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[] { startX, startY });
+        boolean[][] visitado = new boolean[filas][columnas];
+        visitado[startX][startY] = true;
+
+        int[][] dirs = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            if (current[0] == endX && current[1] == endY)
+                return true;
+
+            for (int[] d : dirs) {
+                int ni = current[0] + d[0];
+                int nj = current[1] + d[1];
+
+                if (ni >= 0 && ni < filas && nj >= 0 && nj < columnas &&
+                        !visitado[ni][nj] &&
+                        celdas[ni][nj].getTipo() != TipoCelda.MURO &&
+                        celdas[ni][nj].getTipo() != TipoCelda.MURO_ROJO) {
+                    visitado[ni][nj] = true;
+                    queue.add(new int[] { ni, nj });
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void forzarCamino(Celda[][] celdas, int filas, int columnas) {
+        int startX = -1, startY = -1;
+        int endX = -1, endY = -1;
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (celdas[i][j].getTipo() == TipoCelda.ENTRADA) {
+                    startX = i;
+                    startY = j;
+                } else if (celdas[i][j].getTipo() == TipoCelda.SALIDA) {
+                    endX = i;
+                    endY = j;
+                }
+            }
+        }
+
+        if (startX == -1 || endX == -1)
+            return;
+
+        int currX = startX;
+        int currY = startY;
+
+        while (currX != endX || currY != endY) {
+            if (currX < endX)
+                currX++;
+            else if (currX > endX)
+                currX--;
+            else if (currY < endY)
+                currY++;
+            else if (currY > endY)
+                currY--;
+
+            if (celdas[currX][currY].getTipo() == TipoCelda.MURO ||
+                    celdas[currX][currY].getTipo() == TipoCelda.MURO_ROJO) {
+                celdas[currX][currY].setTipo(TipoCelda.CAMINO);
+            }
+        }
     }
 }

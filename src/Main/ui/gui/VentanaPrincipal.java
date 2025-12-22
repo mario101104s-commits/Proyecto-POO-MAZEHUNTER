@@ -66,10 +66,16 @@ public class VentanaPrincipal {
         passField.setMaxWidth(300);
 
         Button btnLogin = new Button("Iniciar Sesión");
-        btnLogin.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        estilizarBoton(btnLogin);
 
         Button btnRegister = new Button("Registrarse");
-        btnRegister.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+        estilizarBoton(btnRegister);
+
+        Button btnRecuperar = new Button("Recuperar Contraseña");
+        estilizarBoton(btnRecuperar);
+
+        Button btnSalir = new Button("Salir");
+        estilizarBoton(btnSalir);
 
         btnLogin.setOnAction(e -> {
             String email = emailField.getText();
@@ -96,7 +102,50 @@ public class VentanaPrincipal {
             }
         });
 
-        layout.getChildren().addAll(title, emailField, passField, btnLogin, btnRegister);
+        btnRecuperar.setOnAction(e -> mostrarPantallaRecuperacion());
+        btnSalir.setOnAction(e -> javafx.application.Platform.exit());
+
+        layout.getChildren().addAll(title, emailField, passField, btnLogin, btnRegister, btnRecuperar, btnSalir);
+        root.setCenter(layout);
+    }
+
+    private void mostrarPantallaRecuperacion() {
+        VBox layout = new VBox(15);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-padding: 20; -fx-border-color: #DAA520; -fx-border-width: 2;");
+
+        Label title = new Label("📜 RECUPERAR ACCESO");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: gold;");
+
+        TextField emailField = new TextField();
+        emailField.setPromptText("Correo Electrónico");
+        emailField.setMaxWidth(300);
+
+        PasswordField newPassField = new PasswordField();
+        newPassField.setPromptText("Nueva Contraseña");
+        newPassField.setMaxWidth(300);
+
+        Button btnRestablecer = new Button("Restablecer Contraseña");
+        estilizarBoton(btnRestablecer);
+
+        Button btnVolver = new Button("Volver");
+        estilizarBoton(btnVolver);
+
+        btnRestablecer.setOnAction(e -> {
+            String email = emailField.getText();
+            String pass = newPassField.getText();
+            if (controladorAuth.recuperarContrasenia(email, pass)) {
+                mostrarAlerta("Éxito", "Contraseña restablecida exitosamente.");
+                mostrarPantallaLogin();
+            } else {
+                mostrarAlerta("Error", "No se pudo restablecer la contraseña.");
+            }
+        });
+
+        btnVolver.setOnAction(e -> mostrarPantallaLogin());
+
+        layout.getChildren().addAll(title, emailField, newPassField, btnRestablecer, btnVolver);
         root.setCenter(layout);
     }
 
@@ -150,6 +199,9 @@ public class VentanaPrincipal {
 
         Button btnIniciar = new Button("Comenzar");
         estilizarBoton(btnIniciar);
+
+        combo.setStyle("-fx-background-color: #444; -fx-text-fill: #DAA520; -fx-border-color: #DAA520;");
+        checkNiebla.setStyle("-fx-text-fill: #DAA520; -fx-font-weight: bold;");
 
         btnIniciar.setOnAction(e -> {
             String diff = combo.getValue();
