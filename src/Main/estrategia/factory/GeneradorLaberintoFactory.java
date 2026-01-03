@@ -5,18 +5,46 @@ import Main.servicio.Interfaces.GeneradorLaberinto;
 
 import java.util.Random;
 
-// Factory para crear estrategias de generación de laberintos
-// Sistema de dificultades definitivo con generación aleatoria de dimensiones
+/**
+ * Fábrica encargada de la creación y configuración de las estrategias de generación de laberintos.
+ * <p>
+ * Implementa el patrón <b>Factory Method</b> para instanciar generadores según el nivel de dificultad.
+ * Además, centraliza los parámetros de configuración como rangos de dimensiones, cantidad de trampas
+ * y objetos de energía para cada nivel (FÁCIL, MEDIA, DIFÍCIL).
+ * </p>
+ * * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
+ */
 public class GeneradorLaberintoFactory {
 
+    /**
+     * Generador de números aleatorios para determinar dimensiones dinámicas.
+     */
     private static Random random = new Random();
 
-    // Tipos de dificultad disponibles
+    /**
+     *  Identificador para el nivel de dificultad fácil.
+     */
     public static final String FACIL = "FACIL";
+
+    /**
+     *  Identificador para el nivel de dificultad media.
+     */
     public static final String MEDIA = "MEDIA";
+
+    /**
+     * Identificador para el nivel de dificultad difícil.
+     */
     public static final String DIFICIL = "DIFICIL";
 
-    // Crea una estrategia de generación según la dificultad especificada
+    /**
+     * Crea una instancia de un generador de laberintos basada en la dificultad solicitada.
+     *
+     * @param dificultad Cadena de texto con el nombre de la dificultad.
+     * @return Una implementación de {@link GeneradorLaberinto}. Si la dificultad es nula,
+     * retorna el generador de dificultad MEDIA por defecto.
+     */
     public static GeneradorLaberinto crear(String dificultad) {
         if (dificultad == null) {
             return new GeneradorLaberintoDificultad(MEDIA); // Default
@@ -25,7 +53,13 @@ public class GeneradorLaberintoFactory {
         return new GeneradorLaberintoDificultad(dificultad.toUpperCase());
     }
 
-    // Obtiene la descripción y rangos de una dificultad
+    /**
+     * Proporciona una descripción detallada de las características de una dificultad,
+     * incluyendo rangos de tamaño y cantidad de elementos.
+     *
+     * @param dificultad Nivel de dificultad a consultar.
+     * @return Una cadena formateada con la información del nivel.
+     */
     public static String obtenerDescripcion(String dificultad) {
         if (dificultad == null)
             dificultad = MEDIA;
@@ -42,7 +76,12 @@ public class GeneradorLaberintoFactory {
         }
     }
 
-    // Obtiene los rangos válidos de filas para una dificultad
+    /**
+     * Obtiene el rango de filas permitido para una dificultad específica.
+     *
+     * @param dificultad Nivel de dificultad.
+     * @return Cadena con el formato "mín-máx".
+     */
     public static String getRangoFilas(String dificultad) {
         switch (dificultad.toUpperCase()) {
             case FACIL:
@@ -56,7 +95,12 @@ public class GeneradorLaberintoFactory {
         }
     }
 
-    // Obtiene los rangos válidos de columnas para una dificultad
+    /**
+     * Obtiene el rango de columnas permitido para una dificultad específica.
+     *
+     * @param dificultad Nivel de dificultad.
+     * @return Cadena con el formato "mín-máx".
+     */
     public static String getRangoColumnas(String dificultad) {
         switch (dificultad.toUpperCase()) {
             case FACIL:
@@ -70,7 +114,12 @@ public class GeneradorLaberintoFactory {
         }
     }
 
-    // Genera un número aleatorio de filas según la dificultad
+    /**
+     * Calcula un número de filas aleatorio respetando los límites de la dificultad.
+     *
+     * @param dificultad Nivel que define el rango de filas.
+     * @return Valor entero aleatorio entre los límites establecidos.
+     */
     public static int generarFilasAleatorias(String dificultad) {
         switch (dificultad.toUpperCase()) {
             case FACIL:
@@ -84,7 +133,12 @@ public class GeneradorLaberintoFactory {
         }
     }
 
-    // Genera un número aleatorio de columnas según la dificultad
+    /**
+     * Calcula un número de columnas aleatorio respetando los límites de la dificultad.
+     *
+     * @param dificultad Nivel que define el rango de columnas.
+     * @return Valor entero aleatorio entre los límites establecidos.
+     */
     public static int generarColumnasAleatorias(String dificultad) {
         switch (dificultad.toUpperCase()) {
             case FACIL:

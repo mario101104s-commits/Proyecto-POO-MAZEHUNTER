@@ -11,20 +11,57 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Estrategia de generación usando Depth-First Search (DFS)
-// Genera laberintos con caminos largos y sinuosos - Dificultad MEDIA
+/**
+ * Implementación de la estrategia de generación de laberintos mediante el algoritmo
+ * Depth-First Search (DFS) con Backtracking.
+ * <p>
+ * Este generador crea laberintos perfectos (sin ciclos) caracterizados por tener
+ * caminos largos, sinuosos y con muchos callejones sin salida. Es ideal para
+ * niveles de dificultad media o alta debido a la complejidad de las rutas generadas.
+ * </p>
+ *
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
+ */
 public class GeneradorLaberintoDFS implements GeneradorLaberinto {
+
+    /**
+     * Generador de aleatoriedad para la elección de direcciones.
+     */
     private Random random;
 
+    /**
+     * Constructor por defecto. Inicializa el motor de aleatoriedad.
+     */
     public GeneradorLaberintoDFS() {
         this.random = new Random();
     }
 
+    /**
+     * Genera un laberinto utilizando el timestamp actual como semilla.
+     *
+     * @param filas Cantidad de filas del laberinto.
+     * @param columnas Cantidad de columnas del laberinto.
+     * @return Un objeto {@link Laberinto} con estructura sinuosa.
+     */
     @Override
     public Laberinto generar(int filas, int columnas) {
         return generarConSemilla(filas, columnas, System.currentTimeMillis());
     }
 
+    /**
+     * Genera un laberinto basado en una semilla para garantizar la reproducibilidad.
+     * <p>
+     * El proceso inicia con una cuadrícula llena de muros y utiliza una pila (Stack)
+     * para excavar caminos, asegurando que todas las áreas transitables estén conectadas.
+     * </p>
+     *
+     * @param filas Número de filas.
+     * @param columnas Número de columnas.
+     * @param semilla Valor para controlar la generación aleatoria.
+     * @return Un objeto {@link Laberinto} completamente formado.
+     */
     @Override
     public Laberinto generarConSemilla(int filas, int columnas, long semilla) {
         this.random = new Random(semilla);
@@ -42,6 +79,17 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
         return new Laberinto(celdas, filas, columnas);
     }
 
+    /**
+     * Algoritmo principal de DFS que talla el laberinto sobre la matriz de muros.
+     * <p>
+     * Selecciona una celda inicial y se mueve en pasos de dos unidades para mantener
+     * muros divisorios, eliminando el muro intermedio para conectar las celdas de camino.
+     * </p>
+     *
+     * @param celdas Matriz de celdas a procesar.
+     * @param filas Límite vertical.
+     * @param columnas Límite horizontal.
+     */
     private void generarLaberintoDFS(Celda[][] celdas, int filas, int columnas) {
         Stack<int[]> pila = new Stack<>();
         int startX = 1;
@@ -50,6 +98,7 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
         celdas[startX][startY].setTipo(TipoCelda.CAMINO);
         pila.push(new int[] { startX, startY });
 
+        // Direcciones en saltos de 2 celdas
         int[][] direcciones = { { -2, 0 }, { 0, 2 }, { 2, 0 }, { 0, -2 } };
 
         while (!pila.isEmpty()) {
@@ -74,6 +123,7 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
                 int nuevoX = x + dirElegida[0];
                 int nuevoY = y + dirElegida[1];
 
+                // Romper el muro intermedio
                 int muroX = x + dirElegida[0] / 2;
                 int muroY = y + dirElegida[1] / 2;
                 celdas[muroX][muroY].setTipo(TipoCelda.CAMINO);
@@ -86,6 +136,17 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
         }
     }
 
+    /**
+     * Distribuye la entrada, salida y consumibles en las celdas transitables.
+     * <p>
+     * Utiliza un barajado aleatorio para asegurar que los elementos no se
+     * concentren en una sola zona del mapa.
+     * </p>
+     *
+     * @param celdas Matriz del laberinto.
+     * @param filas Dimensiones verticales.
+     * @param columnas Dimensiones horizontales.
+     */
     private void colocarElementosEspeciales(Celda[][] celdas, int filas, int columnas) {
         List<int[]> posicionesCaminos = new ArrayList<>();
 
@@ -108,6 +169,7 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
         int[] salida = posicionesCaminos.get(posicionesCaminos.size() - 1);
         celdas[salida[0]][salida[1]].setTipo(TipoCelda.SALIDA);
 
+        // Distribución de cristales, trampas, llaves y energía
         int numCristales = Math.min(10, posicionesCaminos.size() / 10);
         for (int i = 0; i < numCristales; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, i + 1);
@@ -139,6 +201,14 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
         }
     }
 
+    /**
+     * Busca una posición libre de elementos especiales en la lista de caminos.
+     *
+     * @param celdas Matriz actual.
+     * @param posiciones Lista de coordenadas de tipo CAMINO.
+     * @param inicio Índice para evitar colisiones entre objetos.
+     * @return Coordenadas [x,y] o {@code null}.
+     */
     private int[] encontrarPosicionValida(Celda[][] celdas, List<int[]> posiciones, int inicio) {
         for (int i = inicio; i < posiciones.size(); i++) {
             int[] pos = posiciones.get(i);
@@ -149,6 +219,15 @@ public class GeneradorLaberintoDFS implements GeneradorLaberinto {
         return null;
     }
 
+    /**
+     * Valida que las coordenadas se encuentren dentro de los límites de la matriz.
+     *
+     * @param x Fila.
+     * @param y Columna.
+     * @param filas Total filas.
+     * @param columnas Total columnas.
+     * @return {@code true} si la posición es segura de acceder.
+     */
     private boolean esPosicionValida(int x, int y, int filas, int columnas) {
         return x >= 0 && x < filas && y >= 0 && y < columnas;
     }

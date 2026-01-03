@@ -3,15 +3,35 @@ package Main.ui.consola;
 import Main.controlador.ControladorAutenticacion;
 import Main.ui.util.ConsoleUtils;
 
-// Vista para el sistema de autenticación
+/**
+ * Representa la interfaz de usuario basada en consola para el sistema de autenticación.
+ * <p>
+ * Esta vista se encarga de interactuar con el usuario para gestionar el acceso
+ * al juego, incluyendo el inicio de sesión, registro de nuevos perfiles y
+ * recuperación de credenciales, delegando la lógica al {@link ControladorAutenticacion}.
+ * </p>
+ * * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
+ */
 public class AutenticacionConsola {
+
+    /**
+     * Controlador que gestiona la lógica de negocio para la autenticación.
+     */
     private ControladorAutenticacion controlador;
 
+    /**
+     * Crea una nueva instancia de la vista de autenticación.
+     * * @param controlador El controlador de autenticación que manejará las peticiones.
+     */
     public AutenticacionConsola(ControladorAutenticacion controlador) {
         this.controlador = controlador;
     }
 
-    // Muestra el menú de autenticación
+    /**
+     * Despliega en consola el menú principal de autenticación con sus opciones.
+     */
     public void mostrarMenu() {
         ConsoleUtils.limpiarConsola();
         System.out.println("=== 🔐 ACCESO AL TEMPLO PERDIDO ===");
@@ -22,8 +42,11 @@ public class AutenticacionConsola {
         System.out.println("====================================");
     }
 
-    // Maneja el menú de autenticación y retorna el email del usuario autenticado o
-    // null
+    /**
+     * Captura la opción del usuario y ejecuta la acción correspondiente.
+     * * @return El correo electrónico del usuario autenticado, "SALIR" si se elige abandonar,
+     * o {@code null} si la operación no resultó en una sesión activa.
+     */
     public String manejarMenu() {
         int opcion = ConsoleUtils.leerEntero("Seleccione una opción: ");
 
@@ -51,7 +74,10 @@ public class AutenticacionConsola {
         }
     }
 
-    // Maneja el inicio de sesión
+    /**
+     * Gestiona el flujo de inicio de sesión capturando credenciales por consola.
+     * * @return El correo electrónico si la autenticación es exitosa, {@code null} en caso contrario.
+     */
     public String iniciarSesion() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🗝️  INGRESO AL TEMPLO ===");
@@ -72,7 +98,10 @@ public class AutenticacionConsola {
         }
     }
 
-    // Maneja el registro de un nuevo usuario
+    /**
+     * Gestiona el registro de un nuevo usuario, realizando validaciones de formato
+     * y seguridad antes de persistir los datos.
+     */
     public void registrarUsuario() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 📝 REGISTRO DE NUEVO HUNTER ===");
@@ -122,7 +151,10 @@ public class AutenticacionConsola {
         ConsoleUtils.pausar();
     }
 
-    // Maneja la recuperación de contraseña
+    /**
+     * Gestiona la recuperación de cuenta permitiendo al usuario establecer
+     * una nueva contraseña tras validar su existencia en el sistema.
+     */
     public void recuperarContrasenia() {
         ConsoleUtils.limpiarConsola();
         ConsoleUtils.mostrarMensaje("=== 🔑 RECUPERACIÓN DE CONTRASEÑA MÁGICA ===");

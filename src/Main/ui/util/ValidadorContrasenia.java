@@ -18,7 +18,7 @@ import java.util.Scanner;
  * 
  * @author Jose Berroteran
  * @version 1.0
- * @since 2025-11-15
+ * @since 11/11/25
  */
 public class ValidadorContrasenia {
     /** Scanner para capturar la entrada de datos del usuario desde la consola. */

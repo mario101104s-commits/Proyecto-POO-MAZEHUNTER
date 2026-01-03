@@ -34,6 +34,17 @@ import java.util.Optional;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Representa la interfaz visual del entorno de juego activo para Maze Hunter.
+ * <p>
+ * Gestiona el renderizado 2D mediante un {@link Canvas}, el sistema de HUD dinámico,
+ * el procesamiento de eventos de teclado y el ciclo de vida visual de la partida.
+ * </p>
+ *
+ * @author Mario Sanchez
+ * @version 1.2
+ * @since 22/12/25
+ */
 public class VistaJuego extends BorderPane {
 
     private ControladorJuego controlador;
@@ -54,6 +65,12 @@ public class VistaJuego extends BorderPane {
 
     private static final int TILE_SIZE = 32;
 
+    /**
+     * Construye la vista del juego, carga los recursos gráficos e inicializa los componentes del HUD.
+     *
+     * @param controlador El controlador de lógica del juego.
+     * @param onExit      Callback para volver al menú principal.
+     */
     public VistaJuego(ControladorJuego controlador, Runnable onExit) {
         this.controlador = controlador;
         this.onExit = onExit;
@@ -67,17 +84,28 @@ public class VistaJuego extends BorderPane {
         inicializarTimer();
     }
 
+    /**
+     * Inicializa el cronómetro de la interfaz para actualizar el tiempo transcurrido cada segundo.
+     */
     private void inicializarTimer() {
         timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> actualizarHUD()));
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
     }
 
+    /**
+     * Activa o desactiva la capa visual de niebla de guerra.
+     *
+     * @param niebla true para activar la niebla, false para ver el mapa completo.
+     */
     public void setNiebla(boolean niebla) {
         this.niebla = niebla;
         dibujar();
     }
 
+    /**
+     * Carga las imágenes necesarias para el renderizado desde el directorio de recursos.
+     */
     private void cargarImagenes() {
         imagenes = new HashMap<>();
         String[] nombres = { "jugador", "muro", "muro_rojo", "suelo", "cristal", "bomba",
@@ -93,6 +121,9 @@ public class VistaJuego extends BorderPane {
         }
     }
 
+    /**
+     * Configura la disposición de los elementos gráficos (HUD superior, inferior y canvas central).
+     */
     private void inicializarGUI() {
         // HUD Superior
         HBox hud = new HBox(20);
@@ -167,6 +198,9 @@ public class VistaJuego extends BorderPane {
         this.setCenter(scrollPane);
     }
 
+    /**
+     * Despliega un diálogo de confirmación que permite guardar la partida o salir al menú.
+     */
     private void mostrarMenuPausa() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Menú de Pausa");
@@ -196,6 +230,12 @@ public class VistaJuego extends BorderPane {
         }
     }
 
+    /**
+     * Muestra un mensaje informativo al usuario.
+     *
+     * @param titulo  El título del diálogo.
+     * @param mensaje El contenido del mensaje.
+     */
     private void mostrarMensajeInfo(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -204,12 +244,24 @@ public class VistaJuego extends BorderPane {
         alert.showAndWait();
     }
 
+    /**
+     * Crea un objeto {@link Label} estilizado para el HUD.
+     *
+     * @param text El texto inicial del label.
+     * @return El label configurado.
+     */
     private Label crearLabelHUD(String text) {
         Label l = new Label(text);
         l.setStyle("-fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'Serif';");
         return l;
     }
 
+    /**
+     * Realiza el renderizado gráfico de todas las celdas del laberinto y el jugador.
+     * <p>
+     * Se encarga de procesar la visibilidad (niebla) y las capas de dibujo (suelo y objetos).
+     * </p>
+     */
     private void dibujar() {
         Juego juego = controlador.getJuego();
         Laberinto lab = juego.getLaberinto();
@@ -263,6 +315,9 @@ public class VistaJuego extends BorderPane {
         actualizarHUD();
     }
 
+    /**
+     * Sincroniza los elementos visuales del HUD con el estado actual del jugador y el tiempo.
+     */
     private void actualizarHUD() {
         Jugador j = controlador.getJuego().getJugador();
         lblVida.setText("Vida: " + j.getVida() + "%");
@@ -282,6 +337,11 @@ public class VistaJuego extends BorderPane {
         }
     }
 
+    /**
+     * Gestiona las pulsaciones de teclas para el movimiento y uso de objetos.
+     *
+     * @param event El evento de teclado capturado.
+     */
     private void manejarTeclado(KeyEvent event) {
         Juego juego = controlador.getJuego();
         if (juego.getEstado() != EstadoJuego.EN_CURSO)
@@ -309,6 +369,9 @@ public class VistaJuego extends BorderPane {
         }
     }
 
+    /**
+     * Verifica si el juego ha terminado (Victoria o Derrota) y realiza las acciones pertinentes.
+     */
     private void verificarFinJuego() {
         Juego juego = controlador.getJuego();
         if (juego.getEstado() == EstadoJuego.GANADO) {
@@ -317,12 +380,18 @@ public class VistaJuego extends BorderPane {
             controlador.terminarJuego(juego);
             onExit.run();
         } else if (juego.getEstado() == EstadoJuego.PERDIDO) {
-            mostrarAlerta("DERROTA", "Has perecido en el laberinto.");
+            mostrarAlerta("DERROTA", "Has perdido en el laberinto.");
             controlador.terminarJuego(juego);
             onExit.run();
         }
     }
 
+    /**
+     * Muestra un diálogo de alerta de tipo información.
+     *
+     * @param titulo  El título de la alerta.
+     * @param mensaje El contenido del mensaje.
+     */
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);

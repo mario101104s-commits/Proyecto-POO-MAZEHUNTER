@@ -32,12 +32,12 @@ public class ConsoleUtils {
                         .start()
                         .waitFor();
             } else {
-                // Para Linux/Mac - método más seguro
+                // Para Linux/Mac - metodo más seguro
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
             }
         } catch (Exception e) {
-            // Método de respaldo: imprimir múltiples líneas nuevas
+            // Metodo de respaldo: imprimir múltiples líneas nuevas
             limpiarConsolaRespaldo();
         }
     }

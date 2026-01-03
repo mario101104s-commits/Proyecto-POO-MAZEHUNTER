@@ -1,0 +1,28 @@
+[
+  {
+    "usuario": "val@nir.com",
+    "fecha": "2026-01-03T08:34:04.4435948",
+    "tiempoSegundos": 13,
+    "cristalesRecolectados": 2,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "7x19",
+    "ganado": false,
+    "bombasRecolectadas": 3,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0
+  },
+  {
+    "usuario": "val@nir.com",
+    "fecha": "2026-01-03T08:34:11.8128367",
+    "tiempoSegundos": 21,
+    "cristalesRecolectados": 2,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "7x19",
+    "ganado": true,
+    "bombasRecolectadas": 3,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0
+  }
+]

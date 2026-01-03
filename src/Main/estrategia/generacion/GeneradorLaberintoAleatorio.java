@@ -7,20 +7,57 @@ import Main.servicio.Interfaces.GeneradorLaberinto;
 
 import java.util.*;
 
-// Estrategia de generación completamente aleatoria
-// Genera laberintos impredecibles - Dificultad VARIABLE
+/**
+ * Implementación de la estrategia de generación de laberintos basada en algoritmos aleatorios.
+ * <p>
+ * Esta clase genera estructuras impredecibles utilizando una distribución probabilística
+ * (60% caminos, 40% muros). Incluye mecanismos para garantizar la resolubilidad del laberinto
+ * mediante la creación forzada de un camino entre los extremos y la distribución aleatoria
+ * de objetos especiales.
+ * </p>
+ *
+ * @author Jose Berroteran
+ * @version 1.0
+ */
 public class GeneradorLaberintoAleatorio implements GeneradorLaberinto {
+
+    /** Generador de números aleatorios para la toma de decisiones algorítmicas. */
     private Random random;
 
+    /**
+     * Constructor por defecto. Inicializa el generador de aleatoriedad.
+     */
     public GeneradorLaberintoAleatorio() {
         this.random = new Random();
     }
 
+    /**
+     * Genera un laberinto utilizando la hora actual del sistema como semilla.
+     *
+     * @param filas Cantidad de filas del laberinto.
+     * @param columnas Cantidad de columnas del laberinto.
+     * @return Un objeto {@link Laberinto} generado aleatoriamente.
+     */
     @Override
     public Laberinto generar(int filas, int columnas) {
         return generarConSemilla(filas, columnas, System.currentTimeMillis());
     }
 
+    /**
+     * Genera un laberinto con una semilla específica para permitir la recreación de mapas.
+     * <p>
+     * El proceso de generación sigue estas etapas:
+     * 1. Población inicial basada en probabilidades.
+     * 2. Sellado de bordes perimetrales con muros.
+     * 3. Garantía de conectividad entre entrada y salida.
+     * 4. Colocación de elementos especiales (cristales, trampas, llaves, energía).
+     * </p>
+     *
+     * @param filas Número de filas.
+     * @param columnas Número de columnas.
+     * @param semilla Valor de inicialización para el generador aleatorio.
+     * @return Un objeto {@link Laberinto} completamente configurado.
+     */
     @Override
     public Laberinto generarConSemilla(int filas, int columnas, long semilla) {
         this.random = new Random(semilla);
@@ -39,7 +76,7 @@ public class GeneradorLaberintoAleatorio implements GeneradorLaberinto {
             }
         }
 
-        // Asegurar bordes
+        // Asegurar bordes (Muros perimetrales)
         for (int i = 0; i < filas; i++) {
             celdas[i][0].setTipo(TipoCelda.MURO);
             celdas[i][columnas - 1].setTipo(TipoCelda.MURO);
@@ -57,8 +94,18 @@ public class GeneradorLaberintoAleatorio implements GeneradorLaberinto {
         return new Laberinto(celdas, filas, columnas);
     }
 
+    /**
+     * Crea un camino garantizado desde la esquina superior izquierda a la inferior derecha.
+     * <p>
+     * Este método asegura que, independientemente de la aleatoriedad inicial, el jugador
+     * siempre tenga una ruta física para completar el nivel.
+     * </p>
+     *
+     * @param celdas Matriz de celdas a modificar.
+     * @param filas Filas totales.
+     * @param columnas Columnas totales.
+     */
     private void asegurarConectividad(Celda[][] celdas, int filas, int columnas) {
-        // Crear camino garantizado desde esquina superior izquierda a inferior derecha
         int x = 1;
         int y = 1;
 
@@ -74,6 +121,17 @@ public class GeneradorLaberintoAleatorio implements GeneradorLaberinto {
         celdas[x][y].setTipo(TipoCelda.CAMINO);
     }
 
+    /**
+     * Identifica las celdas transitables y distribuye los objetos del juego.
+     * <p>
+     * Utiliza un sistema de barajado (shuffle) sobre la lista de posiciones de camino
+     * para ubicar la entrada, la salida y los consumibles de forma dispersa.
+     * </p>
+     *
+     * @param celdas Matriz del laberinto.
+     * @param filas Dimensiones verticales.
+     * @param columnas Dimensiones horizontales.
+     */
     private void colocarElementosEspeciales(Celda[][] celdas, int filas, int columnas) {
         List<int[]> posicionesCaminos = new ArrayList<>();
 
@@ -128,6 +186,14 @@ public class GeneradorLaberintoAleatorio implements GeneradorLaberinto {
         }
     }
 
+    /**
+     * Busca una coordenada dentro de la lista de posiciones que aún sea de tipo CAMINO.
+     *
+     * @param celdas Matriz de celdas.
+     * @param posiciones Lista de coordenadas disponibles.
+     * @param inicio Índice de inicio para la búsqueda.
+     * @return Arreglo [fila, columna] o {@code null} si no hay posiciones válidas.
+     */
     private int[] encontrarPosicionValida(Celda[][] celdas, List<int[]> posiciones, int inicio) {
         for (int i = inicio; i < posiciones.size(); i++) {
             int[] pos = posiciones.get(i);

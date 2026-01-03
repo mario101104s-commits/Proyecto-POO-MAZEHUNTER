@@ -2,127 +2,87 @@ package Main.modelo.Transferencia;
 
 /**
  * Objeto de Transferencia de Datos (DTO) que encapsula el resultado final y las
- * métricas
- * de rendimiento de una partida de Maze Hunter.
+ * métricas de rendimiento de una partida de Maze Hunter.
  * <p>
  * Se utiliza para comunicar los datos resumidos de la partida a la capa de
- * presentación
- * y para crear objetos de tipo {@code EstadisticasJuego} para la persistencia.
+ * presentación y para facilitar la creación de registros históricos en la persistencia.
+ * Al ser un DTO, no contiene lógica de negocio, solo contenedores de datos.
  * </p>
- * 
- * @author Mario Sanchez
+ * * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
  */
 public class ResultadoJuego {
-    /**
-     * El tiempo total transcurrido en la partida, medido en segundos.
-     */
+    /** El tiempo total transcurrido en la partida, medido en segundos. */
     private long tiempoSegundos;
-    /**
-     * La cantidad de ítems de cristal recolectados por el jugador.
-     */
+    /** La cantidad de ítems de cristal recolectados por el jugador. */
     private int cristalesRecolectados;
-    /**
-     * El número de veces que el jugador activó una trampa.
-     */
+    /** El número de veces que el jugador activó una trampa. */
     private int trampasActivadas;
-    /**
-     * La cantidad de vida que le restaba al jugador al finalizar la partida.
-     */
+    /** La cantidad de vida que le restaba al jugador al finalizar la partida. */
     private int vidaRestante;
-    /**
-     * La dimensión del laberinto en el que se jugó la partida ).
-     */
+    /** La dimensión del laberinto en el que se jugó la partida. */
     private String tamanioLaberinto;
-    /**
-     * Indica si la partida terminó en victoria ({@code true}) o derrota
-     * ({@code false}).
-     */
+    /** Indica si la partida terminó en victoria (true) o derrota (false). */
     private boolean ganado;
 
-    // Nuevas estadísticas
+    /** Cantidad de bombas obtenidas durante la exploración. */
     private int bombasRecolectadas;
+    /** Cantidad de muros eliminados mediante el uso de bombas. */
     private int murosDestruidos;
+    /** Cantidad de fósforos consumidos para iluminar el laberinto. */
     private int fosforosUsados;
 
-    // Getters y Setters
+    /** @return Segundos totales de duración. */
+    public long getTiempoSegundos() { return tiempoSegundos; }
+    /** @param tiempoSegundos Duración final de la partida. */
+    public void setTiempoSegundos(long tiempoSegundos) { this.tiempoSegundos = tiempoSegundos; }
 
-    public long getTiempoSegundos() {
-        return tiempoSegundos;
-    }
+    /** @return Total de cristales obtenidos. */
+    public int getCristalesRecolectados() { return cristalesRecolectados; }
+    /** @param cristalesRecolectados Cantidad de cristales para el resumen. */
+    public void setCristalesRecolectados(int cristalesRecolectados) { this.cristalesRecolectados = cristalesRecolectados; }
 
-    public void setTiempoSegundos(long tiempoSegundos) {
-        this.tiempoSegundos = tiempoSegundos;
-    }
+    /** @return Total de trampas accionadas. */
+    public int getTrampasActivadas() { return trampasActivadas; }
+    /** @param trampasActivadas Número de trampas para el resumen. */
+    public void setTrampasActivadas(int trampasActivadas) { this.trampasActivadas = trampasActivadas; }
 
-    public int getCristalesRecolectados() {
-        return cristalesRecolectados;
-    }
+    /** @return Salud final del jugador. */
+    public int getVidaRestante() { return vidaRestante; }
+    /** @param vidaRestante Porcentaje de salud restante. */
+    public void setVidaRestante(int vidaRestante) { this.vidaRestante = vidaRestante; }
 
-    public void setCristalesRecolectados(int cristalesRecolectados) {
-        this.cristalesRecolectados = cristalesRecolectados;
-    }
+    /** @return Nombre o dimensiones del laberinto. */
+    public String getTamanioLaberinto() { return tamanioLaberinto; }
+    /** @param tamanioLaberinto Descripción del mapa jugado. */
+    public void setTamanioLaberinto(String tamanioLaberinto) { this.tamanioLaberinto = tamanioLaberinto; }
 
-    public int getTrampasActivadas() {
-        return trampasActivadas;
-    }
+    /** @return true si fue victoria, false si fue derrota. */
+    public boolean isGanado() { return ganado; }
+    /** @param ganado Resultado final de la sesión. */
+    public void setGanado(boolean ganado) { this.ganado = ganado; }
 
-    public void setTrampasActivadas(int trampasActivadas) {
-        this.trampasActivadas = trampasActivadas;
-    }
+    /** @return Cantidad de bombas recogidas. */
+    public int getBombasRecolectadas() { return bombasRecolectadas; }
+    /** @param bombasRecolectadas Bombas encontradas en el laberinto. */
+    public void setBombasRecolectadas(int bombasRecolectadas) { this.bombasRecolectadas = bombasRecolectadas; }
 
-    public int getVidaRestante() {
-        return vidaRestante;
-    }
+    /** @return Muros destruidos por el jugador. */
+    public int getMurosDestruidos() { return murosDestruidos; }
+    /** @param murosDestruidos Cantidad de muros rojos eliminados. */
+    public void setMurosDestruidos(int murosDestruidos) { this.murosDestruidos = murosDestruidos; }
 
-    public void setVidaRestante(int vidaRestante) {
-        this.vidaRestante = vidaRestante;
-    }
-
-    public String getTamanioLaberinto() {
-        return tamanioLaberinto;
-    }
-
-    public void setTamanioLaberinto(String tamanioLaberinto) {
-        this.tamanioLaberinto = tamanioLaberinto;
-    }
-
-    public boolean isGanado() {
-        return ganado;
-    }
-
-    public void setGanado(boolean ganado) {
-        this.ganado = ganado;
-    }
-
-    public int getBombasRecolectadas() {
-        return bombasRecolectadas;
-    }
-
-    public void setBombasRecolectadas(int bombasRecolectadas) {
-        this.bombasRecolectadas = bombasRecolectadas;
-    }
-
-    public int getMurosDestruidos() {
-        return murosDestruidos;
-    }
-
-    public void setMurosDestruidos(int murosDestruidos) {
-        this.murosDestruidos = murosDestruidos;
-    }
-
-    public int getFosforosUsados() {
-        return fosforosUsados;
-    }
-
-    public void setFosforosUsados(int fosforosUsados) {
-        this.fosforosUsados = fosforosUsados;
-    }
+    /** @return Fósforos utilizados durante la partida. */
+    public int getFosforosUsados() { return fosforosUsados; }
+    /** @param fosforosUsados Cantidad de fósforos consumidos. */
+    public void setFosforosUsados(int fosforosUsados) { this.fosforosUsados = fosforosUsados; }
 
     /**
      * Proporciona una representación legible y formateada del resultado del juego.
-     *
+     * <p>
+     * Utiliza iconos decorativos para mejorar la legibilidad en interfaces de consola.
+     * </p>
      * @return Una cadena de texto que detalla las métricas clave de la partida.
      */
     @Override
@@ -142,6 +102,4 @@ public class ResultadoJuego {
                 vidaRestante, tamanioLaberinto, bombasRecolectadas, murosDestruidos, fosforosUsados,
                 ganado ? "GANADO" : "PERDIDO");
     }
-
-    ;
 }

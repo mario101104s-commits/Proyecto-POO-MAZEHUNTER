@@ -8,162 +8,107 @@ import java.time.format.DateTimeFormatter;
  * de Maze Hunter.
  * <p>
  * Esta clase es utilizada por el sistema de persistencia para guardar un
- * registro
- * historico de las partidas jugadas por cada usuario.
+ * registro histórico de las partidas jugadas por cada usuario, permitiendo
+ * el seguimiento de su progreso y logros.
  * </p>
- * 
- * @author Mario Sanchez
+ * * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
  */
-
 public class EstadisticasJuego {
-    /**
-     * El correo electronico del usuario asociado a estas estadisticas.
-     */
+    /** El correo electrónico del usuario asociado a estas estadísticas. */
     private String usuario;
-    /**
-     * La fecha y hora exactas en que se guardaron estas estadisticas.
-     */
+    /** La fecha y hora exactas en que se guardaron estas estadísticas. */
     private LocalDateTime fecha;
-    /**
-     * El tiempo total que duró la partida, medido en segundos.
-     */
+    /** El tiempo total que duró la partida, medido en segundos. */
     private long tiempoSegundos;
-    /**
-     * Número de items de cristal que el jugador logro recolectar durante la
-     * partida.
-     */
+    /** Número de ítems de cristal recolectados durante la partida. */
     private int cristalesRecolectados;
-    /**
-     * El número de veces que el jugador activo una trampa.
-     */
+    /** El número de veces que el jugador activó una trampa. */
     private int trampasActivadas;
-    /**
-     * La cantidad de vida que le restaba al jugador al finalizar la partida.
-     */
+    /** La cantidad de vida que le restaba al jugador al finalizar la partida. */
     private int vidaRestante;
-
-    /**
-     * La dimension del laberinto.
-     */
+    /** La dimensión o nombre del tamaño del laberinto (ej. "15x20"). */
     private String tamanioLaberinto;
-    /**
-     * Indica si la partida termino en victoria ({@code true}) o derrota
-     * ({@code false}).
-     */
+    /** Indica si la partida terminó en victoria (true) o derrota (false). */
     private boolean ganado;
 
-    // Nuevas estadísticas
+    /** Cantidad de ítems de bomba recogidos. */
     private int bombasRecolectadas;
+    /** Cantidad de muros eliminados usando bombas. */
     private int murosDestruidos;
+    /** Cantidad de fósforos consumidos para iluminar el área. */
     private int fosforosUsados;
 
     /**
-     * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la
-     * fecha.
+     * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la fecha.
      *
-     * Los demas campos de rendimiento deben ser establecidos posteriormente a
-     * traves de sus setters.
-     *
-     * @param usuario El email del usuario que jugo la partida.
-     * @param fecha   La marca de tiempo del inicio o fin del registro de
-     *                estadísticas.
+     * @param usuario El email del usuario que jugó la partida.
+     * @param fecha   La marca de tiempo del registro de las estadísticas.
      */
     public EstadisticasJuego(String usuario, LocalDateTime fecha) {
         this.usuario = usuario;
         this.fecha = fecha;
     }
 
-    // Getters y Setters
+    // --- Getters y Setters ---
 
-    public String getUsuario() {
-        return usuario;
-    }
+    /** @return El identificador del usuario. */
+    public String getUsuario() { return usuario; }
+    /** @param usuario El identificador del usuario a establecer. */
+    public void setUsuario(String usuario) { this.usuario = usuario; }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    /** @return La fecha de la partida. */
+    public LocalDateTime getFecha() { return fecha; }
+    /** @param fecha La fecha de la partida a establecer. */
+    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
+    /** @return Duración en segundos. */
+    public long getTiempoSegundos() { return tiempoSegundos; }
+    /** @param tiempoSegundos Segundos transcurridos en la partida. */
+    public void setTiempoSegundos(long tiempoSegundos) { this.tiempoSegundos = tiempoSegundos; }
 
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
+    /** @return Total de cristales obtenidos. */
+    public int getCristalesRecolectados() { return cristalesRecolectados; }
+    /** @param cristalesRecolectados Cantidad de cristales a registrar. */
+    public void setCristalesRecolectados(int cristalesRecolectados) { this.cristalesRecolectados = cristalesRecolectados; }
 
-    public long getTiempoSegundos() {
-        return tiempoSegundos;
-    }
+    /** @return Total de trampas accionadas. */
+    public int getTrampasActivadas() { return trampasActivadas; }
+    /** @param trampasActivadas Número de trampas activadas. */
+    public void setTrampasActivadas(int trampasActivadas) { this.trampasActivadas = trampasActivadas; }
 
-    public void setTiempoSegundos(long tiempoSegundos) {
-        this.tiempoSegundos = tiempoSegundos;
-    }
+    /** @return Puntos de vida al finalizar. */
+    public int getVidaRestante() { return vidaRestante; }
+    /** @param vidaRestante Puntos de vida restantes. */
+    public void setVidaRestante(int vidaRestante) { this.vidaRestante = vidaRestante; }
 
-    public int getCristalesRecolectados() {
-        return cristalesRecolectados;
-    }
+    /** @return Descripción del tamaño del mapa. */
+    public String getTamanioLaberinto() { return tamanioLaberinto; }
+    /** @param tamanioLaberinto Nombre o dimensiones del laberinto. */
+    public void setTamanioLaberinto(String tamanioLaberinto) { this.tamanioLaberinto = tamanioLaberinto; }
 
-    public void setCristalesRecolectados(int cristalesRecolectados) {
-        this.cristalesRecolectados = cristalesRecolectados;
-    }
+    /** @return true si el jugador llegó a la salida, false de lo contrario. */
+    public boolean isGanado() { return ganado; }
+    /** @param ganado Resultado final de la partida. */
+    public void setGanado(boolean ganado) { this.ganado = ganado; }
 
-    public int getTrampasActivadas() {
-        return trampasActivadas;
-    }
+    /** @return Cantidad de bombas recogidas. */
+    public int getBombasRecolectadas() { return bombasRecolectadas; }
+    /** @param bombasRecolectadas Total de bombas en la partida. */
+    public void setBombasRecolectadas(int bombasRecolectadas) { this.bombasRecolectadas = bombasRecolectadas; }
 
-    public void setTrampasActivadas(int trampasActivadas) {
-        this.trampasActivadas = trampasActivadas;
-    }
+    /** @return Número de muros derribados. */
+    public int getMurosDestruidos() { return murosDestruidos; }
+    /** @param murosDestruidos Cantidad de muros destruidos por bombas. */
+    public void setMurosDestruidos(int murosDestruidos) { this.murosDestruidos = murosDestruidos; }
 
-    public int getVidaRestante() {
-        return vidaRestante;
-    }
+    /** @return Cantidad de fósforos empleados. */
+    public int getFosforosUsados() { return fosforosUsados; }
+    /** @param fosforosUsados Número de veces que se usó un fósforo. */
+    public void setFosforosUsados(int fosforosUsados) { this.fosforosUsados = fosforosUsados; }
 
-    public void setVidaRestante(int vidaRestante) {
-        this.vidaRestante = vidaRestante;
-    }
-
-    public String getTamanioLaberinto() {
-        return tamanioLaberinto;
-    }
-
-    public void setTamanioLaberinto(String tamanioLaberinto) {
-        this.tamanioLaberinto = tamanioLaberinto;
-    }
-
-    public boolean isGanado() {
-        return ganado;
-    }
-
-    public void setGanado(boolean ganado) {
-        this.ganado = ganado;
-    }
-
-    public int getBombasRecolectadas() {
-        return bombasRecolectadas;
-    }
-
-    public void setBombasRecolectadas(int bombasRecolectadas) {
-        this.bombasRecolectadas = bombasRecolectadas;
-    }
-
-    public int getMurosDestruidos() {
-        return murosDestruidos;
-    }
-
-    public void setMurosDestruidos(int murosDestruidos) {
-        this.murosDestruidos = murosDestruidos;
-    }
-
-    public int getFosforosUsados() {
-        return fosforosUsados;
-    }
-
-    public void setFosforosUsados(int fosforosUsados) {
-        this.fosforosUsados = fosforosUsados;
-    }
+    // --- Métodos de Utilidad ---
 
     /**
      * Formatea la fecha de la partida a un formato de cadena legible.
@@ -176,11 +121,9 @@ public class EstadisticasJuego {
     }
 
     /**
-     * Proporciona una representacion en cadena concisa de las estadísticas
-     * principales.
+     * Proporciona una representación en cadena concisa de las estadísticas principales.
      *
-     * @return Un string con el resumen de la fecha, el resultado, el tamaño del
-     *         laberinto y los cristales recolectados.
+     * @return Un string con el resumen de la fecha, el resultado y el rendimiento.
      */
     @Override
     public String toString() {

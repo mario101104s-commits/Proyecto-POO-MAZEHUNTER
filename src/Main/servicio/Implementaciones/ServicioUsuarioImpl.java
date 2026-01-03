@@ -1,5 +1,6 @@
 package Main.servicio.Implementaciones;
 
+import Main.servicio.Implementaciones.CifradorImpl;
 import Main.modelo.Dominio.Usuario;
 import Main.servicio.Interfaces.Persistencia;
 import Main.servicio.Interfaces.ServicioUsuario;
@@ -16,7 +17,7 @@ import java.util.List;
  * obtención de información de la cuenta, interactuando con la capa de
  * persistencia.
  * </p>
- * 
+ *
  * @author Jose Berroteran
  * @version 1.0
  * @since 11/11/2025
@@ -25,7 +26,7 @@ import java.util.List;
 public class ServicioUsuarioImpl implements ServicioUsuario {
     /** Referencia a la capa de persistencia para acceso a datos. */
     private Persistencia persistencia;
-
+    private CifradorImpl cifrador = new CifradorImpl();
     /**
      * Formateador estándar para mostrar fechas y horas de registro de manera
      * legible.
@@ -58,7 +59,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
      * Si el email ya existe, el registro falla. En caso contrario, crea el objeto
      * {@code Usuario} con la fecha actual y lo guarda en la persistencia.
      * </p>
-     * 
+     *
      * @param email              El correo electrónico del nuevo usuario.
      * @param contraseniaCifrada La contraseña ya cifrada.
      * @return {@code true} si el usuario fue registrado exitosamente, {@code false}
@@ -66,11 +67,12 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
      */
     @Override
     public boolean registrarUsuario(String email, String contraseniaCifrada) {
-        if (persistencia.existeUsuario(email)) {
+        String emailCifrado = cifrador.cifrarEmail(email);
+        if (persistencia.existeUsuario(emailCifrado)) {
             return false;
         }
         String fechaRegistro = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        Usuario nuevoUsuario = new Usuario(email, contraseniaCifrada, fechaRegistro);
+        Usuario nuevoUsuario = new Usuario(emailCifrado, contraseniaCifrada, fechaRegistro);
 
         return persistencia.guardarUsuario(nuevoUsuario);
     }
@@ -81,7 +83,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
      * Carga el usuario por email y compara la contraseña cifrada proporcionada
      * con la almacenada.
      * </p>
-     * 
+     *
      * @param email              El correo electrónico del usuario.
      * @param contraseniaCifrada La contraseña ingresada por el usuario (ya
      *                           cifrada).
@@ -90,7 +92,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
      */
     @Override
     public boolean autenticarUsuario(String email, String contraseniaCifrada) {
-        Usuario usuario = persistencia.cargarUsuario(email);
+
+        String emailProtegido = cifrador.cifrarEmail(email);
+
+        Usuario usuario = persistencia.cargarUsuario(emailProtegido);
+
         return usuario != null && usuario.getContraseniaCifrada().equals(contraseniaCifrada);
     }
 
@@ -138,7 +144,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
      */
     @Override
     public boolean existeUsuario(String email) {
-        return persistencia.existeUsuario(email);
+        return persistencia.existeUsuario(cifrador.cifrarEmail(email));
     }
 
     /**
@@ -160,7 +166,7 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
      */
     @Override
     public Usuario obtenerUsuario(String email) {
-        return persistencia.cargarUsuario(email);
+        return persistencia.cargarUsuario(cifrador.cifrarEmail(email));
     }
 
     /**
@@ -217,8 +223,11 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
         return stats.toString();
     }
-
-    // Actualiza la información de un usuario existente
+    /**
+     * Actualiza los datos de un usuario en el almacenamiento persistente.
+     * * @param usuario Objeto con la información actualizada.
+     * @throws Exception Si el usuario no existe o hay un error en la base de datos/archivo.
+     */
     @Override
     public void actualizarUsuario(Usuario usuario) throws Exception {
         persistencia.actualizarUsuario(usuario);

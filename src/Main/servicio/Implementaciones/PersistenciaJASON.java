@@ -1,19 +1,23 @@
 package Main.servicio.Implementaciones;
 
+
 //Pasos para agregar Libreria GSON:
 //File > Project Structure > Libraries
 //Click + > From Maven
 //Buscar: com.google.code.gson:gson:2.10.1
 //Click OK para descargar y agregar
 
+
 import Main.modelo.Constantes.EstadoJuego;
 import Main.modelo.Constantes.TipoCelda;
 import Main.modelo.Dominio.*;
 import Main.servicio.Interfaces.Persistencia;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -23,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Implementación concreta de la interfaz {@code Persistencia} utilizando
@@ -34,11 +39,12 @@ import java.util.List;
  * directorios
  * para el almacenamiento de archivos.
  * </p>
- * 
+ *
  * @author Mario Sanchez y Niyerlin Muñoz
  * @version 1.0
  * @since 2025-11-15
  */
+
 
 public class PersistenciaJASON implements Persistencia {
     /** El directorio base donde se almacenan todos los archivos de datos. */
@@ -54,6 +60,7 @@ public class PersistenciaJASON implements Persistencia {
     /** Instancia de Gson configurada para manejar formatos y tipos específicos. */
     private Gson gson;
 
+
     /**
      * Constructor. Inicializa la instancia de Gson con formato bonito y el
      * adaptador
@@ -67,9 +74,11 @@ public class PersistenciaJASON implements Persistencia {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()) // ✅ REGISTRAR EL ADAPTER
                 .create();
 
+
         // Crear directorios si no existen
         crearDirectorios();
     }
+
 
     /**
      * Crea los directorios base de datos si no existen previamente.
@@ -83,6 +92,7 @@ public class PersistenciaJASON implements Persistencia {
             System.err.println("Error creando directorios: " + e.getMessage());
         }
     }
+
 
     // ===== IMPLEMENTACIÓN DE USUARIOS =====
     /**
@@ -98,29 +108,34 @@ public class PersistenciaJASON implements Persistencia {
     public boolean guardarUsuario(Usuario usuario) {
         try {
             List<Usuario> usuarios = cargarTodosUsuarios();
-
-            // Verificar si el usuario ya existe
             for (Usuario u : usuarios) {
-                if (u.getEmail().equalsIgnoreCase(usuario.getEmail())) {
+
+
+                if (u != null && u.getEmail() != null && u.getEmail().equalsIgnoreCase(usuario.getEmail())) {
                     return false; // Usuario ya existe
                 }
             }
 
+
             // Agregar nuevo usuario
             usuarios.add(usuario);
+
 
             // Guardar lista actualizada
             try (FileWriter writer = new FileWriter(ARCHIVO_USUARIOS)) {
                 gson.toJson(usuarios, writer);
             }
 
+
             return true;
+
 
         } catch (IOException e) {
             System.err.println("Error guardando usuario: " + e.getMessage());
             return false;
         }
     }
+
 
     /**
      * Carga un usuario específico por su correo electrónico.
@@ -133,14 +148,15 @@ public class PersistenciaJASON implements Persistencia {
     public Usuario cargarUsuario(String email) {
         List<Usuario> usuarios = cargarTodosUsuarios();
 
+
         for (Usuario usuario : usuarios) {
-            if (usuario.getEmail().equalsIgnoreCase(email)) {
+            if (usuario != null && usuario.getEmail() != null && usuario.getEmail().equalsIgnoreCase(email)) {
                 return usuario;
             }
         }
-
         return null;
     }
+
 
     /**
      * Carga la lista completa de todos los usuarios registrados desde el archivo
@@ -157,6 +173,7 @@ public class PersistenciaJASON implements Persistencia {
                 return new ArrayList<>();
             }
 
+
             try (FileReader reader = new FileReader(archivo)) {
                 Type listType = new TypeToken<ArrayList<Usuario>>() {
                 }.getType();
@@ -164,11 +181,13 @@ public class PersistenciaJASON implements Persistencia {
                 return usuarios != null ? usuarios : new ArrayList<>();
             }
 
+
         } catch (IOException e) {
             System.err.println("Error cargando usuarios: " + e.getMessage());
             return new ArrayList<>();
         }
     }
+
 
     /**
      * Escribe la lista completa de usuarios al archivo {@code usuarios.json}.
@@ -182,6 +201,7 @@ public class PersistenciaJASON implements Persistencia {
             gson.toJson(usuarios, writer);
         }
     }
+
 
     /**
      * Actualiza la información de un usuario existente (normalmente para cambiar la
@@ -206,12 +226,14 @@ public class PersistenciaJASON implements Persistencia {
             }
         }
 
+
         if (encontrado) {
             guardarListaUsuarios(usuarios);
         } else {
             throw new Exception("Error al actualizar la contraseña: Usuario no encontrado en la base de datos.");
         }
     }
+
 
     /**
      * Verifica la existencia de un usuario por su correo electrónico.
@@ -223,6 +245,7 @@ public class PersistenciaJASON implements Persistencia {
     public boolean existeUsuario(String email) {
         return cargarUsuario(email) != null;
     }
+
 
     /**
      * Implementación del metodo de la interfaz {@code Persistencia} para cargar
@@ -237,10 +260,11 @@ public class PersistenciaJASON implements Persistencia {
         cargarTodosUsuarios();
     }
 
+
     /**
      * Implementación del metodo de la interfaz {@code Persistencia} para cargar
      * estadísticas.
-     * 
+     *
      * @return {@code null}
      */
     @Override
@@ -248,6 +272,7 @@ public class PersistenciaJASON implements Persistencia {
         cargarTodasEstadisticas();
         return null;
     }
+
 
     /**
      * Guarda el estado actual de un juego serializándolo en un archivo JSON usando
@@ -263,20 +288,25 @@ public class PersistenciaJASON implements Persistencia {
         try {
             String archivoJuego = DIRECTORIO_JUEGOS + juego.getUsuario() + ".json";
 
+
             // Convertir juego a DTO para serialización
             JuegoDTO juegoDTO = new JuegoDTO(juego);
+
 
             try (FileWriter writer = new FileWriter(archivoJuego)) {
                 gson.toJson(juegoDTO, writer);
             }
 
+
             return true;
+
 
         } catch (IOException e) {
             System.err.println("Error guardando juego: " + e.getMessage());
             return false;
         }
     }
+
 
     /**
      * Carga el juego guardado de un usuario por su email.
@@ -291,20 +321,24 @@ public class PersistenciaJASON implements Persistencia {
             String archivoJuego = DIRECTORIO_JUEGOS + usuario + ".json";
             File archivo = new File(archivoJuego);
 
+
             if (!archivo.exists()) {
                 return null;
             }
+
 
             try (FileReader reader = new FileReader(archivo)) {
                 JuegoDTO juegoDTO = gson.fromJson(reader, JuegoDTO.class);
                 return juegoDTO != null ? juegoDTO.toJuego() : null;
             }
 
+
         } catch (IOException e) {
             System.err.println("Error cargando juego: " + e.getMessage());
             return null;
         }
     }
+
 
     /**
      * Verifica si existe una partida guardada para un usuario específico.
@@ -318,6 +352,7 @@ public class PersistenciaJASON implements Persistencia {
         return new File(archivoJuego).exists();
     }
 
+
     // ===== IMPLEMENTACIÓN DE ESTADÍSTICAS =====
     /**
      * Guarda las estadísticas de una partida.
@@ -325,7 +360,7 @@ public class PersistenciaJASON implements Persistencia {
      * Agrega las nuevas estadísticas a la lista histórica existente del usuario y
      * rescribe el archivo.
      * </p>
-     * 
+     *
      * @param estadisticas El objeto {@code EstadisticasJuego} a guardar.
      * @return {@code true} si las estadísticas fueron guardadas exitosamente.
      */
@@ -334,20 +369,25 @@ public class PersistenciaJASON implements Persistencia {
         try {
             String archivoEstadisticas = DIRECTORIO_ESTADISTICAS + estadisticas.getUsuario() + ".json";
 
+
             List<EstadisticasJuego> estadisticasUsuario = cargarEstadisticas(estadisticas.getUsuario());
             estadisticasUsuario.add(estadisticas);
+
 
             try (FileWriter writer = new FileWriter(archivoEstadisticas)) {
                 gson.toJson(estadisticasUsuario, writer);
             }
 
+
             return true;
+
 
         } catch (IOException e) {
             System.err.println("Error guardando estadísticas: " + e.getMessage());
             return false;
         }
     }
+
 
     /**
      * Carga la lista de estadísticas históricas asociadas a un usuario específico.
@@ -362,9 +402,11 @@ public class PersistenciaJASON implements Persistencia {
             String archivoEstadisticas = DIRECTORIO_ESTADISTICAS + usuario + ".json";
             File archivo = new File(archivoEstadisticas);
 
+
             if (!archivo.exists()) {
                 return new ArrayList<>();
             }
+
 
             try (FileReader reader = new FileReader(archivo)) {
                 Type listType = new TypeToken<ArrayList<EstadisticasJuego>>() {
@@ -373,11 +415,13 @@ public class PersistenciaJASON implements Persistencia {
                 return estadisticas != null ? estadisticas : new ArrayList<>();
             }
 
+
         } catch (IOException e) {
             System.err.println("Error cargando estadísticas: " + e.getMessage());
             return new ArrayList<>();
         }
     }
+
 
     /**
      * Carga todas las estadísticas de juego de todos los usuarios, recorriendo el
@@ -391,8 +435,10 @@ public class PersistenciaJASON implements Persistencia {
         List<EstadisticasJuego> todasEstadisticas = new ArrayList<>();
         File directorio = new File(DIRECTORIO_ESTADISTICAS);
 
+
         if (directorio.exists() && directorio.isDirectory()) {
             File[] archivos = directorio.listFiles((dir, name) -> name.endsWith(".json"));
+
 
             if (archivos != null) {
                 for (File archivo : archivos) {
@@ -402,8 +448,10 @@ public class PersistenciaJASON implements Persistencia {
             }
         }
 
+
         return todasEstadisticas;
     }
+
 
     /**
      * Carga todas las estadísticas de juego de un usuario dado.
@@ -418,19 +466,23 @@ public class PersistenciaJASON implements Persistencia {
             String archivoEstadisticas = DIRECTORIO_ESTADISTICAS + usuario + ".json";
             File archivo = new File(archivoEstadisticas);
 
+
             // ✅ SI el archivo no existe, retornar lista vacía, no null
             if (!archivo.exists()) {
                 return new ArrayList<>();
             }
+
 
             try (FileReader reader = new FileReader(archivo)) {
                 Type listType = new TypeToken<ArrayList<EstadisticasJuego>>() {
                 }.getType();
                 List<EstadisticasJuego> estadisticas = gson.fromJson(reader, listType);
 
+
                 // ✅ GARANTIZAR que nunca retorne null
                 return estadisticas != null ? estadisticas : new ArrayList<>();
             }
+
 
         } catch (IOException e) {
             System.err.println("Error cargando estadísticas para " + usuario + ": " + e.getMessage());
@@ -442,6 +494,7 @@ public class PersistenciaJASON implements Persistencia {
             return new ArrayList<>();
         }
     }
+
 
     // ===== CLASE DTO PARA SERIALIZACIÓN DE JUEGO =====
     /**
@@ -465,6 +518,7 @@ public class PersistenciaJASON implements Persistencia {
         private int fosforosUsados;
         private int murosRojosDestruidos;
 
+
         public JuegoDTO(Juego juego) {
             this.laberinto = new LaberintoDTO(juego.getLaberinto());
             this.jugador = new JugadorDTO(juego.getJugador());
@@ -475,15 +529,17 @@ public class PersistenciaJASON implements Persistencia {
             this.trampasActivadas = juego.getTrampasActivadas();
             this.nieblaDeGuerra = juego.isNieblaDeGuerra();
 
+
             this.bombasRecolectadasTotal = juego.getBombasRecolectadasTotal();
             this.fosforosRecolectadosTotal = juego.getFosforosRecolectadosTotal();
             this.fosforosUsados = juego.getFosforosUsados();
             this.murosRojosDestruidos = juego.getMurosRojosDestruidos();
         }
 
+
         /**
          * Convierte el DTO de vuelta a un objeto {@code Juego} de dominio completo.
-         * 
+         *
          * @return El objeto {@code Juego} reconstruido.
          */
         public Juego toJuego() {
@@ -493,11 +549,13 @@ public class PersistenciaJASON implements Persistencia {
             LocalDateTime finObj = this.fin != null ? LocalDateTime.parse(this.fin) : null;
             EstadoJuego estadoObj = EstadoJuego.valueOf(this.estado);
 
+
             Juego juego = new Juego(laberintoObj, jugadorObj, usuario, inicioObj);
             juego.setFin(finObj);
             juego.setEstado(estadoObj);
             juego.setTrampasActivadas(this.trampasActivadas);
             juego.setNieblaDeGuerra(this.nieblaDeGuerra);
+
 
             // Restaurar estadísticas acumulativas (usando reflexión o setters si
             // existieran,
@@ -510,15 +568,18 @@ public class PersistenciaJASON implements Persistencia {
             // VOY A AÑADIR SETTERS EN JUEGO.JAVA PRIMERO O USAR UN BUCLE AQUÍ ES FEO.
             // MEJOR AÑADIR SETTERS EN JUEGO.JAVA.
 
+
             // Asumiendo que añadiré los setters en Juego.java:
             juego.setBombasRecolectadasTotal(this.bombasRecolectadasTotal);
             juego.setFosforosRecolectadosTotal(this.fosforosRecolectadosTotal);
             juego.setFosforosUsados(this.fosforosUsados);
             juego.setMurosRojosDestruidos(this.murosRojosDestruidos);
 
+
             return juego;
         }
     }
+
 
     /**
      * Clase auxiliar (DTO) para serializar el objeto {@code Laberinto}.
@@ -528,10 +589,12 @@ public class PersistenciaJASON implements Persistencia {
         private int filas;
         private int columnas;
 
+
         public LaberintoDTO(Laberinto laberinto) {
             this.filas = laberinto.getFilas();
             this.columnas = laberinto.getColumnas();
             this.celdas = new CeldaDTO[filas][columnas];
+
 
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
@@ -540,8 +603,10 @@ public class PersistenciaJASON implements Persistencia {
             }
         }
 
+
         public Laberinto toLaberinto() {
             Celda[][] celdasObj = new Celda[filas][columnas];
+
 
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
@@ -549,9 +614,11 @@ public class PersistenciaJASON implements Persistencia {
                 }
             }
 
+
             return new Laberinto(celdasObj, filas, columnas);
         }
     }
+
 
     /**
      * Clase auxiliar (DTO) para serializar el objeto {@code Celda}.
@@ -563,6 +630,7 @@ public class PersistenciaJASON implements Persistencia {
         private boolean visitada;
         private boolean visible;
 
+
         public CeldaDTO(Celda celda) {
             this.tipo = celda.getTipo().name();
             this.fila = celda.getFila();
@@ -570,6 +638,7 @@ public class PersistenciaJASON implements Persistencia {
             this.visitada = celda.isVisitada();
             this.visible = celda.isVisible();
         }
+
 
         public Celda toCelda() {
             TipoCelda tipoObj = TipoCelda.valueOf(this.tipo);
@@ -579,6 +648,7 @@ public class PersistenciaJASON implements Persistencia {
             return celda;
         }
     }
+
 
     /**
      * Clase auxiliar (DTO) para serializar el objeto {@code Jugador}.
@@ -592,6 +662,7 @@ public class PersistenciaJASON implements Persistencia {
         private int bombas;
         private int fosforos;
 
+
         public JugadorDTO(Jugador jugador) {
             this.vida = jugador.getVida();
             this.cristales = jugador.getCristales();
@@ -601,6 +672,7 @@ public class PersistenciaJASON implements Persistencia {
             this.bombas = jugador.getBombas();
             this.fosforos = jugador.getFosforos();
         }
+
 
         public Jugador toJugador() {
             Jugador jugador = new Jugador(vida, cristales, tieneLlave);
@@ -612,6 +684,7 @@ public class PersistenciaJASON implements Persistencia {
         }
     }
 
+
     /**
      * Adaptador para la librería Gson que permite serializar y deserializar
      * correctamente
@@ -621,16 +694,20 @@ public class PersistenciaJASON implements Persistencia {
             implements com.google.gson.JsonSerializer<LocalDateTime>, com.google.gson.JsonDeserializer<LocalDateTime> {
         private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+
         @Override
         public com.google.gson.JsonElement serialize(LocalDateTime src, java.lang.reflect.Type typeOfSrc,
-                com.google.gson.JsonSerializationContext context) {
+                                                     com.google.gson.JsonSerializationContext context) {
             return new com.google.gson.JsonPrimitive(formatter.format(src));
         }
 
+
         @Override
         public LocalDateTime deserialize(com.google.gson.JsonElement json, java.lang.reflect.Type typeOfT,
-                com.google.gson.JsonDeserializationContext context) throws com.google.gson.JsonParseException {
+                                         com.google.gson.JsonDeserializationContext context) throws com.google.gson.JsonParseException {
             return LocalDateTime.parse(json.getAsString(), formatter);
         }
     }
+
+
 }

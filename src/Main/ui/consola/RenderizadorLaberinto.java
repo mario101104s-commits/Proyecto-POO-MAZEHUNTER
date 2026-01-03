@@ -5,32 +5,33 @@ import Main.modelo.Dominio.Jugador;
 import Main.modelo.Dominio.Laberinto;
 
 /**
- * Clase de utilidad para la Interfaz de Usuario (UI) que se encarga de
- * renderizar
- * visualmente el estado del laberinto, la información del jugador y los
- * controles
- * en la consola.
+ * Clase de utilidad para la Interfaz de Usuario (UI) encargada de la representación
+ * visual del juego en la consola.
  * <p>
- * Utiliza los símbolos de las celdas y la posición del jugador para crear la
- * vista
- * del juego, aplicando el concepto de campo de visión limitado.
+ * Transforma las entidades del dominio (Laberinto, Jugador, Celdas) en una matriz
+ * de caracteres, gestionando dinámicamente la visibilidad del entorno mediante
+ * el sistema de "Niebla de Guerra".
  * </p>
- * 
- * @author Mario Sanchez
+ * * @author Mario Sanchez
  * @version 1.0
- * @since 2025-11-15
+ * @since 22/12/25
  */
 public class RenderizadorLaberinto {
-    /**
-     * Muestra el laberinto en la consola, aplicando el campo de visión (solo celdas
-     * visibles o visitadas) y marcando la posición actual del jugador (@).
-     *
-     * @param laberinto      El objeto {@code Laberinto} a renderizar.
-     * @param jugador        El objeto {@code Jugador} para determinar su posición.
-     * @param nieblaDeGuerra Si es true, aplica niebla de guerra; si es false,
-     *                       muestra todo.
-     */
 
+    /**
+     * Dibuja el estado actual del laberinto en la salida estándar.
+     * <p>
+     * El renderizado varía según la configuración de {@code nieblaDeGuerra}:
+     * <ul>
+     * <li>Si está activa: Solo muestra celdas en el radio de visión (?) o visitadas (.).</li>
+     * <li>Si está desactivada: Revela la totalidad del mapa.</li>
+     * </ul>
+     * </p>
+     *
+     * @param laberinto      Estructura de datos del mapa a dibujar.
+     * @param jugador        Instancia del jugador para posicionar el avatar '@'.
+     * @param nieblaDeGuerra Interruptor lógico para el sistema de visibilidad limitada.
+     */
     public void mostrarLaberinto(Laberinto laberinto, Jugador jugador, boolean nieblaDeGuerra) {
         System.out.println("\n=== 🗺️  LABERINTO ===");
         mostrarLeyenda();
@@ -40,20 +41,15 @@ public class RenderizadorLaberinto {
             for (int j = 0; j < laberinto.getColumnas(); j++) {
                 Celda celda = laberinto.getCelda(i, j);
 
-                // Si el jugador está en esta celda, mostrar jugador
                 if (i == jugador.getPosX() && j == jugador.getPosY()) {
                     System.out.print("@ ");
                 } else if (!nieblaDeGuerra) {
-                    // Sin niebla de guerra: mostrar todo
                     System.out.print(celda.getSimbolo() + " ");
                 } else if (celda.isVisible()) {
-                    // Con niebla: mostrar celda visible
                     System.out.print(celda.getSimbolo() + " ");
                 } else if (celda.isVisitada()) {
-                    // Con niebla: mostrar celda visitada pero no visible actualmente
                     System.out.print(". ");
                 } else {
-                    // Con niebla: celda no explorada
                     System.out.print("? ");
                 }
             }
@@ -62,8 +58,7 @@ public class RenderizadorLaberinto {
     }
 
     /**
-     * Muestra la leyenda de símbolos para la vista de juego con visión limitada.
-     * * Metodo auxiliar privado.
+     * Imprime la guía de referencia de caracteres para la vista con niebla.
      */
     private void mostrarLeyenda() {
         System.out.println("Leyenda: @ Tú | # Muro | % Muro Rojo | . Camino");
@@ -72,10 +67,13 @@ public class RenderizadorLaberinto {
     }
 
     /**
-     * Muestra el estado actual del jugador, incluyendo vida (con una barra visual),
-     * cristales, posesión de la llave y posición.
+     * Muestra una ficha detallada con las estadísticas vitales y recursos del Hunter.
+     * <p>
+     * Incluye una representación gráfica de la salud mediante una barra de
+     * caracteres Unicode para facilitar la lectura rápida del estado del jugador.
+     * </p>
      *
-     * @param jugador El objeto {@code Jugador} cuyo estado se va a mostrar.
+     * @param jugador El objeto {@code Jugador} del cual extraer las métricas.
      */
     public void mostrarEstadoJugador(Jugador jugador) {
         System.out.println("\n=== 👤 ESTADO DEL JUGADOR ===");
@@ -84,7 +82,6 @@ public class RenderizadorLaberinto {
         System.out.println("🗝️  Llave: " + (jugador.isTieneLlave() ? "SÍ ✅" : "NO ❌"));
         System.out.println("📍 Posición: (" + jugador.getPosX() + ", " + jugador.getPosY() + ")");
 
-        // Mostrar barra de vida visual
         System.out.print("Salud: [");
         int barrasVida = jugador.getVida() / 10;
         for (int i = 0; i < 10; i++) {
@@ -98,11 +95,13 @@ public class RenderizadorLaberinto {
     }
 
     /**
-     * Muestra la vista completa del laberinto, sin aplicar restricciones de
-     * visibilidad.
-     * * Útil para la función de "mapa completo".
+     * Renderiza el mapa completo ignorando cualquier restricción de visibilidad.
+     * <p>
+     * Este metodo se utiliza principalmente para la función de "Mapa Mágico" o
+     * depuración, permitiendo al usuario ver la disposición total de muros y premios.
+     * </p>
      *
-     * @param laberinto El objeto {@code Laberinto} a renderizar.
+     * @param laberinto El mapa completo a visualizar.
      */
     public void mostrarLaberintoCompleto(Laberinto laberinto) {
         System.out.println("\n=== 🗺️  VISTA COMPLETA DEL LABERINTO ===");
@@ -119,8 +118,7 @@ public class RenderizadorLaberinto {
     }
 
     /**
-     * Muestra la leyenda de símbolos para la vista completa del laberinto.
-     * * Metodo auxiliar privado.
+     * Imprime la guía de referencia técnica para la vista revelada del mapa.
      */
     private void mostrarLeyendaCompleta() {
         System.out.println("# Muro        % Muro Rojo   . Camino      @ Jugador");
@@ -130,7 +128,7 @@ public class RenderizadorLaberinto {
     }
 
     /**
-     * Imprime en la consola la lista de comandos disponibles para el jugador.
+     * Despliega el menú de acciones y controles del teclado disponibles en el juego.
      */
     public void mostrarControles() {
         System.out.println("\n=== 🎮 CONTROLES ===");

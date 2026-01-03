@@ -5,225 +5,162 @@ import Main.modelo.Dominio.Celda;
 import Main.modelo.Constantes.TipoCelda;
 import Main.servicio.Interfaces.GeneradorLaberinto;
 
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
+
 /**
- * Implementación concreta de la interfaz {@code GeneradorLaberinto} que utiliza el algoritmo
- * de Búsqueda en Profundidad para generar laberintos perfectos.
+ * Implementación concreta de la interfaz {@link GeneradorLaberinto} que utiliza el algoritmo
+ * de Búsqueda en Profundidad (DFS) con Backtracking para generar laberintos perfectos.
  * <p>
- * Además de la generación de la estructura (caminos y muros), se encarga de la colocación
- * aleatoria de los elementos del juego: entrada, salida, cristales, trampas, llave y energía.
+ * El algoritmo asegura que todas las celdas de camino sean alcanzables. Tras generar
+ * la estructura, se distribuyen aleatoriamente elementos como cristales, trampas,
+ * llaves, bombas y fósforos.
  * </p>
+ *
  * @author Mario Sanchez
- * @version 1.0
+ * @version 1.1
  * @since 11/11/2025
  */
-
 public class GeneradorLaberintoImpl implements GeneradorLaberinto {
-    /** Generador de números pseudoaleatorios utilizado para la selección de caminos y colocación de elementos. */
+
+    /** Generador de números pseudoaleatorios. */
     private Random random;
+
     /**
-     * Constructor. Inicializa el generador de números aleatorios.
+     * Constructor por defecto.
      */
     public GeneradorLaberintoImpl() {
         this.random = new Random();
     }
 
     /**
-     * Genera un laberinto de las dimensiones especificadas utilizando una semilla de tiempo actual.
+     * Genera un laberinto utilizando el tiempo actual como semilla.
      *
-     * @param filas El número de filas del laberinto.
-     * @param columnas El número de columnas del laberinto.
-     * @return Un objeto {@code Laberinto} recién generado.
+     * @param filas Número de filas solicitadas.
+     * @param columnas Número de columnas solicitadas.
+     * @return Un objeto {@link Laberinto} procesado.
      */
     @Override
     public Laberinto generar(int filas, int columnas) {
         return generarConSemilla(filas, columnas, System.currentTimeMillis());
-    }/**
-     * Genera un laberinto determinista utilizando el algoritmo DFS a partir de una semilla específica.
-     * * Esto asegura que el mismo laberinto puede ser recreado si se usa la misma semilla.
+    }
+
+    /**
+     * Genera un laberinto determinista a partir de una semilla.
+     * <p>
+     * Se recomienda usar dimensiones impares para un resultado óptimo del algoritmo DFS.
+     * </p>
      *
      * @param filas El número de filas.
      * @param columnas El número de columnas.
-     * @param semilla La semilla utilizada para el generador de números aleatorios.
-     * @return Un objeto {@code Laberinto} recién generado.
+     * @param semilla La semilla para el generador aleatorio.
+     * @return Un objeto {@link Laberinto}.
      */
     @Override
     public Laberinto generarConSemilla(int filas, int columnas, long semilla) {
         this.random = new Random(semilla);
 
-        // Crear matriz inicial llena de muros
-        Celda[][] celdas = new Celda[filas][columnas];
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
+        // Ajuste opcional: asegurar que las dimensiones sean impares para el patrón de muros
+        int f = (filas % 2 == 0) ? filas + 1 : filas;
+        int c = (columnas % 2 == 0) ? columnas + 1 : columnas;
+
+        Celda[][] celdas = new Celda[f][c];
+        for (int i = 0; i < f; i++) {
+            for (int j = 0; j < c; j++) {
                 celdas[i][j] = new Celda(TipoCelda.MURO, i, j);
             }
         }
 
-        // Generar laberinto usando Depth-First Search
-        generarLaberintoDFS(celdas, filas, columnas);
+        generarLaberintoDFS(celdas, f, c);
+        colocarElementosEspeciales(celdas, f, c);
 
-        // Colocar elementos especiales
-        colocarElementosEspeciales(celdas, filas, columnas);
-
-        return new Laberinto(celdas, filas, columnas);
+        return new Laberinto(celdas, f, c);
     }
+
     /**
-     * Aplica el algoritmo de Búsqueda en Profundidad (DFS) para crear los caminos del laberinto.
-     * * Trabaja en una cuadrícula donde las celdas son inicialmente muros, creando caminos
-     * entre celdas no visitadas y eliminando los muros intermedios.
-     *
-     * @param celdas La matriz de celdas a modificar.
-     * @param filas El límite de filas.
-     * @param columnas El límite de columnas.
+     * Ejecuta el algoritmo de Backtracking para esculpir caminos en la matriz de muros.
      */
     private void generarLaberintoDFS(Celda[][] celdas, int filas, int columnas) {
         Stack<int[]> pila = new Stack<>();
 
-        // Empezar desde una posición aleatoria impar (para mantener patrón)
+        // Punto de inicio
         int startX = 1;
         int startY = 1;
-
         celdas[startX][startY].setTipo(TipoCelda.CAMINO);
         pila.push(new int[]{startX, startY});
 
-        // Direcciones: arriba, derecha, abajo, izquierda
         int[][] direcciones = {{-2, 0}, {0, 2}, {2, 0}, {0, -2}};
 
         while (!pila.isEmpty()) {
             int[] actual = pila.peek();
-            int x = actual[0];
-            int y = actual[1];
-
-            // Obtener direcciones válidas no visitadas
-            java.util.ArrayList<int[]> direccionesValidas = new java.util.ArrayList<>();
+            List<int[]> validos = new ArrayList<>();
 
             for (int[] dir : direcciones) {
-                int nuevoX = x + dir[0];
-                int nuevoY = y + dir[1];
+                int nx = actual[0] + dir[0];
+                int ny = actual[1] + dir[1];
 
-                if (esPosicionValida(nuevoX, nuevoY, filas, columnas) &&
-                        celdas[nuevoX][nuevoY].getTipo() == TipoCelda.MURO) {
-                    direccionesValidas.add(dir);
+                if (esPosicionValida(nx, ny, filas, columnas) && celdas[nx][ny].getTipo() == TipoCelda.MURO) {
+                    validos.add(dir);
                 }
             }
 
-            if (!direccionesValidas.isEmpty()) {
-                // Elegir dirección aleatoria
-                int[] dirElegida = direccionesValidas.get(random.nextInt(direccionesValidas.size()));
-                int nuevoX = x + dirElegida[0];
-                int nuevoY = y + dirElegida[1];
+            if (!validos.isEmpty()) {
+                int[] d = validos.get(random.nextInt(validos.size()));
+                int nx = actual[0] + d[0];
+                int ny = actual[1] + d[1];
 
-                // Quitar el muro entre la celda actual y la nueva
-                int muroX = x + dirElegida[0] / 2;
-                int muroY = y + dirElegida[1] / 2;
-                celdas[muroX][muroY].setTipo(TipoCelda.CAMINO);
+                // Romper el muro intermedio
+                celdas[actual[0] + d[0]/2][actual[1] + d[1]/2].setTipo(TipoCelda.CAMINO);
+                celdas[nx][ny].setTipo(TipoCelda.CAMINO);
 
-                // Marcar la nueva celda como camino
-                celdas[nuevoX][nuevoY].setTipo(TipoCelda.CAMINO);
-
-                pila.push(new int[]{nuevoX, nuevoY});
+                pila.push(new int[]{nx, ny});
             } else {
                 pila.pop();
             }
         }
     }
+
     /**
-     * Coloca los elementos especiales del juego (Entrada, Salida, Cristales, Trampas, Llave, Energía)
-     * en posiciones aleatorias de los caminos generados.
-     *
-     * @param celdas La matriz de celdas del laberinto.
-     * @param filas El límite de filas.
-     * @param columnas El límite de columnas.
+     * Distribuye los elementos del juego sobre los caminos generados.
      */
     private void colocarElementosEspeciales(Celda[][] celdas, int filas, int columnas) {
-        java.util.List<int[]> posicionesCaminos = new java.util.ArrayList<>();
-
-        // Recolectar todas las posiciones que son caminos
+        List<int[]> caminos = new ArrayList<>();
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 if (celdas[i][j].getTipo() == TipoCelda.CAMINO) {
-                    posicionesCaminos.add(new int[]{i, j});
+                    caminos.add(new int[]{i, j});
                 }
             }
         }
 
-        if (posicionesCaminos.size() < 10) return; // Laberinto muy pequeño
+        if (caminos.size() < 15) return;
 
-        // Mezclar posiciones
-        java.util.Collections.shuffle(posicionesCaminos, random);
+        Collections.shuffle(caminos, random);
 
-        // Colocar entrada (posición 0)
-        int[] entrada = posicionesCaminos.get(0);
-        celdas[entrada[0]][entrada[1]].setTipo(TipoCelda.ENTRADA);
+        // Entrada y Salida
+        celdas[caminos.get(0)[0]][caminos.get(0)[1]].setTipo(TipoCelda.ENTRADA);
+        celdas[caminos.get(caminos.size()-1)[0]][caminos.get(caminos.size()-1)[1]].setTipo(TipoCelda.SALIDA);
 
-        // Colocar salida (última posición)
-        int[] salida = posicionesCaminos.get(posicionesCaminos.size() - 1);
-        celdas[salida[0]][salida[1]].setTipo(TipoCelda.SALIDA);
+        // Distribución de ítems (usando índices de la lista mezclada)
+        int idx = 1;
 
-        // Colocar cristales (10% de los caminos, máximo 10)
-        int numCristales = Math.min(10, posicionesCaminos.size() / 10);
-        for (int i = 0; i < numCristales; i++) {
-            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, i + 1);
-            if (pos != null) {
-                celdas[pos[0]][pos[1]].setTipo(TipoCelda.CRISTAL);
-            }
-        }
+        // Cristales (10%)
+        int limite = Math.min(10, caminos.size() / 10);
+        for(int i=0; i < limite; i++) celdas[caminos.get(idx++)[0]][caminos.get(idx)[1]].setTipo(TipoCelda.CRISTAL);
 
-        // Colocar trampas (8% de los caminos, máximo 8)
-        int numTrampas = Math.min(8, posicionesCaminos.size() / 12);
-        for (int i = 0; i < numTrampas; i++) {
-            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, i + numCristales + 1);
-            if (pos != null) {
-                celdas[pos[0]][pos[1]].setTipo(TipoCelda.TRAMPA);
-            }
-        }
+        // Trampas (8%)
+        limite = Math.min(8, caminos.size() / 12);
+        for(int i=0; i < limite; i++) celdas[caminos.get(idx++)[0]][caminos.get(idx)[1]].setTipo(TipoCelda.TRAMPA);
 
+        // Llave (1)
+        celdas[caminos.get(idx++)[0]][caminos.get(idx)[1]].setTipo(TipoCelda.LLAVE);
 
-        // Colocar llave (solo 1)
-        int[] posLlave = encontrarPosicionValida(celdas, posicionesCaminos, numCristales + numTrampas + 1);
-        if (posLlave != null) {
-            celdas[posLlave[0]][posLlave[1]].setTipo(TipoCelda.LLAVE);
-        }
+        // Bombas (Nuevas)
+        celdas[caminos.get(idx++)[0]][caminos.get(idx)[1]].setTipo(TipoCelda.BOMBA);
 
-        // Colocar energía (5% de los caminos, máximo 5)
-        int numEnergia = Math.min(5, posicionesCaminos.size() / 20);
-        for (int i = 0; i < numEnergia; i++) {
-            int[] pos = encontrarPosicionValida(celdas, posicionesCaminos,
-                    numCristales + numTrampas + 1 + i);
-            if (pos != null) {
-                celdas[pos[0]][pos[1]].setTipo(TipoCelda.ENERGIA);
-            }
-        }
+        // Fósforos (Nuevos)
+        celdas[caminos.get(idx++)[0]][caminos.get(idx)[1]].setTipo(TipoCelda.FOSFORO);
     }
-    /**
-     * Busca la siguiente posición libre de {@code TipoCelda.CAMINO} dentro de la lista de posiciones.
-     * * Utilizado para la colocación de elementos especiales después de mezclar la lista.
-     *
-     * @param celdas La matriz de celdas.
-     * @param posiciones La lista de posiciones de camino disponibles.
-     * @param inicio El índice a partir del cual comenzar la búsqueda.
-     * @return Un array {@code int[]} con las coordenadas [fila, columna], o {@code null} si no se encuentra.
-     */
-    private int[] encontrarPosicionValida(Celda[][] celdas, java.util.List<int[]> posiciones, int inicio) {
-        for (int i = inicio; i < posiciones.size(); i++) {
-            int[] pos = posiciones.get(i);
-            if (celdas[pos[0]][pos[1]].getTipo() == TipoCelda.CAMINO) {
-                return pos;
-            }
-        }
-        return null;
-    }
-    /**
-     * Verifica si un par de coordenadas está dentro de los límites de la matriz del laberinto.
-     *
-     * @param x La coordenada de la fila a verificar.
-     * @param y La coordenada de la columna a verificar.
-     * @param filas El límite máximo de filas.
-     * @param columnas El límite máximo de columnas.
-     * @return {@code true} si la posición es válida, {@code false} en caso contrario.
-     */
-    private boolean esPosicionValida(int x, int y, int filas, int columnas) {
-        return x >= 0 && x < filas && y >= 0 && y < columnas;
+    private boolean esPosicionValida(int x, int y, int f, int c) {
+        return x > 0 && x < f - 1 && y > 0 && y < c - 1;
     }
 }

@@ -1,27 +1,27 @@
 package Main.modelo.Dominio;
+
 /**
  * Representa la estructura completa del laberinto como una matriz bidimensional de celdas.
- *<p>
- * Esta clase maneja las dimensiones del mapa y proporciona metodos de acceso y validación
+ * <p>
+ * Esta clase maneja las dimensiones del mapa y proporciona métodos de acceso y validación
  * para interactuar con las celdas individuales dentro de los límites del laberinto.
- *</p>
+ * Es el componente principal para la lógica de colisiones y renderizado del mapa.
+ * </p>
  * @author Mario Sanchez
  * @version 1.0
  * @since 11/11/2025
  */
 public class Laberinto {
     /**
-     * La matriz bidimensional que contiene todas las {@code Celda} que componen el laberinto.
-     * La estructura es [fila][columna].
+     * La matriz bidimensional que contiene todas las {@link Celda} que componen el laberinto.
+     * La estructura se organiza mediante el acceso [fila][columna].
      */
     private Celda[][] celdas;
-    /**
-     * El número total de filas en el laberinto.
-     */
+
+    /** El número total de filas en el laberinto. */
     private int filas;
-    /**
-     * El número total de columnas en el laberinto.
-     */
+
+    /** El número total de columnas en el laberinto. */
     private int columnas;
 
     /**
@@ -37,36 +37,59 @@ public class Laberinto {
         this.columnas = columnas;
     }
 
-    // Getters
+    // --- Getters ---
+
+    /**
+     * Obtiene la matriz completa de celdas.
+     * @return El arreglo bidimensional de objetos {@link Celda}.
+     */
     public Celda[][] getCeldas() { return celdas; }
+
+    /**
+     * Obtiene el límite vertical del laberinto.
+     * @return El número total de filas.
+     */
     public int getFilas() { return filas; }
+
+    /**
+     * Obtiene el límite horizontal del laberinto.
+     * @return El número total de columnas.
+     */
     public int getColumnas() { return columnas; }
+
     /**
      * Obtiene una celda específica en las coordenadas dadas.
-     *
+     * <p>
+     * Realiza una validación previa para evitar excepciones de tipo
+     * {@code ArrayIndexOutOfBoundsException}.
+     * </p>
      * @param fila El índice de la fila (de 0 a filas-1).
      * @param columna El índice de la columna (de 0 a columnas-1).
-     * @return La {@code Celda} en la posición especificada, o {@code null} si la posicion es invalida.
+     * @return La {@link Celda} en la posición especificada, o {@code null} si la posición es inválida.
      */
     public Celda getCelda(int fila, int columna) {
-        if (fila >= 0 && fila < filas && columna >= 0 && columna < columnas) {
+        if (esPosicionValida(fila, columna)) {
             return celdas[fila][columna];
         }
         return null;
     }
+
     /**
      * Establece o reemplaza una celda específica en las coordenadas dadas.
-     *
-     * @param fila El indice de la fila.
-     * @param columna El indice de la columna.
-     * @param celda El objeto {@code Celda} a colocar en esa posicion.
+     * <p>
+     * Este metodo es útil para actualizaciones dinámicas del mapa, como la
+     * destrucción de muros o la aparición de objetos.
+     * </p>
+     * @param fila El índice de la fila.
+     * @param columna El índice de la columna.
+     * @param celda El objeto {@link Celda} a colocar en esa posición.
      */
-
     public void setCelda(int fila, int columna, Celda celda) {
-        if (fila >= 0 && fila < filas && columna >= 0 && columna < columnas) {
+        if (esPosicionValida(fila, columna)) {
             celdas[fila][columna] = celda;
         }
     }
+
     /**
      * Verifica si una posición dada está dentro de los límites del laberinto.
      *
@@ -79,12 +102,13 @@ public class Laberinto {
     }
     /**
      * Verifica si una celda en las coordenadas dadas es transitable por el jugador.
-     *
-     * Implica verificar que la posición sea válida y que el tipo de celda no sea un muro.
-     *
+     * <p>
+     * Un punto es transitable si existe dentro de los límites y su {@link Main.modelo.Constantes.TipoCelda}
+     * no representa un obstáculo físico (como un muro).
+     * </p>
      * @param fila El índice de la fila.
      * @param columna El índice de la columna.
-     * @return {@code true} si la posición es válida y la celda es transitable, {@code false} en caso contrario.
+     * @return {@code true} si la posición es válida y la celda permite el paso, {@code false} en caso contrario.
      */
     public boolean esTransitable(int fila, int columna) {
         Celda celda = getCelda(fila, columna);

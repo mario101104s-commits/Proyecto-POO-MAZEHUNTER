@@ -9,17 +9,42 @@ import Main.ui.util.ConsoleUtils;
 
 import java.io.File;
 
-// Vista para el juego del laberinto
+/**
+ * Interfaz de usuario en consola para la ejecución del juego del laberinto.
+ * <p>
+ * Esta clase gestiona el bucle principal de la partida, procesando las entradas
+ * del teclado para el movimiento del Hunter, el uso de habilidades especiales
+ * y la interacción con el sistema de guardado.
+ * </p>
+ * * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
+ */
 public class ConsolaLaberinto {
+
+    /** Controlador para delegar la lógica de negocio del juego. */
     private ControladorJuego controladorJuego;
+
+    /** Componente encargado de la representación visual del mapa en texto. */
     private RenderizadorLaberinto renderizador;
 
+    /**
+     * Construye la vista de consola para el laberinto.
+     * @param controladorJuego Controlador que maneja el estado y acciones del juego.
+     */
     public ConsolaLaberinto(ControladorJuego controladorJuego) {
         this.controladorJuego = controladorJuego;
         this.renderizador = new RenderizadorLaberinto();
     }
 
-    // Bucle principal del juego
+    /**
+     * Inicia y gestiona el ciclo de vida de una partida activa.
+     * <p>
+     * Mantiene el bucle de juego mientras el estado sea {@code EN_CURSO} o el
+     * usuario no decida salir manualmente.
+     * </p>
+     * @param juego La instancia de la partida actual a ejecutar.
+     */
     public void jugarPartida(Juego juego) {
         boolean jugando = true;
 
@@ -110,7 +135,11 @@ public class ConsolaLaberinto {
         }
     }
 
-    // Muestra el estado del jugador
+    /**
+     * Imprime en consola los atributos actuales del Hunter, incluyendo una
+     * representación gráfica de la salud.
+     * @param juego Sesión actual de donde obtener los datos del jugador.
+     */
     private void mostrarEstadoJugador(Juego juego) {
         System.out.println("\n=== 👤 ESTADO DEL HUNTER ===");
         System.out.println("❤️  Vida: " + juego.getJugador().getVida() + "%");
@@ -133,7 +162,9 @@ public class ConsolaLaberinto {
         System.out.println("] " + juego.getJugador().getVida() + "%");
     }
 
-    // Muestra los controles del juego
+    /**
+     * Imprime el manual de comandos disponibles para el usuario durante la partida.
+     */
     private void mostrarControles() {
         System.out.println("\n=== 🎮 CONTROLES MÁGICOS ===");
         System.out.println("W - ↑ Mover hacia arriba");
@@ -147,7 +178,11 @@ public class ConsolaLaberinto {
         System.out.println("============================");
     }
 
-    // Convierte el input a dirección
+    /**
+     * Traduce la entrada de carácter del usuario a una constante de dirección.
+     * @param input Tecla presionada por el usuario.
+     * @return La constante {@link Direccion} correspondiente.
+     */
     private Direccion obtenerDireccion(char input) {
         switch (input) {
             case 'w':
@@ -163,7 +198,10 @@ public class ConsolaLaberinto {
         }
     }
 
-    // Elimina el juego guardado
+    /**
+     * Elimina el archivo de persistencia física de una partida guardada.
+     * @param usuario Email del usuario cuyo archivo de guardado será eliminado.
+     */
     private void eliminarJuegoGuardado(String usuario) {
         try {
             String archivoJuego = "datos/juegos/" + usuario + ".json";
@@ -182,7 +220,11 @@ public class ConsolaLaberinto {
         }
     }
 
-    // Muestra el resultado final del juego
+    /**
+     * Gestiona la pantalla de finalización de partida, mostrando si el usuario
+     * ganó o perdió y el resumen detallado de su desempeño.
+     * @param juego Sesión finalizada.
+     */
     private void mostrarFinDelJuego(Juego juego) {
         ResultadoJuego resultado = controladorJuego.terminarJuego(juego);
 

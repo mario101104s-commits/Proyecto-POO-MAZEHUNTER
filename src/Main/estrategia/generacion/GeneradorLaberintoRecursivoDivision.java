@@ -7,20 +7,62 @@ import Main.servicio.Interfaces.GeneradorLaberinto;
 
 import java.util.*;
 
-// Estrategia de generación usando División Recursiva
-// Genera laberintos con estructura de habitaciones - Dificultad DIFÍCIL
+/**
+ * Implementación de la estrategia de generación de laberintos mediante el algoritmo de División Recursiva.
+ * <p>
+ * A diferencia de los algoritmos de "excavación" (como DFS o Prim), este algoritmo comienza con un
+ * espacio completamente abierto y lo divide repetidamente mediante muros horizontales o verticales
+ * que contienen un único pasaje aleatorio.
+ * </p>
+ * <p>
+ * El resultado es un laberinto con una estructura similar a un conjunto de habitaciones interconectadas,
+ * lo cual genera grandes áreas abiertas y pasillos largos, aumentando la dificultad de orientación.
+ * </p>
+ * * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
+ */
 public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
+
+    /**
+     * Motor de aleatoriedad para determinar la orientación de la división y la posición de los pasajes.
+     */
     private Random random;
 
+    /**
+     * Constructor por defecto. Inicializa el generador de números aleatorios.
+     */
     public GeneradorLaberintoRecursivoDivision() {
         this.random = new Random();
     }
 
+    /**
+     * Genera un laberinto utilizando el timestamp actual como semilla.
+     *
+     * @param filas Cantidad de filas del laberinto.
+     * @param columnas Cantidad de columnas del laberinto.
+     * @return Un objeto {@link Laberinto} con estructura de división recursiva.
+     */
     @Override
     public Laberinto generar(int filas, int columnas) {
         return generarConSemilla(filas, columnas, System.currentTimeMillis());
     }
 
+    /**
+     * Genera un laberinto basado en una semilla para permitir la recreación de estructuras específicas.
+     * <p>
+     * El flujo de trabajo consiste en:
+     * 1. Inicializar todas las celdas como {@link TipoCelda#CAMINO}.
+     * 2. Construir muros perimetrales.
+     * 3. Invocar el proceso recursivo de subdivisión de áreas.
+     * 4. Distribuir elementos especiales en las áreas transitables.
+     * </p>
+     *
+     * @param filas Número de filas del laberinto.
+     * @param columnas Número de columnas del laberinto.
+     * @param semilla Valor para inicializar el generador aleatorio.
+     * @return Un objeto {@link Laberinto} estructurado.
+     */
     @Override
     public Laberinto generarConSemilla(int filas, int columnas, long semilla) {
         this.random = new Random(semilla);
@@ -34,7 +76,6 @@ public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
             }
         }
 
-        // Crear bordes
         for (int i = 0; i < filas; i++) {
             celdas[i][0].setTipo(TipoCelda.MURO);
             celdas[i][columnas - 1].setTipo(TipoCelda.MURO);
@@ -52,10 +93,23 @@ public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
         return new Laberinto(celdas, filas, columnas);
     }
 
+    /**
+     * Metodo recursivo que subdivide una región del laberinto en dos partes menores.
+     * <p>
+     * El algoritmo decide si dividir horizontal o verticalmente basándose en la forma de
+     * la región (ancho contra alto). Se coloca un muro con un único hueco (pasaje) para
+     * garantizar que todas las "habitaciones" sigan estando conectadas.
+     * </p>
+     *
+     * @param celdas Matriz de celdas.
+     * @param x Coordenada inicial en filas.
+     * @param y Coordenada inicial en columnas.
+     * @param ancho Extensión horizontal de la región actual.
+     * @param alto Extensión vertical de la región actual.
+     */
     private void dividir(Celda[][] celdas, int x, int y, int ancho, int alto) {
         if (ancho < 2 || alto < 2)
             return;
-
         boolean horizontal = (alto > ancho);
         if (ancho == alto) {
             horizontal = random.nextBoolean();
@@ -88,6 +142,17 @@ public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
         }
     }
 
+    /**
+     * Coloca los puntos de entrada, salida y consumibles en las áreas de camino.
+     * <p>
+     * Utiliza un barajado de las posiciones de camino disponibles para maximizar la
+     * dispersión de los objetos especiales.
+     * </p>
+     *
+     * @param celdas Matriz del laberinto.
+     * @param filas Dimensiones verticales.
+     * @param columnas Dimensiones horizontales.
+     */
     private void colocarElementosEspeciales(Celda[][] celdas, int filas, int columnas) {
         List<int[]> posicionesCaminos = new ArrayList<>();
 
@@ -141,6 +206,14 @@ public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
         }
     }
 
+    /**
+     * Busca una posición libre en la lista barajada de caminos.
+     *
+     * @param celdas Matriz actual.
+     * @param posiciones Lista de coordenadas transitables.
+     * @param inicio Índice de partida en la búsqueda.
+     * @return Arreglo de coordenadas [fila, columna] o {@code null}.
+     */
     private int[] encontrarPosicionValida(Celda[][] celdas, List<int[]> posiciones, int inicio) {
         for (int i = inicio; i < posiciones.size(); i++) {
             int[] pos = posiciones.get(i);
