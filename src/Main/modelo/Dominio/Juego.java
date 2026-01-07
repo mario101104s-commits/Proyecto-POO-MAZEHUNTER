@@ -35,6 +35,8 @@ public class Juego {
     private boolean nieblaDeGuerra;
     /** Tiempo jugado acumulado en segundos. */
     private long tiempoJugadoSegundos;
+    /** El nivel de dificultad de la partida. */
+    private String dificultad;
 
     // Estadísticas acumulativas
     /** Total de bombas recogidas en esta sesión. */
@@ -166,6 +168,16 @@ public class Juego {
     /** @param tiempoJugadoSegundos Tiempo jugado acumulado en segundos. */
     public void setTiempoJugadoSegundos(long tiempoJugadoSegundos) {
         this.tiempoJugadoSegundos = tiempoJugadoSegundos;
+    }
+
+    /** @return Nivel de dificultad. */
+    public String getDificultad() {
+        return dificultad;
+    }
+
+    /** @param dificultad Nivel de dificultad. */
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
     }
 
     // --- Métodos de estadísticas acumulativas ---

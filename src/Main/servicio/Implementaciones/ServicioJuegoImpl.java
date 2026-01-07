@@ -79,6 +79,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
         Juego juego = new Juego(laberinto, jugador, usuario, LocalDateTime.now());
         juego.setNieblaDeGuerra(configuracion.isNieblaDeGuerra()); // Usar configuración real
+        juego.setDificultad(configuracion.getTipoActual()); // Guardar dificultad
 
         // Marcar celda inicial como visitada
         Celda celdaInicial = laberinto.getCelda(posicionInicial[0], posicionInicial[1]);
@@ -396,6 +397,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
         estadisticas.setFosforosUsados(juego.getFosforosUsados());
         estadisticas.setNieblaDeGuerra(juego.isNieblaDeGuerra());
+        estadisticas.setDificultad(juego.getDificultad());
 
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);

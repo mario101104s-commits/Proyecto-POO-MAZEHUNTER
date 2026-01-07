@@ -10,7 +10,6 @@ import Main.servicio.Implementaciones.ServicioUsuarioImpl;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -571,10 +570,7 @@ public class VentanaPrincipal {
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        javafx.stage.Stage stage = (javafx.stage.Stage) root.getScene().getWindow();
+        new VentanaAlertaPersonalizada(stage, titulo, mensaje, VentanaAlertaPersonalizada.Tipo.INFO);
     }
 }

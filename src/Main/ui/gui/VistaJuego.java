@@ -380,6 +380,10 @@ public class VistaJuego extends BorderPane {
      * el tiempo.
      */
     private void actualizarHUD() {
+        if (controlador.getJuego() == null || controlador.getJuego().getJugador() == null) {
+            return;
+        }
+
         Jugador j = controlador.getJuego().getJugador();
         lblVida.setText("Vida: " + j.getVida() + "%");
         pbVida.setProgress(j.getVida() / 100.0);

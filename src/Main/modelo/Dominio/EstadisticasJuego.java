@@ -42,6 +42,8 @@ public class EstadisticasJuego {
     private int fosforosUsados;
     /** Indica si la partida se jugó con niebla de guerra. */
     private boolean nieblaDeGuerra;
+    /** El nivel de dificultad de la partida (ej. "Media"). */
+    private String dificultad;
 
     /**
      * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la
@@ -175,6 +177,16 @@ public class EstadisticasJuego {
     /** @param nieblaDeGuerra Estado de la niebla. */
     public void setNieblaDeGuerra(boolean nieblaDeGuerra) {
         this.nieblaDeGuerra = nieblaDeGuerra;
+    }
+
+    /** @return Nivel de dificultad. */
+    public String getDificultad() {
+        return dificultad;
+    }
+
+    /** @param dificultad Nivel de dificultad a establecer. */
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
     }
 
     // --- Métodos de Utilidad ---

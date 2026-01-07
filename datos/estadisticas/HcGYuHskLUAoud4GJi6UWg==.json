@@ -68,5 +68,19 @@
     "murosDestruidos": 1,
     "fosforosUsados": 1,
     "nieblaDeGuerra": false
+  },
+  {
+    "usuario": "HcGYuHskLUAoud4GJi6UWg\u003d\u003d",
+    "fecha": "2026-01-07T19:42:26.585228",
+    "tiempoSegundos": 11,
+    "cristalesRecolectados": 4,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "15x14",
+    "ganado": true,
+    "bombasRecolectadas": 2,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0,
+    "nieblaDeGuerra": false
   }
 ]
