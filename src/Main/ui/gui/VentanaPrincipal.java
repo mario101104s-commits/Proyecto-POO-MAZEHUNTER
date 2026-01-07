@@ -571,6 +571,6 @@ public class VentanaPrincipal {
 
     private void mostrarAlerta(String titulo, String mensaje) {
         javafx.stage.Stage stage = (javafx.stage.Stage) root.getScene().getWindow();
-        new VentanaAlertaPersonalizada(stage, titulo, mensaje, VentanaAlertaPersonalizada.Tipo.INFO);
+        new VentanaAlertaPersonalizada(stage, titulo, mensaje, VentanaAlertaPersonalizada.Tipo.INFO).showAndWait();
     }
 }
