@@ -5,10 +5,13 @@ import Main.servicio.Interfaces.Cifrador;
 import Main.servicio.Interfaces.ServicioUsuario;
 
 /**
- * Controlador encargado de gestionar los procesos de seguridad y acceso de usuarios.
+ * Controlador encargado de gestionar los procesos de seguridad y acceso de
+ * usuarios.
  * <p>
- * Actúa como intermediario entre la interfaz de usuario (Vista) y los servicios de negocio.
- * Maneja la lógica de inicio de sesión, registro de nuevos usuarios, recuperación
+ * Actúa como intermediario entre la interfaz de usuario (Vista) y los servicios
+ * de negocio.
+ * Maneja la lógica de inicio de sesión, registro de nuevos usuarios,
+ * recuperación
  * de credenciales y validaciones de formato de datos.
  * </p>
  *
@@ -19,12 +22,12 @@ import Main.servicio.Interfaces.ServicioUsuario;
 public class ControladorAutenticacion {
 
     /**
-     *  Servicio para la gestión de datos y persistencia de usuarios.
+     * Servicio para la gestión de datos y persistencia de usuarios.
      */
     private ServicioUsuario servicioUsuario;
 
     /**
-     *  Componente encargado de las operaciones de cifrado y descifrado.
+     * Componente encargado de las operaciones de cifrado y descifrado.
      */
     private Cifrador cifrador;
 
@@ -32,7 +35,7 @@ public class ControladorAutenticacion {
      * Constructor que inicializa el controlador con sus dependencias necesarias.
      *
      * @param servicioUsuario Implementación del servicio de usuarios.
-     * @param cifrador Implementación del componente de cifrado.
+     * @param cifrador        Implementación del componente de cifrado.
      */
     public ControladorAutenticacion(ServicioUsuario servicioUsuario, Cifrador cifrador) {
         this.servicioUsuario = servicioUsuario;
@@ -40,17 +43,58 @@ public class ControladorAutenticacion {
     }
 
     /**
-     * Valida las credenciales de acceso de un usuario.
+     * Valida las credenciales de acceso de un usuario con mensajes de error
+     * específicos.
      * <p>
-     * El proceso incluye la obtención del usuario, el descifrado de la contraseña almacenada
+     * El proceso incluye la obtención del usuario, el descifrado de la contraseña
+     * almacenada
      * y la comparación con la contraseña proporcionada en texto plano.
      * </p>
      *
-     * @param email Correo electrónico del usuario que intenta acceder.
+     * @param email       Correo electrónico del usuario que intenta acceder.
      * @param contrasenia Contraseña en texto plano ingresada en la vista.
-     * @return El correo electrónico si la autenticación es exitosa; {@code null} en caso de
-     * usuario inexistente, error de descifrado o contraseña incorrecta.
+     * @return Un objeto {@link Main.modelo.Transferencia.ResultadoAutenticacion}
+     *         que contiene
+     *         el resultado de la autenticación y, en caso de fallo, el motivo
+     *         específico.
      */
+    public Main.modelo.Transferencia.ResultadoAutenticacion iniciarSesionConDetalle(String email, String contrasenia) {
+        Usuario usuario = servicioUsuario.obtenerUsuario(email);
+
+        if (usuario == null) {
+            return new Main.modelo.Transferencia.ResultadoAutenticacion(false, "Usuario no encontrado");
+        }
+
+        String contraseniaDescifrada = cifrador.descifrarContrasenia(usuario.getContraseniaCifrada());
+
+        if (contraseniaDescifrada == null) {
+            return new Main.modelo.Transferencia.ResultadoAutenticacion(false, "Error al descifrar la contraseña");
+        }
+
+        if (contraseniaDescifrada.equals(contrasenia)) {
+            return new Main.modelo.Transferencia.ResultadoAutenticacion(email);
+        }
+
+        return new Main.modelo.Transferencia.ResultadoAutenticacion(false, "Contraseña incorrecta");
+    }
+
+    /**
+     * Valida las credenciales de acceso de un usuario (método legacy).
+     * <p>
+     * El proceso incluye la obtención del usuario, el descifrado de la contraseña
+     * almacenada
+     * y la comparación con la contraseña proporcionada en texto plano.
+     * </p>
+     *
+     * @param email       Correo electrónico del usuario que intenta acceder.
+     * @param contrasenia Contraseña en texto plano ingresada en la vista.
+     * @return El correo electrónico si la autenticación es exitosa; {@code null} en
+     *         caso de
+     *         usuario inexistente, error de descifrado o contraseña incorrecta.
+     * @deprecated Use {@link #iniciarSesionConDetalle(String, String)} para obtener
+     *             mensajes de error específicos.
+     */
+    @Deprecated
     public String iniciarSesion(String email, String contrasenia) {
         Usuario usuario = servicioUsuario.obtenerUsuario(email);
 
@@ -75,14 +119,16 @@ public class ControladorAutenticacion {
      * Recupera un objeto de usuario basado en su identificador único (email).
      *
      * @param email El correo electrónico del usuario a buscar.
-     * @return El objeto {@link Usuario} correspondiente o {@code null} si no se encuentra.
+     * @return El objeto {@link Usuario} correspondiente o {@code null} si no se
+     *         encuentra.
      */
     public Usuario obtenerUsuario(String email) {
         return servicioUsuario.obtenerUsuario(email);
     }
 
     /**
-     * Registra un nuevo usuario en el sistema previo cifrado de sus datos sensibles.
+     * Registra un nuevo usuario en el sistema previo cifrado de sus datos
+     * sensibles.
      * <p>
      * Incluye validaciones de robustez para la contraseña:
      * - Mínimo 6 caracteres.
@@ -90,10 +136,11 @@ public class ControladorAutenticacion {
      * - Al menos un carácter especial (@#$%^&+=!).
      * </p>
      *
-     * @param email Correo electrónico para la nueva cuenta.
+     * @param email       Correo electrónico para la nueva cuenta.
      * @param contrasenia Contraseña en texto plano que será validada y cifrada.
-     * @return {@code true} si el registro fue exitoso; {@code false} si el usuario ya existe
-     * o la contraseña no cumple los requisitos.
+     * @return {@code true} si el registro fue exitoso; {@code false} si el usuario
+     *         ya existe
+     *         o la contraseña no cumple los requisitos.
      */
     public boolean registrarUsuario(String email, String contrasenia) {
         // 1. Verificar si el usuario ya existe
@@ -112,13 +159,15 @@ public class ControladorAutenticacion {
         String contraseniaCifrada = cifrador.cifrarContrasenia(contrasenia);
         return servicioUsuario.registrarUsuario(email, contraseniaCifrada);
     }
+
     /**
      * Actualiza la contraseña de un usuario existente en el sistema.
      *
-     * @param email Correo del usuario a actualizar.
+     * @param email            Correo del usuario a actualizar.
      * @param nuevaContrasenia Nueva contraseña en texto plano.
-     * @return {@code true} si la actualización fue exitosa; {@code false} si hubo un error
-     * en la persistencia o el usuario no existe.
+     * @return {@code true} si la actualización fue exitosa; {@code false} si hubo
+     *         un error
+     *         en la persistencia o el usuario no existe.
      */
     public boolean recuperarContrasenia(String email, String nuevaContrasenia) {
         Usuario usuario = servicioUsuario.obtenerUsuario(email);
@@ -146,7 +195,8 @@ public class ControladorAutenticacion {
      * </p>
      *
      * @param password La cadena de texto de la contraseña a validar.
-     * @return {@code true} si cumple los requisitos; {@code false} en caso contrario.
+     * @return {@code true} si cumple los requisitos; {@code false} en caso
+     *         contrario.
      */
     public boolean validarContrasenia(String password) {
         if (password == null || password.length() < 8) {
@@ -160,10 +210,12 @@ public class ControladorAutenticacion {
     }
 
     /**
-     * Verifica que el formato del correo electrónico sea válido mediante expresiones regulares.
+     * Verifica que el formato del correo electrónico sea válido mediante
+     * expresiones regulares.
      *
      * @param email La cadena de texto del correo a validar.
-     * @return {@code true} si el formato es correcto; {@code false} si es nulo o inválido.
+     * @return {@code true} si el formato es correcto; {@code false} si es nulo o
+     *         inválido.
      */
     public boolean validarEmail(String email) {
         return email != null && email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
@@ -173,7 +225,8 @@ public class ControladorAutenticacion {
      * Consulta la existencia de un usuario en el sistema.
      *
      * @param email Correo electrónico a verificar.
-     * @return {@code true} si el email ya está registrado; {@code false} si está disponible.
+     * @return {@code true} si el email ya está registrado; {@code false} si está
+     *         disponible.
      */
     public boolean existeUsuario(String email) {
         return servicioUsuario.existeUsuario(email);

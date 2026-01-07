@@ -8,6 +8,7 @@ import Main.servicio.Implementaciones.PersistenciaJASON;
 import Main.servicio.Implementaciones.ServicioJuegoImpl;
 import Main.servicio.Implementaciones.ServicioUsuarioImpl;
 import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -18,14 +19,26 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
- * Orquestador principal de la interfaz gráfica de usuario (GUI) para Maze Hunter.
+ * Orquestador principal de la interfaz gráfica de usuario (GUI) para Maze
+ * Hunter.
  * <p>
- * Esta clase centraliza la navegación de la aplicación, gestionando la transición
- * entre el sistema de autenticación, el menú principal y el entorno de juego activo.
- * Utiliza un contenedor {@link BorderPane} para realizar el intercambio dinámico de vistas.
+ * Esta clase centraliza la navegación de la aplicación, gestionando la
+ * transición
+ * entre el sistema de autenticación, el menú principal y el entorno de juego
+ * activo.
+ * Utiliza un contenedor {@link BorderPane} para realizar el intercambio
+ * dinámico de vistas.
  * </p>
  *
  * @author Mario Sanchez
@@ -40,7 +53,9 @@ public class VentanaPrincipal {
     /** Controlador para la gestión de usuarios, sesiones y seguridad. */
     private ControladorAutenticacion controladorAuth;
 
-    /** Controlador para la gestión de la lógica de negocio y estado del laberinto. */
+    /**
+     * Controlador para la gestión de la lógica de negocio y estado del laberinto.
+     */
     private ControladorJuego controladorJuego;
 
     /** Entidad que representa al Hunter que ha iniciado sesión actualmente. */
@@ -50,8 +65,11 @@ public class VentanaPrincipal {
     private CifradorImpl cifrador;
 
     /**
-     * Inicializa la estructura visual básica y la cadena de dependencias del sistema.
-     * @param stage El escenario principal de JavaFX sobre el que se montará la vista.
+     * Inicializa la estructura visual básica y la cadena de dependencias del
+     * sistema.
+     * 
+     * @param stage El escenario principal de JavaFX sobre el que se montará la
+     *              vista.
      */
     public VentanaPrincipal(Stage stage) {
         this.root = new BorderPane();
@@ -74,52 +92,93 @@ public class VentanaPrincipal {
     }
 
     /**
-     * @return El nodo raíz {@link Parent} que contiene la interfaz actual para ser renderizada.
+     * @return El nodo raíz {@link Parent} que contiene la interfaz actual para ser
+     *         renderizada.
      */
     public Parent getView() {
         return root;
     }
 
     /**
-     * Construye y despliega la pantalla de autenticación.
+     * Construye y despliega la pantalla de autenticación con tema de jungla.
      */
     private void mostrarPantallaLogin() {
-        VBox layout = new VBox(15);
+        VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-padding: 20; -fx-border-color: #DAA520; -fx-border-width: 2;");
+        layout.setPadding(new Insets(40));
 
-        Label title = new Label("🏰 MAZE HUNTER");
-        title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: gold;");
+        // Aplicar fondo de imagen
+        try {
+            Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/fondo3.jpg"));
+            BackgroundImage bgImg = new BackgroundImage(
+                    fondoImg,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true));
+            layout.setBackground(new Background(bgImg));
+        } catch (Exception e) {
+            // Fallback a gradiente si no se encuentra la imagen
+            layout.setStyle("-fx-background-color: linear-gradient(to bottom, #1a3a1a, #0a1a0a);");
+            System.err.println("Error cargando fondo3.jpg: " + e.getMessage());
+        }
+
+        Label title = new Label("MAZE HUNTER");
+        title.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3);");
 
         TextField emailField = new TextField();
         emailField.setPromptText("Correo Electrónico");
-        emailField.setMaxWidth(300);
+        emailField.setMaxWidth(400);
+        emailField.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 14px; -fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 5;");
 
         PasswordField passField = new PasswordField();
         passField.setPromptText("Contraseña");
-        passField.setMaxWidth(300);
+        passField.setMaxWidth(400);
+        passField.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 14px; -fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 5;");
+
+        // Grid para botones en 2 columnas
+        GridPane botonesGrid = new GridPane();
+        botonesGrid.setAlignment(Pos.CENTER);
+        botonesGrid.setHgap(20);
+        botonesGrid.setVgap(15);
+        botonesGrid.setPadding(new Insets(20, 0, 0, 0));
 
         Button btnLogin = new Button("Iniciar Sesión");
-        estilizarBoton(btnLogin);
+        estilizarBotonConFondo(btnLogin, "entrada");
+        btnLogin.setPrefSize(250, 60);
 
         Button btnRegister = new Button("Registrarse");
-        estilizarBoton(btnRegister);
+        estilizarBotonConFondo(btnRegister, "entrada");
+        btnRegister.setPrefSize(250, 60);
 
         Button btnRecuperar = new Button("Recuperar Contraseña");
-        estilizarBoton(btnRecuperar);
+        estilizarBotonConFondo(btnRecuperar, "generico");
+        btnRecuperar.setPrefSize(250, 60);
 
         Button btnSalir = new Button("Salir");
-        estilizarBoton(btnSalir);
+        estilizarBotonConFondo(btnSalir, "salida");
+        btnSalir.setPrefSize(250, 60);
+
+        // Colocar botones en grid 2x2
+        botonesGrid.add(btnLogin, 0, 0);
+        botonesGrid.add(btnRegister, 1, 0);
+        botonesGrid.add(btnRecuperar, 0, 1);
+        botonesGrid.add(btnSalir, 1, 1);
 
         btnLogin.setOnAction(e -> {
             String email = emailField.getText();
             String pass = passField.getText();
-            if (controladorAuth.iniciarSesion(email, pass) != null) {
+            Main.modelo.Transferencia.ResultadoAutenticacion resultado = controladorAuth.iniciarSesionConDetalle(email,
+                    pass);
+
+            if (resultado.isExitoso()) {
                 this.usuarioActual = controladorAuth.obtenerUsuario(email);
                 mostrarMenuPrincipal();
             } else {
-                mostrarAlerta("Error", "Credenciales incorrectas");
+                mostrarAlerta("Error al iniciar sesión", resultado.getMensajeError());
             }
         });
 
@@ -128,7 +187,6 @@ public class VentanaPrincipal {
             String pass = passField.getText();
 
             String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-
             String passRegex = "^(?=.*[A-Z])(?=.*[@#$%^&+=!]).{6,}$";
 
             if (email.isEmpty() || pass.isEmpty()) {
@@ -157,7 +215,7 @@ public class VentanaPrincipal {
         btnRecuperar.setOnAction(e -> mostrarPantallaRecuperacion());
         btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
-        layout.getChildren().addAll(title, emailField, passField, btnLogin, btnRegister, btnRecuperar, btnSalir);
+        layout.getChildren().addAll(title, emailField, passField, botonesGrid);
         root.setCenter(layout);
     }
 
@@ -220,13 +278,27 @@ public class VentanaPrincipal {
     }
 
     /**
-     * Despliega el HUB central del usuario autenticado.
+     * Despliega el HUB central del usuario autenticado con tema de jungla.
      */
     private void mostrarMenuPrincipal() {
-        VBox layout = new VBox(20);
+        VBox layout = new VBox(25);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-border-color: #DAA520; -fx-border-width: 2;");
+        layout.setPadding(new Insets(40));
+
+        // Aplicar fondo de imagen
+        try {
+            Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/fondo3.jpg"));
+            BackgroundImage bgImg = new BackgroundImage(
+                    fondoImg,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true));
+            layout.setBackground(new Background(bgImg));
+        } catch (Exception e) {
+            layout.setStyle("-fx-background-color: linear-gradient(to bottom, #1a3a1a, #0a1a0a);");
+            System.err.println("Error cargando fondo3.jpg en menú: " + e.getMessage());
+        }
 
         String nombreAMostrar = "Hunter";
         if (usuarioActual != null) {
@@ -234,19 +306,46 @@ public class VentanaPrincipal {
             nombreAMostrar = cifrador.descifrarEmail(emailCifrado);
         }
         Label bienvenido = new Label("Bienvenido, " + nombreAMostrar);
-        bienvenido.setStyle("-fx-font-size: 24px; -fx-text-fill: white;");
+        bienvenido.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 32px; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3);");
 
-        Button btnJugar = new Button("🏹 Nueva Partida");
-        Button btnCargar = new Button("📂 Cargar Partida");
-        Button btnAnales = new Button("📜 Anales del Templo");
-        Button btnLogout = new Button("🔑 Cerrar Sesión");
-        Button btnSalir = new Button("🚪 Salir");
+        // Grid para botones en 2 columnas
+        GridPane botonesGrid = new GridPane();
+        botonesGrid.setAlignment(Pos.CENTER);
+        botonesGrid.setHgap(25);
+        botonesGrid.setVgap(20);
+        botonesGrid.setPadding(new Insets(30, 0, 0, 0));
 
-        estilizarBoton(btnJugar);
-        estilizarBoton(btnCargar);
-        estilizarBoton(btnAnales);
-        estilizarBoton(btnLogout);
-        estilizarBoton(btnSalir);
+        Button btnJugar = new Button("Nueva Partida");
+        estilizarBotonConFondo(btnJugar, "entrada");
+        btnJugar.setPrefSize(250, 70);
+
+        Button btnCargar = new Button("Cargar Partida");
+        estilizarBotonConFondo(btnCargar, "generico");
+        btnCargar.setPrefSize(250, 70);
+
+        Button btnAnales = new Button("Anales del Templo");
+        estilizarBotonConFondo(btnAnales, "anales");
+        btnAnales.setPrefSize(250, 70);
+
+        Button btnLogout = new Button("Cerrar Sesión");
+        estilizarBotonConFondo(btnLogout, "generico");
+        btnLogout.setPrefSize(250, 70);
+
+        Button btnSalir = new Button("Salir");
+        estilizarBotonConFondo(btnSalir, "salida");
+        btnSalir.setPrefSize(250, 70);
+
+        // Colocar botones en grid
+        botonesGrid.add(btnJugar, 0, 0);
+        botonesGrid.add(btnCargar, 1, 0);
+        botonesGrid.add(btnAnales, 0, 1);
+        botonesGrid.add(btnLogout, 1, 1);
+
+        // Botón salir centrado abajo
+        HBox salidaBox = new HBox(btnSalir);
+        salidaBox.setAlignment(Pos.CENTER);
+        salidaBox.setPadding(new Insets(10, 0, 0, 0));
 
         btnJugar.setOnAction(e -> mostrarSelectorDificultad());
         btnCargar.setOnAction(e -> cargarJuego());
@@ -254,7 +353,7 @@ public class VentanaPrincipal {
         btnLogout.setOnAction(e -> cerrarSesion());
         btnSalir.setOnAction(e -> System.exit(0));
 
-        layout.getChildren().addAll(bienvenido, btnJugar, btnCargar, btnAnales, btnLogout, btnSalir);
+        layout.getChildren().addAll(bienvenido, botonesGrid, salidaBox);
         root.setCenter(layout);
     }
 
@@ -262,27 +361,57 @@ public class VentanaPrincipal {
      * Despliega la interfaz de selección de parámetros para una nueva partida.
      */
     private void mostrarSelectorDificultad() {
-        VBox layout = new VBox(20);
+        VBox layout = new VBox(25);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-border-color: #DAA520; -fx-border-width: 2;");
+        layout.setPadding(new Insets(40));
+
+        // Aplicar fondo de imagen fondo2.jpg
+        try {
+            Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/fondo2.jpg"));
+            BackgroundImage bgImg = new BackgroundImage(
+                    fondoImg,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true));
+            layout.setBackground(new Background(bgImg));
+        } catch (Exception e) {
+            layout.setStyle("-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a);");
+            System.err.println("Error cargando fondo2.jpg en selector: " + e.getMessage());
+        }
 
         Label lbl = new Label("Selecciona Dificultad");
-        lbl.setStyle("-fx-text-fill: white; -fx-font-size: 20px;");
+        lbl.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3);");
 
         ComboBox<String> combo = new ComboBox<>();
         combo.getItems().addAll("Fácil", "Media", "Difícil");
         combo.setValue("Media");
+        combo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-background-color: rgba(255, 255, 255, 0.9); -fx-text-fill: #1a150a; -fx-border-color: #DAA520; -fx-font-size: 16px; -fx-pref-width: 300;");
 
         CheckBox checkNiebla = new CheckBox("Activar Niebla de Guerra");
-        checkNiebla.setStyle("-fx-text-fill: white;");
+        checkNiebla.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
         checkNiebla.setSelected(true);
 
-        Button btnIniciar = new Button("Comenzar");
-        estilizarBoton(btnIniciar);
+        // Grid para botones
+        GridPane botonesGrid = new GridPane();
+        botonesGrid.setAlignment(Pos.CENTER);
+        botonesGrid.setHgap(20);
+        botonesGrid.setVgap(15);
+        botonesGrid.setPadding(new Insets(20, 0, 0, 0));
 
-        combo.setStyle("-fx-background-color: #444; -fx-text-fill: #DAA520; -fx-border-color: #DAA520;");
-        checkNiebla.setStyle("-fx-text-fill: #DAA520; -fx-font-weight: bold;");
+        Button btnIniciar = new Button("Comenzar");
+        estilizarBotonConFondo(btnIniciar, "entrada");
+        btnIniciar.setPrefSize(250, 60);
+
+        Button btnVolver = new Button("Volver");
+        estilizarBotonConFondo(btnVolver, "salida");
+        btnVolver.setPrefSize(250, 60);
+
+        botonesGrid.add(btnIniciar, 0, 0);
+        botonesGrid.add(btnVolver, 1, 0);
 
         btnIniciar.setOnAction(e -> {
             String diff = combo.getValue();
@@ -290,11 +419,9 @@ public class VentanaPrincipal {
             iniciarJuego(diff, niebla);
         });
 
-        Button btnVolver = new Button("Volver");
-        estilizarBoton(btnVolver);
         btnVolver.setOnAction(e -> mostrarMenuPrincipal());
 
-        layout.getChildren().addAll(lbl, combo, checkNiebla, btnIniciar, btnVolver);
+        layout.getChildren().addAll(lbl, combo, checkNiebla, botonesGrid);
         root.setCenter(layout);
     }
 
@@ -381,6 +508,60 @@ public class VentanaPrincipal {
                 "-fx-cursor: hand;";
 
         btn.setStyle(baseStyle);
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(baseStyle));
+    }
+
+    /**
+     * Estiliza un botón con imagen de fondo boton2.jpg usando CSS.
+     * 
+     * @param btn  El botón a estilizar
+     * @param tipo El tipo de botón (no usado, todos usan boton2.jpg)
+     */
+    private void estilizarBotonConFondo(Button btn, String tipo) {
+        // Ruta de la imagen para CSS
+        String imagePath = "/imagenes/boton2.jpg";
+
+        // Estilo base con imagen de fondo y tipografía jungle
+        String baseStyle = "-fx-background-image: url('" + imagePath + "'); " +
+                "-fx-background-size: 100% 100%; " +
+                "-fx-background-repeat: no-repeat; " +
+                "-fx-background-position: center; " +
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; " +
+                "-fx-font-size: 22px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-text-fill: white; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3); " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: rgba(218, 165, 32, 0.7); " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 8; " +
+                "-fx-background-radius: 8; " +
+                "-fx-padding: 10 20 10 20;";
+
+        // Estilo hover: mantiene la imagen pero aumenta el brillo/borde
+        String hoverStyle = "-fx-background-image: url('" + imagePath + "'); " +
+                "-fx-background-size: 100% 100%; " +
+                "-fx-background-repeat: no-repeat; " +
+                "-fx-background-position: center; " +
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; " +
+                "-fx-font-size: 24px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-text-fill: #FFD700; " +
+                "-fx-effect: dropshadow(gaussian, rgba(255,215,0,0.9), 15, 0, 0, 4); " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: #FFD700; " +
+                "-fx-border-width: 3; " +
+                "-fx-border-radius: 8; " +
+                "-fx-background-radius: 8; " +
+                "-fx-padding: 10 20 10 20; " +
+                "-fx-scale-x: 1.05; " +
+                "-fx-scale-y: 1.05;";
+
+        // Aplicar estilo inicial
+        btn.setStyle(baseStyle);
+
+        // Eventos de ratón
         btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
         btn.setOnMouseExited(e -> btn.setStyle(baseStyle));
     }

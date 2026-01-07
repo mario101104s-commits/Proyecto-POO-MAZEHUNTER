@@ -132,12 +132,7 @@ Para dominar el Templo Perdido, es vital entender cómo interactúan tus recurso
 
 ---
 
-## 📊 Sistema de Puntuación y Anales
 
-Tu desempeño se registra en los **Anales del Templo** basándose en:
-- **Cristales Recolectados**: Cada cristal 💎 otorga puntos de bonificación.
-- **Eficiencia Temporal**: El cronómetro en tiempo real no es solo decorativo; terminar el laberinto en el menor tiempo posible multiplica tu puntuación final.
-- **Dificultad**: Jugar en niveles más altos (Medio o Difícil) otorga un multiplicador de puntos base significativamente mayor.
 ## 📝 Licencia y Versión
 **Versión 2.0 (Beta)** - Diciembre 2025.
 Desarrollado para la cátedra de Programación Orientada a Objetos.
