@@ -10,11 +10,10 @@ import Main.modelo.Dominio.Laberinto;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.stage.Stage;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -22,6 +21,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 
 import javafx.scene.paint.Color;
 import javafx.animation.KeyFrame;
@@ -29,7 +33,6 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.function.Consumer;
 import Main.modelo.Dominio.EstadisticasJuego;
 import Main.modelo.Transferencia.ResultadoJuego;
@@ -152,13 +155,56 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
+     * Aplica el estilo visual temático al botón proporcionado.
+     */
+    private void estilizarBoton(Button btn) {
+        String imagePath = "/imagenes/boton2.jpg";
+        String baseStyle = "-fx-background-image: url('" + imagePath + "'); " +
+                "-fx-background-size: 100% 100%; " +
+                "-fx-background-repeat: no-repeat; " +
+                "-fx-background-position: center; " +
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; " +
+                "-fx-font-size: 14px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-text-fill: white; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 5, 0, 0, 2); " +
+                "-fx-cursor: hand; " +
+                "-fx-border-color: rgba(218, 165, 32, 0.7); " +
+                "-fx-border-width: 1; " +
+                "-fx-border-radius: 5; " +
+                "-fx-background-radius: 5; " +
+                "-fx-padding: 5 15 5 15;";
+
+        String hoverStyle = baseStyle
+                + "-fx-text-fill: #FFD700; -fx-border-color: #FFD700; -fx-scale-x: 1.05; -fx-scale-y: 1.05;";
+
+        btn.setStyle(baseStyle);
+        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
+        btn.setOnMouseExited(e -> btn.setStyle(baseStyle));
+    }
+
+    /**
      * Configura la disposición de los elementos gráficos (HUD superior, inferior y
      * canvas central).
      */
     private void inicializarGUI() {
+        // Fondo General
+        try {
+            Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/mazmorra.png"));
+            BackgroundImage bgImg = new BackgroundImage(
+                    fondoImg,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true));
+            this.setBackground(new Background(bgImg));
+        } catch (Exception e) {
+            this.setStyle("-fx-background-color: #1a150a;");
+        }
+
         // HUD Superior
         HBox hud = new HBox(20);
-        hud.setStyle("-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); " +
+        hud.setStyle("-fx-background-color: rgba(26, 21, 10, 0.7); " +
                 "-fx-padding: 10; " +
                 "-fx-alignment: center-left; " +
                 "-fx-border-color: #DAA520; " +
@@ -179,16 +225,8 @@ public class VistaJuego extends BorderPane {
         javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button btnMenu = new Button("⚙️ Menú");
-        btnMenu.setStyle("-fx-background-color: linear-gradient(to bottom, #555, #222); " +
-                "-fx-text-fill: #DAA520; " +
-                "-fx-font-weight: bold; " +
-                "-fx-border-color: #DAA520; " +
-                "-fx-cursor: hand;");
-        btnMenu.setOnMouseEntered(e -> btnMenu.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #777, #444); -fx-text-fill: #FFD700; -fx-font-weight: bold; -fx-border-color: #FFD700; -fx-cursor: hand;"));
-        btnMenu.setOnMouseExited(e -> btnMenu.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #555, #222); -fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-border-color: #DAA520; -fx-cursor: hand;"));
+        Button btnMenu = new Button("⚙️ MENÚ");
+        estilizarBoton(btnMenu);
         btnMenu.setFocusTraversable(false); // Para no robar foco del teclado
         btnMenu.setOnAction(e -> mostrarMenuPausa());
 
@@ -198,7 +236,7 @@ public class VistaJuego extends BorderPane {
 
         // HUD Inferior (Instrucciones)
         HBox instructionsHud = new HBox(30);
-        instructionsHud.setStyle("-fx-background-color: linear-gradient(to top, #332b1a, #1a150a); " +
+        instructionsHud.setStyle("-fx-background-color: rgba(26, 21, 10, 0.7); " +
                 "-fx-padding: 8; " +
                 "-fx-alignment: center; " +
                 "-fx-border-color: #DAA520; " +
@@ -234,54 +272,33 @@ public class VistaJuego extends BorderPane {
      * al menú.
      */
     private void mostrarMenuPausa() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Menú de Pausa");
-        alert.setHeaderText("Juego Pausado");
-        alert.setContentText("¿Qué deseas hacer?");
+        VentanaAlertaPersonalizada alert = new VentanaAlertaPersonalizada(
+                (Stage) this.getScene().getWindow(),
+                "Menú de Pausa",
+                "El tiempo se ha detenido. ¿Qué deseas hacer?",
+                VentanaAlertaPersonalizada.Tipo.PAUSA);
 
-        ButtonType btnGuardar = new ButtonType("Guardar Partida");
-        ButtonType btnSalir = new ButtonType("Salir al Menú");
-        ButtonType btnCancelar = new ButtonType("Volver al Juego",
-                javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.showAndWait();
+        String res = alert.getResultado();
 
-        alert.getButtonTypes().setAll(btnGuardar, btnSalir, btnCancelar);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == btnGuardar) {
+        if (res != null) {
+            if (res.equals("GUARDAR")) {
                 // Actualizar tiempo antes de guardar
                 long segundos = ChronoUnit.SECONDS.between(controlador.getJuego().getInicio(), LocalDateTime.now());
                 controlador.getJuego().setTiempoJugadoSegundos(segundos);
 
                 if (controlador.guardarJuego(controlador.getJuego())) {
-                    mostrarMensajeInfo("Guardado", "Partida guardada exitosamente.");
+                    mostrarAlerta("GUARDADO", "Partida guardada exitosamente en los anales mágicos.");
                 } else {
-                    mostrarMensajeInfo("Error", "No se pudo guardar la partida.");
+                    mostrarAlerta("ERROR", "No se pudo invocar el hechizo de guardado.");
                 }
-            } else if (result.get() == btnSalir) {
+            } else if (res.equals("SALIR")) {
                 // Actualizar tiempo antes de salir
                 long segundos = ChronoUnit.SECONDS.between(controlador.getJuego().getInicio(), LocalDateTime.now());
                 controlador.getJuego().setTiempoJugadoSegundos(segundos);
-
-                // NO guardar estadísticas parciales al salir para evitar "PERDIDO"
-                // controlador.guardarEstadisticasParciales(controlador.getJuego());
                 onSalir.run();
             }
         }
-    }
-
-    /**
-     * Muestra un mensaje informativo al usuario.
-     *
-     * @param titulo  El título del diálogo.
-     * @param mensaje El contenido del mensaje.
-     */
-    private void mostrarMensajeInfo(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
     }
 
     /**
@@ -292,7 +309,8 @@ public class VistaJuego extends BorderPane {
      */
     private Label crearLabelHUD(String text) {
         Label l = new Label(text);
-        l.setStyle("-fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'Serif';");
+        l.setStyle(
+                "-fx-text-fill: #DAA520; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'Papyrus', 'Copperplate', serif;");
         return l;
     }
 
@@ -420,14 +438,26 @@ public class VistaJuego extends BorderPane {
         Juego juego = controlador.getJuego();
         if (juego.getEstado() == EstadoJuego.GANADO) {
             ResultadoJuego resultado = controlador.terminarJuego(juego);
-            mostrarAlerta("¡VICTORIA!",
-                    "Has escapado del templo con " + juego.getJugador().getCristales() + " cristales.");
+            VentanaAlertaPersonalizada alert = new VentanaAlertaPersonalizada(
+                    (Stage) this.getScene().getWindow(),
+                    "¡VICTORIA!",
+                    "¡Felicidades Explorador! Has escapado del templo con " + juego.getJugador().getCristales()
+                            + " cristales.",
+                    VentanaAlertaPersonalizada.Tipo.VICTORIA);
+            alert.showAndWait();
+
             if (onJuegoTerminado != null) {
                 onJuegoTerminado.accept(resultado.getEstadisticas());
             }
         } else if (juego.getEstado() == EstadoJuego.PERDIDO) {
             ResultadoJuego resultado = controlador.terminarJuego(juego);
-            mostrarAlerta("DERROTA", "Has perdido en el laberinto.");
+            VentanaAlertaPersonalizada alert = new VentanaAlertaPersonalizada(
+                    (Stage) this.getScene().getWindow(),
+                    "DERROTA",
+                    "Has sucumbido a los peligros del laberinto...",
+                    VentanaAlertaPersonalizada.Tipo.GAME_OVER);
+            alert.showAndWait();
+
             if (onJuegoTerminado != null) {
                 onJuegoTerminado.accept(resultado.getEstadisticas());
             }
@@ -441,10 +471,11 @@ public class VistaJuego extends BorderPane {
      * @param mensaje El contenido del mensaje.
      */
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
+        VentanaAlertaPersonalizada alert = new VentanaAlertaPersonalizada(
+                (Stage) this.getScene().getWindow(),
+                titulo,
+                mensaje,
+                VentanaAlertaPersonalizada.Tipo.INFO);
         alert.showAndWait();
     }
 }

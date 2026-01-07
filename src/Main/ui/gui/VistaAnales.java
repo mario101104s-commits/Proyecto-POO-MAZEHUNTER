@@ -84,26 +84,47 @@ public class VistaAnales extends BorderPane {
 
         // Configuración de la tabla de datos
         TableView<EstadisticasJuego> table = new TableView<>();
-        table.setStyle("-fx-background-color: rgba(26, 21, 10, 0.8); " +
-                "-fx-control-inner-background: rgba(26, 21, 10, 0.8); " +
-                "-fx-text-fill: white; " +
+        table.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); " +
+                "-fx-control-inner-background: transparent; " +
+                "-fx-background-insets: 0; " +
+                "-fx-padding: 5; " +
                 "-fx-border-color: #DAA520; " +
                 "-fx-border-width: 2; " +
+                "-fx-background-radius: 10; " +
+                "-fx-border-radius: 10; " +
                 "-fx-font-family: 'Papyrus', 'Copperplate', serif; " +
-                "-fx-font-size: 13px;");
+                "-fx-font-size: 14px;");
+
+        // Asegurar que el fondo del viewport también sea semi-transparente
+        table.setPlaceholder(new Label("No hay registros en los archivos del templo..."));
+
+        // Hacer que las filas sean transparentes para ver el fondo del TableView
+        table.setRowFactory(tv -> {
+            TableRow<EstadisticasJuego> row = new TableRow<>() {
+                @Override
+                protected void updateItem(EstadisticasJuego item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setStyle("-fx-background-color: transparent; -fx-text-fill: white;");
+                }
+            };
+            return row;
+        });
+
+        table.setBackground(Background.EMPTY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Columna: Fecha
         TableColumn<EstadisticasJuego, String> colFecha = new TableColumn<>("Fecha");
         colFecha.setCellValueFactory(new PropertyValueFactory<>("fechaFormateada"));
-        colFecha.setPrefWidth(150);
+        colFecha.setPrefWidth(180); // Aumentado para visibilidad completa
 
-        // Columna: Resultado (Personalizada para mostrar GANADO/PERDIDO)
+        // Columna: Resultado
         TableColumn<EstadisticasJuego, String> colResultado = new TableColumn<>("Resultado");
         colResultado.setCellValueFactory(cellData -> {
             boolean ganado = cellData.getValue().isGanado();
             return new javafx.beans.property.SimpleStringProperty(ganado ? "GANADO" : "PERDIDO");
         });
-        colResultado.setPrefWidth(100);
+        colResultado.setPrefWidth(80); // Ajustado de 100
 
         // Columna: Tiempo Transcurrido
         TableColumn<EstadisticasJuego, String> colTiempo = new TableColumn<>("Tiempo ⏱️");
@@ -113,28 +134,29 @@ public class VistaAnales extends BorderPane {
             long segs = segundos % 60;
             return new javafx.beans.property.SimpleStringProperty(String.format("%02d:%02d", minutos, segs));
         });
-        colTiempo.setPrefWidth(100);
+        colTiempo.setPrefWidth(80); // Ajustado de 100
 
-        // Columnas de recursos (Cristales, Bombas, Fósforos, Muros destruidos)
-        TableColumn<EstadisticasJuego, Integer> colCristales = new TableColumn<>("Cristales 💎");
+        // Columnas de recursos
+        TableColumn<EstadisticasJuego, Integer> colCristales = new TableColumn<>("Cirst. 💎");
         colCristales.setCellValueFactory(new PropertyValueFactory<>("cristalesRecolectados"));
-        colCristales.setPrefWidth(100);
+        colCristales.setPrefWidth(80);
 
-        TableColumn<EstadisticasJuego, Integer> colBombas = new TableColumn<>("Bombas 💣");
+        TableColumn<EstadisticasJuego, Integer> colBombas = new TableColumn<>("Bomb. 💣");
         colBombas.setCellValueFactory(new PropertyValueFactory<>("bombasRecolectadas"));
-        colBombas.setPrefWidth(100);
+        colBombas.setPrefWidth(80);
 
-        TableColumn<EstadisticasJuego, Integer> colFosforos = new TableColumn<>("Fósforos 🔥");
+        TableColumn<EstadisticasJuego, Integer> colFosforos = new TableColumn<>("Fósf. 🔥");
         colFosforos.setCellValueFactory(new PropertyValueFactory<>("fosforosUsados"));
-        colFosforos.setPrefWidth(100);
+        colFosforos.setPrefWidth(80);
 
         TableColumn<EstadisticasJuego, Integer> colMuros = new TableColumn<>("Muros 💥");
         colMuros.setCellValueFactory(new PropertyValueFactory<>("murosDestruidos"));
-        colMuros.setPrefWidth(100);
+        colMuros.setPrefWidth(80);
 
         // Columna: Dimensiones del laberinto
         TableColumn<EstadisticasJuego, String> colTamanio = new TableColumn<>("Tamaño");
         colTamanio.setCellValueFactory(new PropertyValueFactory<>("tamanioLaberinto"));
+        colTamanio.setPrefWidth(70);
 
         // Columna: Niebla de Guerra
         TableColumn<EstadisticasJuego, String> colNiebla = new TableColumn<>("Niebla");
@@ -142,12 +164,18 @@ public class VistaAnales extends BorderPane {
             boolean niebla = cellData.getValue().isNieblaDeGuerra();
             return new javafx.beans.property.SimpleStringProperty(niebla ? "SI" : "NO");
         });
-        colNiebla.setPrefWidth(80);
+        colNiebla.setPrefWidth(60);
+
+        // Columna: Dificultad
+        TableColumn<EstadisticasJuego, String> colDificultad = new TableColumn<>("Dificultad");
+        colDificultad.setCellValueFactory(new PropertyValueFactory<>("dificultad"));
+        colDificultad.setPrefWidth(90);
 
         // Agregación de columnas a la tabla
         @SuppressWarnings("unchecked")
         TableColumn<EstadisticasJuego, ?>[] columns = new TableColumn[] {
-                colFecha, colResultado, colTiempo, colCristales, colBombas, colFosforos, colMuros, colTamanio, colNiebla
+                colFecha, colDificultad, colResultado, colTiempo, colCristales, colBombas, colFosforos, colMuros,
+                colTamanio, colNiebla
         };
         table.getColumns().addAll(columns);
 
