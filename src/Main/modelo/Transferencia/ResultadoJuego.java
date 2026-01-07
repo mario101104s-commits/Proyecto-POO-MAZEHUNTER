@@ -5,10 +5,12 @@ package Main.modelo.Transferencia;
  * métricas de rendimiento de una partida de Maze Hunter.
  * <p>
  * Se utiliza para comunicar los datos resumidos de la partida a la capa de
- * presentación y para facilitar la creación de registros históricos en la persistencia.
+ * presentación y para facilitar la creación de registros históricos en la
+ * persistencia.
  * Al ser un DTO, no contiene lógica de negocio, solo contenedores de datos.
  * </p>
  * * @author Mario Sanchez
+ * 
  * @version 1.0
  * @since 11/11/2025
  */
@@ -33,56 +35,120 @@ public class ResultadoJuego {
     /** Cantidad de fósforos consumidos para iluminar el laberinto. */
     private int fosforosUsados;
 
+    /** Referencia al objeto de estadísticas completo. */
+    private Main.modelo.Dominio.EstadisticasJuego estadisticas;
+
     /** @return Segundos totales de duración. */
-    public long getTiempoSegundos() { return tiempoSegundos; }
+    public long getTiempoSegundos() {
+        return tiempoSegundos;
+    }
+
     /** @param tiempoSegundos Duración final de la partida. */
-    public void setTiempoSegundos(long tiempoSegundos) { this.tiempoSegundos = tiempoSegundos; }
+    public void setTiempoSegundos(long tiempoSegundos) {
+        this.tiempoSegundos = tiempoSegundos;
+    }
 
     /** @return Total de cristales obtenidos. */
-    public int getCristalesRecolectados() { return cristalesRecolectados; }
+    public int getCristalesRecolectados() {
+        return cristalesRecolectados;
+    }
+
     /** @param cristalesRecolectados Cantidad de cristales para el resumen. */
-    public void setCristalesRecolectados(int cristalesRecolectados) { this.cristalesRecolectados = cristalesRecolectados; }
+    public void setCristalesRecolectados(int cristalesRecolectados) {
+        this.cristalesRecolectados = cristalesRecolectados;
+    }
 
     /** @return Total de trampas accionadas. */
-    public int getTrampasActivadas() { return trampasActivadas; }
+    public int getTrampasActivadas() {
+        return trampasActivadas;
+    }
+
     /** @param trampasActivadas Número de trampas para el resumen. */
-    public void setTrampasActivadas(int trampasActivadas) { this.trampasActivadas = trampasActivadas; }
+    public void setTrampasActivadas(int trampasActivadas) {
+        this.trampasActivadas = trampasActivadas;
+    }
 
     /** @return Salud final del jugador. */
-    public int getVidaRestante() { return vidaRestante; }
+    public int getVidaRestante() {
+        return vidaRestante;
+    }
+
     /** @param vidaRestante Porcentaje de salud restante. */
-    public void setVidaRestante(int vidaRestante) { this.vidaRestante = vidaRestante; }
+    public void setVidaRestante(int vidaRestante) {
+        this.vidaRestante = vidaRestante;
+    }
 
     /** @return Nombre o dimensiones del laberinto. */
-    public String getTamanioLaberinto() { return tamanioLaberinto; }
+    public String getTamanioLaberinto() {
+        return tamanioLaberinto;
+    }
+
     /** @param tamanioLaberinto Descripción del mapa jugado. */
-    public void setTamanioLaberinto(String tamanioLaberinto) { this.tamanioLaberinto = tamanioLaberinto; }
+    public void setTamanioLaberinto(String tamanioLaberinto) {
+        this.tamanioLaberinto = tamanioLaberinto;
+    }
 
     /** @return true si fue victoria, false si fue derrota. */
-    public boolean isGanado() { return ganado; }
+    public boolean isGanado() {
+        return ganado;
+    }
+
     /** @param ganado Resultado final de la sesión. */
-    public void setGanado(boolean ganado) { this.ganado = ganado; }
+    public void setGanado(boolean ganado) {
+        this.ganado = ganado;
+    }
 
     /** @return Cantidad de bombas recogidas. */
-    public int getBombasRecolectadas() { return bombasRecolectadas; }
+    public int getBombasRecolectadas() {
+        return bombasRecolectadas;
+    }
+
     /** @param bombasRecolectadas Bombas encontradas en el laberinto. */
-    public void setBombasRecolectadas(int bombasRecolectadas) { this.bombasRecolectadas = bombasRecolectadas; }
+    public void setBombasRecolectadas(int bombasRecolectadas) {
+        this.bombasRecolectadas = bombasRecolectadas;
+    }
 
     /** @return Muros destruidos por el jugador. */
-    public int getMurosDestruidos() { return murosDestruidos; }
+    public int getMurosDestruidos() {
+        return murosDestruidos;
+    }
+
     /** @param murosDestruidos Cantidad de muros rojos eliminados. */
-    public void setMurosDestruidos(int murosDestruidos) { this.murosDestruidos = murosDestruidos; }
+    public void setMurosDestruidos(int murosDestruidos) {
+        this.murosDestruidos = murosDestruidos;
+    }
 
     /** @return Fósforos utilizados durante la partida. */
-    public int getFosforosUsados() { return fosforosUsados; }
+    public int getFosforosUsados() {
+        return fosforosUsados;
+    }
+
     /** @param fosforosUsados Cantidad de fósforos consumidos. */
-    public void setFosforosUsados(int fosforosUsados) { this.fosforosUsados = fosforosUsados; }
+    public void setFosforosUsados(int fosforosUsados) {
+        this.fosforosUsados = fosforosUsados;
+    }
+
+    /**
+     * @return El objeto de estadísticas completo asociado a este resultado.
+     */
+    public Main.modelo.Dominio.EstadisticasJuego getEstadisticas() {
+        return estadisticas;
+    }
+
+    /**
+     * @param estadisticas El objeto de estadísticas a establecer.
+     */
+    public void setEstadisticas(Main.modelo.Dominio.EstadisticasJuego estadisticas) {
+        this.estadisticas = estadisticas;
+    }
 
     /**
      * Proporciona una representación legible y formateada del resultado del juego.
      * <p>
-     * Utiliza iconos decorativos para mejorar la legibilidad en interfaces de consola.
+     * Utiliza iconos decorativos para mejorar la legibilidad en interfaces de
+     * consola.
      * </p>
+     * 
      * @return Una cadena de texto que detalla las métricas clave de la partida.
      */
     @Override

@@ -491,9 +491,17 @@ public class VentanaPrincipal {
     }
 
     private void mostrarVistaJuego() {
-        VistaJuego vistaJuego = new VistaJuego(controladorJuego, () -> mostrarMenuPrincipal());
+        VistaJuego vistaJuego = new VistaJuego(
+                controladorJuego,
+                (stats) -> mostrarEstadisticasPartida(stats),
+                () -> mostrarMenuPrincipal());
         root.setCenter(vistaJuego);
         vistaJuego.requestFocus();
+    }
+
+    private void mostrarEstadisticasPartida(Main.modelo.Dominio.EstadisticasJuego stats) {
+        VentanaEstadisticasPartida ventanaStats = new VentanaEstadisticasPartida(stats, () -> mostrarMenuPrincipal());
+        root.setCenter(ventanaStats);
     }
 
     private void mostrarAnales() {

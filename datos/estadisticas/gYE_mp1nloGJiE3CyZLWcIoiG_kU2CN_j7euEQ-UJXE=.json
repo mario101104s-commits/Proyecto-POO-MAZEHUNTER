@@ -1,0 +1,16 @@
+[
+  {
+    "usuario": "gYE_mp1nloGJiE3CyZLWcIoiG_kU2CN_j7euEQ-UJXE\u003d",
+    "fecha": "2026-01-07T12:43:58.869768",
+    "tiempoSegundos": 10,
+    "cristalesRecolectados": 1,
+    "trampasActivadas": 0,
+    "vidaRestante": 100,
+    "tamanioLaberinto": "13x22",
+    "ganado": true,
+    "bombasRecolectadas": 1,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0,
+    "nieblaDeGuerra": false
+  }
+]

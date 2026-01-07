@@ -30,6 +30,9 @@ import javafx.util.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.function.Consumer;
+import Main.modelo.Dominio.EstadisticasJuego;
+import Main.modelo.Transferencia.ResultadoJuego;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +56,8 @@ public class VistaJuego extends BorderPane {
     private Canvas canvas;
     private GraphicsContext gc;
     private Map<String, Image> imagenes;
-    private Runnable onExit;
+    private Consumer<EstadisticasJuego> onJuegoTerminado;
+    private Runnable onSalir;
     private boolean niebla = true;
 
     private Label lblVida;
@@ -71,12 +75,16 @@ public class VistaJuego extends BorderPane {
      * Construye la vista del juego, carga los recursos gráficos e inicializa los
      * componentes del HUD.
      *
-     * @param controlador El controlador de lógica del juego.
-     * @param onExit      Callback para volver al menú principal.
+     * @param controlador      El controlador de lógica del juego.
+     * @param onJuegoTerminado Callback que recibe las estadísticas al finalizar la
+     *                         partida.
+     * @param onSalir          Callback para volver al menú principal (pausa o
+     *                         salida).
      */
-    public VistaJuego(ControladorJuego controlador, Runnable onExit) {
+    public VistaJuego(ControladorJuego controlador, Consumer<EstadisticasJuego> onJuegoTerminado, Runnable onSalir) {
         this.controlador = controlador;
-        this.onExit = onExit;
+        this.onJuegoTerminado = onJuegoTerminado;
+        this.onSalir = onSalir;
         this.niebla = controlador.getJuego().isNieblaDeGuerra();
         cargarImagenes();
         inicializarGUI();
@@ -257,7 +265,7 @@ public class VistaJuego extends BorderPane {
 
                 // NO guardar estadísticas parciales al salir para evitar "PERDIDO"
                 // controlador.guardarEstadisticasParciales(controlador.getJuego());
-                onExit.run();
+                onSalir.run();
             }
         }
     }
@@ -411,14 +419,18 @@ public class VistaJuego extends BorderPane {
     private void verificarFinJuego() {
         Juego juego = controlador.getJuego();
         if (juego.getEstado() == EstadoJuego.GANADO) {
+            ResultadoJuego resultado = controlador.terminarJuego(juego);
             mostrarAlerta("¡VICTORIA!",
                     "Has escapado del templo con " + juego.getJugador().getCristales() + " cristales.");
-            controlador.terminarJuego(juego);
-            onExit.run();
+            if (onJuegoTerminado != null) {
+                onJuegoTerminado.accept(resultado.getEstadisticas());
+            }
         } else if (juego.getEstado() == EstadoJuego.PERDIDO) {
+            ResultadoJuego resultado = controlador.terminarJuego(juego);
             mostrarAlerta("DERROTA", "Has perdido en el laberinto.");
-            controlador.terminarJuego(juego);
-            onExit.run();
+            if (onJuegoTerminado != null) {
+                onJuegoTerminado.accept(resultado.getEstadisticas());
+            }
         }
     }
 

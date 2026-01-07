@@ -400,6 +400,8 @@ public class ServicioJuegoImpl implements ServicioJuego {
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);
 
+        resultado.setEstadisticas(estadisticas);
+
         return resultado;
     }
 

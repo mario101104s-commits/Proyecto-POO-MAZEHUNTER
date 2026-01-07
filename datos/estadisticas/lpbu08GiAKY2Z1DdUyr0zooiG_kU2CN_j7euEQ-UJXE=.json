@@ -1,0 +1,44 @@
+[
+  {
+    "usuario": "lpbu08GiAKY2Z1DdUyr0zooiG_kU2CN_j7euEQ-UJXE\u003d",
+    "fecha": "2026-01-07T12:37:34.931744",
+    "tiempoSegundos": 51,
+    "cristalesRecolectados": 5,
+    "trampasActivadas": 1,
+    "vidaRestante": 40,
+    "tamanioLaberinto": "17x35",
+    "ganado": true,
+    "bombasRecolectadas": 2,
+    "murosDestruidos": 4,
+    "fosforosUsados": 2,
+    "nieblaDeGuerra": false
+  },
+  {
+    "usuario": "lpbu08GiAKY2Z1DdUyr0zooiG_kU2CN_j7euEQ-UJXE\u003d",
+    "fecha": "2026-01-07T12:38:46.626872",
+    "tiempoSegundos": 26,
+    "cristalesRecolectados": 4,
+    "trampasActivadas": 2,
+    "vidaRestante": 60,
+    "tamanioLaberinto": "10x20",
+    "ganado": true,
+    "bombasRecolectadas": 4,
+    "murosDestruidos": 0,
+    "fosforosUsados": 0,
+    "nieblaDeGuerra": true
+  },
+  {
+    "usuario": "lpbu08GiAKY2Z1DdUyr0zooiG_kU2CN_j7euEQ-UJXE\u003d",
+    "fecha": "2026-01-07T12:39:27.108075",
+    "tiempoSegundos": 25,
+    "cristalesRecolectados": 4,
+    "trampasActivadas": 1,
+    "vidaRestante": 0,
+    "tamanioLaberinto": "24x30",
+    "ganado": false,
+    "bombasRecolectadas": 3,
+    "murosDestruidos": 5,
+    "fosforosUsados": 3,
+    "nieblaDeGuerra": false
+  }
+]
