@@ -1,6 +1,5 @@
 package Main.servicio.Implementaciones;
 
-import Main.servicio.Implementaciones.CifradorImpl;
 import Main.modelo.Dominio.Usuario;
 import Main.servicio.Interfaces.Persistencia;
 import Main.servicio.Interfaces.ServicioUsuario;
@@ -223,10 +222,13 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
         return stats.toString();
     }
+
     /**
      * Actualiza los datos de un usuario en el almacenamiento persistente.
      * * @param usuario Objeto con la información actualizada.
-     * @throws Exception Si el usuario no existe o hay un error en la base de datos/archivo.
+     * 
+     * @throws Exception Si el usuario no existe o hay un error en la base de
+     *                   datos/archivo.
      */
     @Override
     public void actualizarUsuario(Usuario usuario) throws Exception {

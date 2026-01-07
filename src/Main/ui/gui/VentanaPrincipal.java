@@ -245,7 +245,7 @@ public class VentanaPrincipal {
             System.err.println("Error cargando fondo3.jpg en recuperación: " + e.getMessage());
         }
 
-        Label title = new Label("📜 RECUPERAR ACCESO");
+        Label title = new Label("RECUPERAR ACCESO");
         title.setStyle(
                 "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3);");
 
