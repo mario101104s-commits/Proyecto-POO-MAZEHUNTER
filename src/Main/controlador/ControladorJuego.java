@@ -12,19 +12,23 @@ import Main.servicio.Interfaces.ServicioJuego;
 import java.util.List;
 
 /**
- * Controlador que orquesta la lógica de ejecución del juego y la generación de laberintos.
+ * Controlador que orquesta la lógica de ejecución del juego y la generación de
+ * laberintos.
  * <p>
- * Esta clase actúa como mediador entre la interfaz de usuario y la lógica de negocio,
- * integrando el patrón de diseño Strategy para permitir diferentes algoritmos de
+ * Esta clase actúa como mediador entre la interfaz de usuario y la lógica de
+ * negocio,
+ * integrando el patrón de diseño Strategy para permitir diferentes algoritmos
+ * de
  * generación de laberintos según la dificultad seleccionada.
  * </p>
  * * @author Mario Sanchez
+ * 
  * @version 1.0
  * @since 22/12/25
  */
 public class ControladorJuego {
     /**
-     *  Servicio para la gestión de las reglas y estado del juego.
+     * Servicio para la gestión de las reglas y estado del juego.
      */
     private ServicioJuego servicioJuego;
 
@@ -78,7 +82,8 @@ public class ControladorJuego {
     }
 
     /**
-     * Proporciona la lista de todas las estrategias de generación disponibles en el sistema.
+     * Proporciona la lista de todas las estrategias de generación disponibles en el
+     * sistema.
      *
      * @return Arreglo de Strings con las dificultades disponibles.
      */
@@ -111,7 +116,8 @@ public class ControladorJuego {
     }
 
     /**
-     * Genera de forma aleatoria un número de filas dentro del rango de la dificultad dada.
+     * Genera de forma aleatoria un número de filas dentro del rango de la
+     * dificultad dada.
      *
      * @param dificultad Nivel de dificultad para determinar el límite.
      * @return Número de filas generado.
@@ -121,7 +127,8 @@ public class ControladorJuego {
     }
 
     /**
-     * Genera de forma aleatoria un número de columnas dentro del rango de la dificultad dada.
+     * Genera de forma aleatoria un número de columnas dentro del rango de la
+     * dificultad dada.
      *
      * @param dificultad Nivel de dificultad para determinar el límite.
      * @return Número de columnas generado.
@@ -133,14 +140,17 @@ public class ControladorJuego {
     // ===== MÉTODOS DE JUEGO =====
 
     /**
-     * Inicializa una nueva partida con dimensiones personalizadas y estrategia actual.
+     * Inicializa una nueva partida con dimensiones personalizadas y estrategia
+     * actual.
      *
-     * @param filas Cantidad de filas para el nuevo laberinto.
-     * @param columnas Cantidad de columnas para el nuevo laberinto.
+     * @param filas        Cantidad de filas para el nuevo laberinto.
+     * @param columnas     Cantidad de columnas para el nuevo laberinto.
      * @param emailUsuario Correo del usuario que inicia la partida.
+     * @param niebla       Si la niebla de guerra está activa.
      * @return Objeto Juego con la nueva partida creada.
      */
-    public Juego iniciarNuevoJuego(int filas, int columnas, String emailUsuario) {
+    public Juego iniciarNuevoJuego(int filas, int columnas, String emailUsuario, boolean niebla) {
+        configuracionJuego.setNieblaDeGuerra(niebla);
         this.juegoActual = servicioJuego.iniciarNuevoJuego(filas, columnas, emailUsuario, configuracionJuego);
         return this.juegoActual;
     }
@@ -178,7 +188,7 @@ public class ControladorJuego {
     /**
      * Ejecuta la lógica de movimiento del jugador en el laberinto.
      *
-     * @param juego Instancia del juego donde se realiza el movimiento.
+     * @param juego     Instancia del juego donde se realiza el movimiento.
      * @param direccion Hacia dónde se desea mover el jugador.
      * @return {@code true} si el movimiento se realizó con éxito.
      */
@@ -248,6 +258,7 @@ public class ControladorJuego {
     /**
      * Valida si las dimensiones propuestas para un laberinto son aceptables.
      * * @param filas Número de filas.
+     * 
      * @param columnas Número de columnas.
      * @return {@code true} si están en el rango de 5 a 20.
      */

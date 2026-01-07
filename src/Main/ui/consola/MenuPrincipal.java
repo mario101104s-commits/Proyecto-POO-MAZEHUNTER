@@ -29,6 +29,7 @@ public class MenuPrincipal {
 
     /**
      * Construye el menú principal inyectando las dependencias necesarias.
+     * 
      * @param controladorJuego Controlador que actuará como puente hacia el modelo.
      */
     public MenuPrincipal(ControladorJuego controladorJuego) {
@@ -38,9 +39,10 @@ public class MenuPrincipal {
 
     /**
      * Despliega el menú de navegación principal y gestiona la entrada del Hunter.
+     * 
      * @param emailUsuario Correo del usuario actualmente autenticado.
      * @return {@code true} si el usuario desea permanecer en el menú;
-     * {@code false} si decide cerrar la sesión.
+     *         {@code false} si decide cerrar la sesión.
      */
     public boolean mostrarMenu(String emailUsuario) {
         try {
@@ -86,6 +88,7 @@ public class MenuPrincipal {
      * configurar la mecánica de "Niebla de Guerra", calculando automáticamente
      * las dimensiones del laberinto según la estrategia elegida.
      * </p>
+     * 
      * @param emailUsuario Correo del Hunter que inicia la aventura.
      */
     private void iniciarNuevaAventura(String emailUsuario) {
@@ -94,9 +97,12 @@ public class MenuPrincipal {
 
         try {
             ConsoleUtils.mostrarMensaje("\n🎯 Seleccione la dificultad:");
-            ConsoleUtils.mostrarMensaje("1. 🟢 FÁCIL   - Filas: 5-15,  Columnas: 10-25  | Trampas: 2-3,  Energías: 2-3");
-            ConsoleUtils.mostrarMensaje("2. 🟡 MEDIA   - Filas: 16-25, Columnas: 26-35  | Trampas: 4-5,  Energías: 4-5");
-            ConsoleUtils.mostrarMensaje("3. 🔴 DIFÍCIL - Filas: 26-45, Columnas: 36-65  | Trampas: 6-18, Energías: 6-18");
+            ConsoleUtils
+                    .mostrarMensaje("1. 🟢 FÁCIL   - Filas: 5-15,  Columnas: 10-25  | Trampas: 2-3,  Energías: 2-3");
+            ConsoleUtils
+                    .mostrarMensaje("2. 🟡 MEDIA   - Filas: 16-25, Columnas: 26-35  | Trampas: 4-5,  Energías: 4-5");
+            ConsoleUtils
+                    .mostrarMensaje("3. 🔴 DIFÍCIL - Filas: 26-45, Columnas: 36-65  | Trampas: 6-18, Energías: 6-18");
 
             int opcionDificultad = ConsoleUtils.leerEntero("\nOpción (1-3): ");
 
@@ -125,8 +131,7 @@ public class MenuPrincipal {
             int filas = controladorJuego.generarFilasAleatorias(dificultad);
             int columnas = controladorJuego.generarColumnasAleatorias(dificultad);
 
-            Juego juego = controladorJuego.iniciarNuevoJuego(filas, columnas, emailUsuario);
-            juego.setNieblaDeGuerra(nieblaDeGuerra);
+            Juego juego = controladorJuego.iniciarNuevoJuego(filas, columnas, emailUsuario, nieblaDeGuerra);
 
             ConsoleUtils.mostrarExito("🔮 ¡Laberinto mágico generado! El templo te espera...");
             ConsoleUtils.pausar();
@@ -144,6 +149,7 @@ public class MenuPrincipal {
 
     /**
      * Intenta recuperar y ejecutar una sesión de juego guardada previamente.
+     * 
      * @param emailUsuario Correo del usuario dueño de la partida.
      */
     private void cargarAventuraExistente(String emailUsuario) {
@@ -170,12 +176,16 @@ public class MenuPrincipal {
     }
 
     /**
-     * Muestra el histórico detallado de partidas y un resumen estadístico agregador.
+     * Muestra el histórico detallado de partidas y un resumen estadístico
+     * agregador.
      * <p>
      * Calcula métricas como tasa de victorias, promedios de tiempo y cristales,
-     * proporcionando además consejos dinámicos basados en el rendimiento del Hunter.
+     * proporcionando además consejos dinámicos basados en el rendimiento del
+     * Hunter.
      * </p>
-     * @param emailUsuario Correo del usuario cuyas estadísticas se desean consultar.
+     * 
+     * @param emailUsuario Correo del usuario cuyas estadísticas se desean
+     *                     consultar.
      */
     private void mostrarEstadisticas(String emailUsuario) {
         // ... (Implementación de cálculo y visualización de estadísticas)

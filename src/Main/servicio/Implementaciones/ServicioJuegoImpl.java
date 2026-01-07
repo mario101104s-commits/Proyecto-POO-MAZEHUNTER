@@ -78,6 +78,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
         jugador.setPosY(posicionInicial[1]);
 
         Juego juego = new Juego(laberinto, jugador, usuario, LocalDateTime.now());
+        juego.setNieblaDeGuerra(configuracion.isNieblaDeGuerra()); // Usar configuración real
 
         // Marcar celda inicial como visitada
         Celda celdaInicial = laberinto.getCelda(posicionInicial[0], posicionInicial[1]);
@@ -391,7 +392,10 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // Nuevas estadísticas en persistencia
         estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
         estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
+        estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
+        estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
         estadisticas.setFosforosUsados(juego.getFosforosUsados());
+        estadisticas.setNieblaDeGuerra(juego.isNieblaDeGuerra());
 
         persistencia.guardarEstadisticas(estadisticas);
         guardarJuego(juego);
@@ -450,45 +454,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
      *         el juego como no ganado.
      */
     public ResultadoJuego guardarEstadisticasParciales(Juego juego) {
+        // CORRECCIÓN: No guardar estadísticas si el juego no ha terminado
+        // (ganado/perdido).
+        // Esto evita que se marquen como "PERDIDO" las partidas guardadas al salir.
         if (juego.getEstado() != EstadoJuego.EN_CURSO) {
             return terminarJuego(juego);
         }
-
-        LocalDateTime ahora = LocalDateTime.now();
-        Duration duracion = Duration.between(juego.getInicio(), ahora);
-
-        ResultadoJuego resultado = new ResultadoJuego();
-        resultado.setTiempoSegundos(duracion.getSeconds());
-        resultado.setCristalesRecolectados(juego.getJugador().getCristales());
-        resultado.setTrampasActivadas(juego.getTrampasActivadas());
-        resultado.setVidaRestante(juego.getJugador().getVida());
-        resultado.setTamanioLaberinto(
-                juego.getLaberinto().getFilas() + "x" + juego.getLaberinto().getColumnas());
-        resultado.setGanado(false); // No ganó porque salió
-
-        // Nuevas estadísticas
-        resultado.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
-        resultado.setMurosDestruidos(juego.getMurosRojosDestruidos());
-        resultado.setFosforosUsados(juego.getFosforosUsados());
-
-        // Guardar estadísticas parciales
-        EstadisticasJuego estadisticas = new EstadisticasJuego(juego.getUsuario(), ahora);
-        estadisticas.setTiempoSegundos(duracion.getSeconds());
-        estadisticas.setCristalesRecolectados(juego.getJugador().getCristales());
-        estadisticas.setTrampasActivadas(juego.getTrampasActivadas());
-        estadisticas.setVidaRestante(juego.getJugador().getVida());
-        estadisticas.setTamanioLaberinto(resultado.getTamanioLaberinto());
-        estadisticas.setGanado(false);
-
-        // Nuevas estadísticas en persistencia
-        estadisticas.setBombasRecolectadas(juego.getBombasRecolectadasTotal());
-        estadisticas.setMurosDestruidos(juego.getMurosRojosDestruidos());
-        estadisticas.setFosforosUsados(juego.getFosforosUsados());
-
-        persistencia.guardarEstadisticas(estadisticas);
-        guardarJuego(juego);
-
-        return resultado;
+        return null; // Retornar null para indicar que no se guardó nada
     }
 
     // Verifica si existe un juego guardado para un usuario

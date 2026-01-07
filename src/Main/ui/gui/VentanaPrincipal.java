@@ -222,28 +222,52 @@ public class VentanaPrincipal {
     /**
      * Construye y despliega la pantalla para el restablecimiento de credenciales.
      */
+    /**
+     * Construye y despliega la pantalla para el restablecimiento de credenciales.
+     */
     private void mostrarPantallaRecuperacion() {
-        VBox layout = new VBox(15);
+        VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a); -fx-padding: 20; -fx-border-color: #DAA520; -fx-border-width: 2;");
+        layout.setPadding(new Insets(40));
+
+        // Aplicar fondo de imagen
+        try {
+            Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/fondo3.jpg"));
+            BackgroundImage bgImg = new BackgroundImage(
+                    fondoImg,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true));
+            layout.setBackground(new Background(bgImg));
+        } catch (Exception e) {
+            layout.setStyle("-fx-background-color: linear-gradient(to bottom, #1a3a1a, #0a1a0a);");
+            System.err.println("Error cargando fondo3.jpg en recuperación: " + e.getMessage());
+        }
 
         Label title = new Label("📜 RECUPERAR ACCESO");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: gold;");
+        title.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3);");
 
         TextField emailField = new TextField();
         emailField.setPromptText("Correo Electrónico");
-        emailField.setMaxWidth(300);
+        emailField.setMaxWidth(400);
+        emailField.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 14px; -fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 5;");
 
         PasswordField newPassField = new PasswordField();
         newPassField.setPromptText("Nueva Contraseña");
-        newPassField.setMaxWidth(300);
+        newPassField.setMaxWidth(400);
+        newPassField.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 14px; -fx-background-color: rgba(255,255,255,0.9); -fx-background-radius: 5;");
 
         Button btnRestablecer = new Button("Restablecer Contraseña");
-        estilizarBoton(btnRestablecer);
+        estilizarBotonConFondo(btnRestablecer, "generico");
+        btnRestablecer.setPrefSize(300, 60);
 
         Button btnVolver = new Button("Volver");
-        estilizarBoton(btnVolver);
+        estilizarBotonConFondo(btnVolver, "generico");
+        btnVolver.setPrefSize(300, 60);
 
         btnRestablecer.setOnAction(e -> {
             String email = emailField.getText();
@@ -446,7 +470,7 @@ public class VentanaPrincipal {
             int filas = controladorJuego.generarFilasAleatorias(estrategia);
             int cols = controladorJuego.generarColumnasAleatorias(estrategia);
 
-            controladorJuego.iniciarNuevoJuego(filas, cols, usuarioActual.getEmail());
+            controladorJuego.iniciarNuevoJuego(filas, cols, usuarioActual.getEmail(), niebla);
 
             mostrarVistaJuego();
 
@@ -482,34 +506,6 @@ public class VentanaPrincipal {
     private void cerrarSesion() {
         this.usuarioActual = null;
         mostrarPantallaLogin();
-    }
-
-    private void estilizarBoton(Button btn) {
-        String baseStyle = "-fx-background-color: linear-gradient(to bottom, #555, #222); " +
-                "-fx-text-fill: #DAA520; " +
-                "-fx-font-size: 14px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-min-width: 220px; " +
-                "-fx-border-color: #DAA520; " +
-                "-fx-border-width: 1; " +
-                "-fx-border-radius: 5; " +
-                "-fx-background-radius: 5; " +
-                "-fx-cursor: hand;";
-
-        String hoverStyle = "-fx-background-color: linear-gradient(to bottom, #777, #444); " +
-                "-fx-text-fill: #FFD700; " +
-                "-fx-font-size: 14px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-min-width: 220px; " +
-                "-fx-border-color: #FFD700; " +
-                "-fx-border-width: 2; " +
-                "-fx-border-radius: 5; " +
-                "-fx-background-radius: 5; " +
-                "-fx-cursor: hand;";
-
-        btn.setStyle(baseStyle);
-        btn.setOnMouseEntered(e -> btn.setStyle(hoverStyle));
-        btn.setOnMouseExited(e -> btn.setStyle(baseStyle));
     }
 
     /**

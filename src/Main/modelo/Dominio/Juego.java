@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  * información necesaria para reanudar una partida.
  * </p>
  * * @author Mario Sanchez
+ * 
  * @version 1.0
  * @since 11/11/2025
  */
@@ -32,6 +33,8 @@ public class Juego {
     private int trampasActivadas;
     /** Indica si la visibilidad está limitada por niebla de guerra. */
     private boolean nieblaDeGuerra;
+    /** Tiempo jugado acumulado en segundos. */
+    private long tiempoJugadoSegundos;
 
     // Estadísticas acumulativas
     /** Total de bombas recogidas en esta sesión. */
@@ -44,15 +47,18 @@ public class Juego {
     private int murosRojosDestruidos;
 
     /**
-     * Construye una nueva instancia de Juego, inicializando los componentes principales.
+     * Construye una nueva instancia de Juego, inicializando los componentes
+     * principales.
      * <p>
      * Por defecto, la niebla de guerra se activa y los contadores de estadísticas
-     * inician en cero. El estado inicial se establece como {@link EstadoJuego#EN_CURSO}.
+     * inician en cero. El estado inicial se establece como
+     * {@link EstadoJuego#EN_CURSO}.
      * </p>
      * * @param laberinto La estructura del laberinto generada.
-     * @param jugador   La instancia del jugador con sus atributos iniciales.
-     * @param usuario   El correo electrónico del usuario que está jugando.
-     * @param inicio    La marca de tiempo del inicio de la partida.
+     * 
+     * @param jugador La instancia del jugador con sus atributos iniciales.
+     * @param usuario El correo electrónico del usuario que está jugando.
+     * @param inicio  La marca de tiempo del inicio de la partida.
      */
     public Juego(Laberinto laberinto, Jugador jugador, String usuario, LocalDateTime inicio) {
         this.laberinto = laberinto;
@@ -62,6 +68,7 @@ public class Juego {
         this.estado = EstadoJuego.EN_CURSO;
         this.trampasActivadas = 0;
         this.nieblaDeGuerra = true;
+        this.tiempoJugadoSegundos = 0;
 
         this.bombasRecolectadasTotal = 0;
         this.fosforosRecolectadosTotal = 0;
@@ -72,64 +79,136 @@ public class Juego {
     // --- Getters y Setters ---
 
     /** @return El objeto laberinto asociado. */
-    public Laberinto getLaberinto() { return laberinto; }
+    public Laberinto getLaberinto() {
+        return laberinto;
+    }
+
     /** @param laberinto El laberinto a establecer. */
-    public void setLaberinto(Laberinto laberinto) { this.laberinto = laberinto; }
+    public void setLaberinto(Laberinto laberinto) {
+        this.laberinto = laberinto;
+    }
 
     /** @return La instancia del jugador. */
-    public Jugador getJugador() { return jugador; }
+    public Jugador getJugador() {
+        return jugador;
+    }
+
     /** @param jugador El estado del jugador a establecer. */
-    public void setJugador(Jugador jugador) { this.jugador = jugador; }
+    public void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+    }
 
     /** @return El correo del usuario. */
-    public String getUsuario() { return usuario; }
+    public String getUsuario() {
+        return usuario;
+    }
+
     /** @param usuario El correo del usuario. */
-    public void setUsuario(String usuario) { this.usuario = usuario; }
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
     /** @return Fecha de inicio. */
-    public LocalDateTime getInicio() { return inicio; }
+    public LocalDateTime getInicio() {
+        return inicio;
+    }
+
     /** @param inicio Fecha de inicio. */
-    public void setInicio(LocalDateTime inicio) { this.inicio = inicio; }
+    public void setInicio(LocalDateTime inicio) {
+        this.inicio = inicio;
+    }
 
     /** @return Fecha de finalización o null si sigue en curso. */
-    public LocalDateTime getFin() { return fin; }
+    public LocalDateTime getFin() {
+        return fin;
+    }
+
     /** @param fin Fecha de finalización. */
-    public void setFin(LocalDateTime fin) { this.fin = fin; }
+    public void setFin(LocalDateTime fin) {
+        this.fin = fin;
+    }
 
     /** @return El {@link EstadoJuego} actual. */
-    public EstadoJuego getEstado() { return estado; }
-    /** @param estado El nuevo estado de la partida. */
-    public void setEstado(EstadoJuego estado) { this.estado = estado; }
+    public EstadoJuego getEstado() {
+        return estado;
+    }
 
-    /** @return Cantidad de trampas activadas. */
-    public int getTrampasActivadas() { return trampasActivadas; }
+    /** @param estado El nuevo estado del juego. */
+    public void setEstado(EstadoJuego estado) {
+        this.estado = estado;
+    }
+
+    /** @return Número de trampas activadas. */
+    public int getTrampasActivadas() {
+        return trampasActivadas;
+    }
+
     /** @param trampasActivadas Número de trampas activadas. */
-    public void setTrampasActivadas(int trampasActivadas) { this.trampasActivadas = trampasActivadas; }
+    public void setTrampasActivadas(int trampasActivadas) {
+        this.trampasActivadas = trampasActivadas;
+    }
 
-    /** @return {@code true} si hay niebla, {@code false} si el mapa es visible. */
-    public boolean isNieblaDeGuerra() { return nieblaDeGuerra; }
-    /** @param nieblaDeGuerra Estado de la niebla. */
-    public void setNieblaDeGuerra(boolean nieblaDeGuerra) { this.nieblaDeGuerra = nieblaDeGuerra; }
+    /** @return Si la niebla de guerra está activa. */
+    public boolean isNieblaDeGuerra() {
+        return nieblaDeGuerra;
+    }
+
+    /** @param nieblaDeGuerra Estado de la niebla de guerra. */
+    public void setNieblaDeGuerra(boolean nieblaDeGuerra) {
+        this.nieblaDeGuerra = nieblaDeGuerra;
+    }
+
+    /** @return Tiempo jugado acumulado en segundos. */
+    public long getTiempoJugadoSegundos() {
+        return tiempoJugadoSegundos;
+    }
+
+    /** @param tiempoJugadoSegundos Tiempo jugado acumulado en segundos. */
+    public void setTiempoJugadoSegundos(long tiempoJugadoSegundos) {
+        this.tiempoJugadoSegundos = tiempoJugadoSegundos;
+    }
+
+    // --- Métodos de estadísticas acumulativas ---
 
     /** @return Total de bombas recolectadas. */
-    public int getBombasRecolectadasTotal() { return bombasRecolectadasTotal; }
+    public int getBombasRecolectadasTotal() {
+        return bombasRecolectadasTotal;
+    }
+
     /** @param bombasRecolectadasTotal Valor acumulado de bombas. */
-    public void setBombasRecolectadasTotal(int bombasRecolectadasTotal) { this.bombasRecolectadasTotal = bombasRecolectadasTotal; }
+    public void setBombasRecolectadasTotal(int bombasRecolectadasTotal) {
+        this.bombasRecolectadasTotal = bombasRecolectadasTotal;
+    }
 
     /** @return Total de fósforos encontrados. */
-    public int getFosforosRecolectadosTotal() { return fosforosRecolectadosTotal; }
+    public int getFosforosRecolectadosTotal() {
+        return fosforosRecolectadosTotal;
+    }
+
     /** @param fosforosRecolectadosTotal Valor acumulado de fósforos. */
-    public void setFosforosRecolectadosTotal(int fosforosRecolectadosTotal) { this.fosforosRecolectadosTotal = fosforosRecolectadosTotal; }
+    public void setFosforosRecolectadosTotal(int fosforosRecolectadosTotal) {
+        this.fosforosRecolectadosTotal = fosforosRecolectadosTotal;
+    }
 
     /** @return Total de fósforos consumidos. */
-    public int getFosforosUsados() { return fosforosUsados; }
+    public int getFosforosUsados() {
+        return fosforosUsados;
+    }
+
     /** @param fosforosUsados Valor acumulado de uso. */
-    public void setFosforosUsados(int fosforosUsados) { this.fosforosUsados = fosforosUsados; }
+    public void setFosforosUsados(int fosforosUsados) {
+        this.fosforosUsados = fosforosUsados;
+    }
 
     /** @return Total de muros rojos destruidos. */
-    public int getMurosRojosDestruidos() { return murosRojosDestruidos; }
+    public int getMurosRojosDestruidos() {
+        return murosRojosDestruidos;
+    }
+
     /** @param murosRojosDestruidos Valor acumulado de destrucción. */
-    public void setMurosRojosDestruidos(int murosRojosDestruidos) { this.murosRojosDestruidos = murosRojosDestruidos; }
+    public void setMurosRojosDestruidos(int murosRojosDestruidos) {
+        this.murosRojosDestruidos = murosRojosDestruidos;
+    }
 
     // --- Métodos de Incremento ---
 

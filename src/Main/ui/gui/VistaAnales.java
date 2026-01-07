@@ -136,10 +136,18 @@ public class VistaAnales extends BorderPane {
         TableColumn<EstadisticasJuego, String> colTamanio = new TableColumn<>("Tamaño");
         colTamanio.setCellValueFactory(new PropertyValueFactory<>("tamanioLaberinto"));
 
+        // Columna: Niebla de Guerra
+        TableColumn<EstadisticasJuego, String> colNiebla = new TableColumn<>("Niebla");
+        colNiebla.setCellValueFactory(cellData -> {
+            boolean niebla = cellData.getValue().isNieblaDeGuerra();
+            return new javafx.beans.property.SimpleStringProperty(niebla ? "SI" : "NO");
+        });
+        colNiebla.setPrefWidth(80);
+
         // Agregación de columnas a la tabla
         @SuppressWarnings("unchecked")
         TableColumn<EstadisticasJuego, ?>[] columns = new TableColumn[] {
-                colFecha, colResultado, colTiempo, colCristales, colBombas, colFosforos, colMuros, colTamanio
+                colFecha, colResultado, colTiempo, colCristales, colBombas, colFosforos, colMuros, colTamanio, colNiebla
         };
         table.getColumns().addAll(columns);
 

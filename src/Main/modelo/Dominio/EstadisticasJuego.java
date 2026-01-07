@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
  * el seguimiento de su progreso y logros.
  * </p>
  * * @author Mario Sanchez
+ * 
  * @version 1.0
  * @since 11/11/2025
  */
@@ -39,9 +40,12 @@ public class EstadisticasJuego {
     private int murosDestruidos;
     /** Cantidad de fósforos consumidos para iluminar el área. */
     private int fosforosUsados;
+    /** Indica si la partida se jugó con niebla de guerra. */
+    private boolean nieblaDeGuerra;
 
     /**
-     * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la fecha.
+     * Crea una nueva instancia de EstadisticasJuego, inicializando el usuario y la
+     * fecha.
      *
      * @param usuario El email del usuario que jugó la partida.
      * @param fecha   La marca de tiempo del registro de las estadísticas.
@@ -54,59 +58,124 @@ public class EstadisticasJuego {
     // --- Getters y Setters ---
 
     /** @return El identificador del usuario. */
-    public String getUsuario() { return usuario; }
+    public String getUsuario() {
+        return usuario;
+    }
+
     /** @param usuario El identificador del usuario a establecer. */
-    public void setUsuario(String usuario) { this.usuario = usuario; }
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
     /** @return La fecha de la partida. */
-    public LocalDateTime getFecha() { return fecha; }
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
     /** @param fecha La fecha de la partida a establecer. */
-    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
 
     /** @return Duración en segundos. */
-    public long getTiempoSegundos() { return tiempoSegundos; }
+    public long getTiempoSegundos() {
+        return tiempoSegundos;
+    }
+
     /** @param tiempoSegundos Segundos transcurridos en la partida. */
-    public void setTiempoSegundos(long tiempoSegundos) { this.tiempoSegundos = tiempoSegundos; }
+    public void setTiempoSegundos(long tiempoSegundos) {
+        this.tiempoSegundos = tiempoSegundos;
+    }
 
     /** @return Total de cristales obtenidos. */
-    public int getCristalesRecolectados() { return cristalesRecolectados; }
+    public int getCristalesRecolectados() {
+        return cristalesRecolectados;
+    }
+
     /** @param cristalesRecolectados Cantidad de cristales a registrar. */
-    public void setCristalesRecolectados(int cristalesRecolectados) { this.cristalesRecolectados = cristalesRecolectados; }
+    public void setCristalesRecolectados(int cristalesRecolectados) {
+        this.cristalesRecolectados = cristalesRecolectados;
+    }
 
     /** @return Total de trampas accionadas. */
-    public int getTrampasActivadas() { return trampasActivadas; }
+    public int getTrampasActivadas() {
+        return trampasActivadas;
+    }
+
     /** @param trampasActivadas Número de trampas activadas. */
-    public void setTrampasActivadas(int trampasActivadas) { this.trampasActivadas = trampasActivadas; }
+    public void setTrampasActivadas(int trampasActivadas) {
+        this.trampasActivadas = trampasActivadas;
+    }
 
     /** @return Puntos de vida al finalizar. */
-    public int getVidaRestante() { return vidaRestante; }
+    public int getVidaRestante() {
+        return vidaRestante;
+    }
+
     /** @param vidaRestante Puntos de vida restantes. */
-    public void setVidaRestante(int vidaRestante) { this.vidaRestante = vidaRestante; }
+    public void setVidaRestante(int vidaRestante) {
+        this.vidaRestante = vidaRestante;
+    }
 
     /** @return Descripción del tamaño del mapa. */
-    public String getTamanioLaberinto() { return tamanioLaberinto; }
+    public String getTamanioLaberinto() {
+        return tamanioLaberinto;
+    }
+
     /** @param tamanioLaberinto Nombre o dimensiones del laberinto. */
-    public void setTamanioLaberinto(String tamanioLaberinto) { this.tamanioLaberinto = tamanioLaberinto; }
+    public void setTamanioLaberinto(String tamanioLaberinto) {
+        this.tamanioLaberinto = tamanioLaberinto;
+    }
 
     /** @return true si el jugador llegó a la salida, false de lo contrario. */
-    public boolean isGanado() { return ganado; }
+    public boolean isGanado() {
+        return ganado;
+    }
+
     /** @param ganado Resultado final de la partida. */
-    public void setGanado(boolean ganado) { this.ganado = ganado; }
+    public void setGanado(boolean ganado) {
+        this.ganado = ganado;
+    }
 
     /** @return Cantidad de bombas recogidas. */
-    public int getBombasRecolectadas() { return bombasRecolectadas; }
+    public int getBombasRecolectadas() {
+        return bombasRecolectadas;
+    }
+
     /** @param bombasRecolectadas Total de bombas en la partida. */
-    public void setBombasRecolectadas(int bombasRecolectadas) { this.bombasRecolectadas = bombasRecolectadas; }
+    public void setBombasRecolectadas(int bombasRecolectadas) {
+        this.bombasRecolectadas = bombasRecolectadas;
+    }
 
     /** @return Número de muros derribados. */
-    public int getMurosDestruidos() { return murosDestruidos; }
-    /** @param murosDestruidos Cantidad de muros destruidos por bombas. */
-    public void setMurosDestruidos(int murosDestruidos) { this.murosDestruidos = murosDestruidos; }
+    public int getMurosDestruidos() {
+        return murosDestruidos;
+    }
 
-    /** @return Cantidad de fósforos empleados. */
-    public int getFosforosUsados() { return fosforosUsados; }
-    /** @param fosforosUsados Número de veces que se usó un fósforo. */
-    public void setFosforosUsados(int fosforosUsados) { this.fosforosUsados = fosforosUsados; }
+    /** @param murosDestruidos Cantidad de muros destruidos por bombas. */
+    public void setMurosDestruidos(int murosDestruidos) {
+        this.murosDestruidos = murosDestruidos;
+    }
+
+    /** @return Cantidad de fósforos usados. */
+    public int getFosforosUsados() {
+        return fosforosUsados;
+    }
+
+    /** @param fosforosUsados Cantidad de fósforos usados. */
+    public void setFosforosUsados(int fosforosUsados) {
+        this.fosforosUsados = fosforosUsados;
+    }
+
+    /** @return Si hubo niebla de guerra. */
+    public boolean isNieblaDeGuerra() {
+        return nieblaDeGuerra;
+    }
+
+    /** @param nieblaDeGuerra Estado de la niebla. */
+    public void setNieblaDeGuerra(boolean nieblaDeGuerra) {
+        this.nieblaDeGuerra = nieblaDeGuerra;
+    }
 
     // --- Métodos de Utilidad ---
 
@@ -121,7 +190,8 @@ public class EstadisticasJuego {
     }
 
     /**
-     * Proporciona una representación en cadena concisa de las estadísticas principales.
+     * Proporciona una representación en cadena concisa de las estadísticas
+     * principales.
      *
      * @return Un string con el resumen de la fecha, el resultado y el rendimiento.
      */

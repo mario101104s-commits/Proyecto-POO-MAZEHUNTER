@@ -7,11 +7,14 @@ import Main.servicio.Interfaces.GeneradorLaberinto;
 /**
  * Clase que actúa como el Contexto dentro del patrón de diseño Strategy.
  * <p>
- * Su función principal es gestionar la estrategia de generación de laberintos activa,
- * permitiendo cambiar el algoritmo de creación (Fácil, Medio o Difícil) de forma
+ * Su función principal es gestionar la estrategia de generación de laberintos
+ * activa,
+ * permitiendo cambiar el algoritmo de creación (Fácil, Medio o Difícil) de
+ * forma
  * dinámica en tiempo de ejecución.
  * </p>
  * * @author Mario Sanchez
+ * 
  * @version 1.0
  * @since 22/12/25
  */
@@ -27,6 +30,11 @@ public class ConfiguracionJuego {
     private String tipoActual;
 
     /**
+     * Indica si la niebla de guerra está activa.
+     */
+    private boolean nieblaDeGuerra = true;
+
+    /**
      * Constructor por defecto.
      * Inicializa el juego con la estrategia MEDIA como configuración base.
      */
@@ -34,6 +42,14 @@ public class ConfiguracionJuego {
         // Estrategia por defecto: MEDIA
         this.tipoActual = GeneradorLaberintoFactory.MEDIA;
         this.estrategiaGeneracion = GeneradorLaberintoFactory.crear(tipoActual);
+    }
+
+    public boolean isNieblaDeGuerra() {
+        return nieblaDeGuerra;
+    }
+
+    public void setNieblaDeGuerra(boolean nieblaDeGuerra) {
+        this.nieblaDeGuerra = nieblaDeGuerra;
     }
 
     /**
@@ -60,7 +76,8 @@ public class ConfiguracionJuego {
     }
 
     /**
-     * Recupera una descripción detallada sobre el comportamiento de la estrategia actual.
+     * Recupera una descripción detallada sobre el comportamiento de la estrategia
+     * actual.
      *
      * @return Texto descriptivo obtenido desde la fábrica de generadores.
      */
@@ -69,9 +86,10 @@ public class ConfiguracionJuego {
     }
 
     /**
-     * Ejecuta el algoritmo de la estrategia configurada para crear un nuevo laberinto.
+     * Ejecuta el algoritmo de la estrategia configurada para crear un nuevo
+     * laberinto.
      *
-     * @param filas Número de filas para el laberinto.
+     * @param filas    Número de filas para el laberinto.
      * @param columnas Número de columnas para el laberinto.
      * @return Un objeto {@link Laberinto} generado aleatoriamente.
      */
@@ -85,9 +103,9 @@ public class ConfiguracionJuego {
      * Esto permite recrear laberintos idénticos si se utiliza la misma semilla.
      * </p>
      *
-     * @param filas Número de filas deseado.
+     * @param filas    Número de filas deseado.
      * @param columnas Número de columnas deseado.
-     * @param semilla Valor numérico para controlar la aleatoriedad.
+     * @param semilla  Valor numérico para controlar la aleatoriedad.
      * @return Un objeto {@link Laberinto} consistente con la semilla dada.
      */
     public Laberinto generarLaberintoConSemilla(int filas, int columnas, long semilla) {

@@ -37,8 +37,10 @@ import java.util.Map;
 /**
  * Representa la interfaz visual del entorno de juego activo para Maze Hunter.
  * <p>
- * Gestiona el renderizado 2D mediante un {@link Canvas}, el sistema de HUD dinámico,
- * el procesamiento de eventos de teclado y el ciclo de vida visual de la partida.
+ * Gestiona el renderizado 2D mediante un {@link Canvas}, el sistema de HUD
+ * dinámico,
+ * el procesamiento de eventos de teclado y el ciclo de vida visual de la
+ * partida.
  * </p>
  *
  * @author Mario Sanchez
@@ -66,7 +68,8 @@ public class VistaJuego extends BorderPane {
     private static final int TILE_SIZE = 32;
 
     /**
-     * Construye la vista del juego, carga los recursos gráficos e inicializa los componentes del HUD.
+     * Construye la vista del juego, carga los recursos gráficos e inicializa los
+     * componentes del HUD.
      *
      * @param controlador El controlador de lógica del juego.
      * @param onExit      Callback para volver al menú principal.
@@ -85,10 +88,28 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Inicializa el cronómetro de la interfaz para actualizar el tiempo transcurrido cada segundo.
+     * Inicializa el cronómetro de la interfaz para actualizar el tiempo
+     * transcurrido cada segundo.
+     */
+    /**
+     * Inicializa el cronómetro de la interfaz para actualizar el tiempo
+     * transcurrido cada segundo.
      */
     private void inicializarTimer() {
-        timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> actualizarHUD()));
+        // Restaurar tiempo si es un juego cargado
+        long tiempoGuardado = controlador.getJuego().getTiempoJugadoSegundos();
+        if (tiempoGuardado > 0) {
+            // Ajustar el inicio del juego para reflejar el tiempo ya jugado
+            LocalDateTime nuevoInicio = LocalDateTime.now().minusSeconds(tiempoGuardado);
+            controlador.getJuego().setInicio(nuevoInicio);
+        }
+
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            actualizarHUD();
+            // Actualizar tiempo en el objeto juego en tiempo real (opcional, pero seguro)
+            long segundos = ChronoUnit.SECONDS.between(controlador.getJuego().getInicio(), LocalDateTime.now());
+            controlador.getJuego().setTiempoJugadoSegundos(segundos);
+        }));
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
     }
@@ -104,7 +125,8 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Carga las imágenes necesarias para el renderizado desde el directorio de recursos.
+     * Carga las imágenes necesarias para el renderizado desde el directorio de
+     * recursos.
      */
     private void cargarImagenes() {
         imagenes = new HashMap<>();
@@ -122,7 +144,8 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Configura la disposición de los elementos gráficos (HUD superior, inferior y canvas central).
+     * Configura la disposición de los elementos gráficos (HUD superior, inferior y
+     * canvas central).
      */
     private void inicializarGUI() {
         // HUD Superior
@@ -199,7 +222,8 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Despliega un diálogo de confirmación que permite guardar la partida o salir al menú.
+     * Despliega un diálogo de confirmación que permite guardar la partida o salir
+     * al menú.
      */
     private void mostrarMenuPausa() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -217,14 +241,22 @@ public class VistaJuego extends BorderPane {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == btnGuardar) {
+                // Actualizar tiempo antes de guardar
+                long segundos = ChronoUnit.SECONDS.between(controlador.getJuego().getInicio(), LocalDateTime.now());
+                controlador.getJuego().setTiempoJugadoSegundos(segundos);
+
                 if (controlador.guardarJuego(controlador.getJuego())) {
                     mostrarMensajeInfo("Guardado", "Partida guardada exitosamente.");
                 } else {
                     mostrarMensajeInfo("Error", "No se pudo guardar la partida.");
                 }
             } else if (result.get() == btnSalir) {
-                // Guardar estadísticas parciales antes de salir
-                controlador.guardarEstadisticasParciales(controlador.getJuego());
+                // Actualizar tiempo antes de salir
+                long segundos = ChronoUnit.SECONDS.between(controlador.getJuego().getInicio(), LocalDateTime.now());
+                controlador.getJuego().setTiempoJugadoSegundos(segundos);
+
+                // NO guardar estadísticas parciales al salir para evitar "PERDIDO"
+                // controlador.guardarEstadisticasParciales(controlador.getJuego());
                 onExit.run();
             }
         }
@@ -257,9 +289,11 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Realiza el renderizado gráfico de todas las celdas del laberinto y el jugador.
+     * Realiza el renderizado gráfico de todas las celdas del laberinto y el
+     * jugador.
      * <p>
-     * Se encarga de procesar la visibilidad (niebla) y las capas de dibujo (suelo y objetos).
+     * Se encarga de procesar la visibilidad (niebla) y las capas de dibujo (suelo y
+     * objetos).
      * </p>
      */
     private void dibujar() {
@@ -316,7 +350,8 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Sincroniza los elementos visuales del HUD con el estado actual del jugador y el tiempo.
+     * Sincroniza los elementos visuales del HUD con el estado actual del jugador y
+     * el tiempo.
      */
     private void actualizarHUD() {
         Jugador j = controlador.getJuego().getJugador();
@@ -370,7 +405,8 @@ public class VistaJuego extends BorderPane {
     }
 
     /**
-     * Verifica si el juego ha terminado (Victoria o Derrota) y realiza las acciones pertinentes.
+     * Verifica si el juego ha terminado (Victoria o Derrota) y realiza las acciones
+     * pertinentes.
      */
     private void verificarFinJuego() {
         Juego juego = controlador.getJuego();
