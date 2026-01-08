@@ -7,6 +7,8 @@ import Main.servicio.Implementaciones.CifradorImpl;
 import Main.servicio.Implementaciones.PersistenciaJASON;
 import Main.servicio.Implementaciones.ServicioJuegoImpl;
 import Main.servicio.Implementaciones.ServicioUsuarioImpl;
+import Main.ui.gui.audio.GestorAudio;
+import Main.ui.gui.audio.ControladorAudioUI;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -73,6 +75,10 @@ public class VentanaPrincipal {
     public VentanaPrincipal(Stage stage) {
         this.root = new BorderPane();
         inicializarControladores();
+
+        // Iniciar audio
+        GestorAudio.getInstancia().reproducirMusica("principal.mp3");
+
         mostrarPantallaLogin();
     }
 
@@ -102,9 +108,16 @@ public class VentanaPrincipal {
      * Construye y despliega la pantalla de autenticación con tema de jungla.
      */
     private void mostrarPantallaLogin() {
+        GestorAudio.getInstancia().reproducirMusica("principal.mp3");
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
+
+        // Control de audio para esta pantalla
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        HBox topBox = new HBox(audioUI);
+        topBox.setAlignment(Pos.TOP_RIGHT);
+        BorderPane.setMargin(topBox, new Insets(15)); // Apply margin to the HBox containing audioUI
 
         // Aplicar fondo de imagen
         try {
@@ -214,7 +227,7 @@ public class VentanaPrincipal {
         btnRecuperar.setOnAction(e -> mostrarPantallaRecuperacion());
         btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
-        layout.getChildren().addAll(title, emailField, passField, botonesGrid);
+        layout.getChildren().addAll(topBox, title, emailField, passField, botonesGrid);
         root.setCenter(layout);
     }
 
@@ -296,7 +309,12 @@ public class VentanaPrincipal {
 
         btnVolver.setOnAction(e -> mostrarPantallaLogin());
 
-        layout.getChildren().addAll(title, emailField, newPassField, btnRestablecer, btnVolver);
+        // Control de audio
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        HBox topBox = new HBox(audioUI);
+        topBox.setAlignment(Pos.TOP_RIGHT);
+
+        layout.getChildren().addAll(topBox, title, emailField, newPassField, btnRestablecer, btnVolver);
         root.setCenter(layout);
     }
 
@@ -304,9 +322,16 @@ public class VentanaPrincipal {
      * Despliega el HUB central del usuario autenticado con tema de jungla.
      */
     private void mostrarMenuPrincipal() {
+        GestorAudio.getInstancia().reproducirMusica("principal.mp3");
         VBox layout = new VBox(25);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
+
+        // Control de audio
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        HBox topBox = new HBox(audioUI);
+        topBox.setAlignment(Pos.TOP_RIGHT);
+        BorderPane.setMargin(topBox, new Insets(15)); // Apply margin to the HBox containing audioUI
 
         // Aplicar fondo de imagen
         try {
@@ -374,9 +399,9 @@ public class VentanaPrincipal {
         btnCargar.setOnAction(e -> cargarJuego());
         btnAnales.setOnAction(e -> mostrarAnales());
         btnLogout.setOnAction(e -> cerrarSesion());
-        btnSalir.setOnAction(e -> System.exit(0));
+        btnSalir.setOnAction(e -> cerrarSesion());
 
-        layout.getChildren().addAll(bienvenido, botonesGrid, salidaBox);
+        layout.getChildren().addAll(topBox, bienvenido, botonesGrid, salidaBox);
         root.setCenter(layout);
     }
 
@@ -384,9 +409,15 @@ public class VentanaPrincipal {
      * Despliega la interfaz de selección de parámetros para una nueva partida.
      */
     private void mostrarSelectorDificultad() {
+        GestorAudio.getInstancia().reproducirMusica("principal.mp3");
         VBox layout = new VBox(25);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
+
+        // Control de audio
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        HBox topBox = new HBox(audioUI);
+        topBox.setAlignment(Pos.TOP_RIGHT);
 
         // Aplicar fondo de imagen fondo2.jpg
         try {
@@ -444,7 +475,7 @@ public class VentanaPrincipal {
 
         btnVolver.setOnAction(e -> mostrarMenuPrincipal());
 
-        layout.getChildren().addAll(lbl, combo, checkNiebla, botonesGrid);
+        layout.getChildren().addAll(topBox, lbl, combo, checkNiebla, botonesGrid);
         root.setCenter(layout);
     }
 
@@ -490,6 +521,7 @@ public class VentanaPrincipal {
     }
 
     private void mostrarVistaJuego() {
+        GestorAudio.getInstancia().reproducirMusica("juego.mp3");
         VistaJuego vistaJuego = new VistaJuego(
                 controladorJuego,
                 (stats) -> mostrarEstadisticasPartida(stats),
@@ -499,11 +531,15 @@ public class VentanaPrincipal {
     }
 
     private void mostrarEstadisticasPartida(Main.modelo.Dominio.EstadisticasJuego stats) {
+        String track = stats.isGanado() ? "victoria.mp3" : "derrota.mp3";
+        GestorAudio.getInstancia().reproducirMusica(track);
+
         VentanaEstadisticasPartida ventanaStats = new VentanaEstadisticasPartida(stats, () -> mostrarMenuPrincipal());
         root.setCenter(ventanaStats);
     }
 
     private void mostrarAnales() {
+        GestorAudio.getInstancia().reproducirMusica("estadisticas.mp3");
         java.util.List<Main.modelo.Dominio.EstadisticasJuego> stats = controladorJuego
                 .obtenerEstadisticas(usuarioActual.getEmail());
         VistaAnales vistaAnales = new VistaAnales(stats, () -> mostrarMenuPrincipal());

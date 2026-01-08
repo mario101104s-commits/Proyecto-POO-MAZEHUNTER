@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import Main.ui.gui.audio.ControladorAudioUI;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -80,7 +82,12 @@ public class VistaAnales extends BorderPane {
         title.setStyle(
                 "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 12, 0, 0, 4);");
         BorderPane.setAlignment(title, Pos.CENTER);
-        this.setTop(title);
+
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        StackPane topStack = new StackPane(title, audioUI);
+        StackPane.setAlignment(audioUI, Pos.TOP_RIGHT);
+        this.setTop(topStack);
+        BorderPane.setMargin(topStack, new Insets(0, 0, 10, 0));
 
         // Configuración de la tabla de datos
         TableView<EstadisticasJuego> table = new TableView<>();

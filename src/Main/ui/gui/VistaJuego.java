@@ -1,6 +1,7 @@
 package Main.ui.gui;
 
 import Main.controlador.ControladorJuego;
+import Main.ui.gui.audio.ControladorAudioUI;
 import Main.modelo.Constantes.Direccion;
 import Main.modelo.Constantes.EstadoJuego;
 import Main.modelo.Dominio.Celda;
@@ -230,8 +231,11 @@ public class VistaJuego extends BorderPane {
         btnMenu.setFocusTraversable(false); // Para no robar foco del teclado
         btnMenu.setOnAction(e -> mostrarMenuPausa());
 
+        // Control de audio
+        ControladorAudioUI audioControl = new ControladorAudioUI();
+
         hud.getChildren().addAll(lblVida, pbVida, lblCristales, lblBombas, lblFosforos, lblLlaves, lblTiempo, spacer,
-                btnMenu);
+                audioControl, btnMenu);
         this.setTop(hud);
 
         // HUD Inferior (Instrucciones)
