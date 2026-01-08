@@ -1,0 +1,17 @@
+[
+  {
+    "usuario": "M5C0cugTDyJDZs8otxeU8A\u003d\u003d",
+    "fecha": "2026-01-08T02:24:42.607086",
+    "tiempoSegundos": 90,
+    "cristalesRecolectados": 7,
+    "trampasActivadas": 1,
+    "vidaRestante": 55,
+    "tamanioLaberinto": "24x30",
+    "ganado": true,
+    "bombasRecolectadas": 3,
+    "murosDestruidos": 4,
+    "fosforosUsados": 1,
+    "nieblaDeGuerra": true,
+    "dificultad": "MEDIA"
+  }
+]

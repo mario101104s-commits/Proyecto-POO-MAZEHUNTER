@@ -416,7 +416,7 @@ public class VentanaPrincipal {
         btnCargar.setOnAction(e -> cargarJuego());
         btnAnales.setOnAction(e -> mostrarAnales());
         btnLogout.setOnAction(e -> cerrarSesion());
-        btnSalir.setOnAction(e -> cerrarSesion());
+        btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
         layout.getChildren().addAll(bienvenido, botonesGrid, salidaBox);
         

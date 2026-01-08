@@ -60,12 +60,14 @@ public class VentanaEstadisticasPartida extends StackPane {
                 addStat(grid, "Tiempo ⏱️:", String.format("%02d:%02d", s / 60, s % 60), "#FFFFFF", r++, 0);
                 addStat(grid, "Tamaño 📏:", stats.getTamanioLaberinto(), "#FFFFFF", r++, 0);
                 addStat(grid, "Niebla  :", stats.isNieblaDeGuerra() ? "SÍ" : "NO", "#FFFFFF", r++, 0);
+                addStat(grid, "Fecha 📅:", stats.getFechaFormateada(), "#FFFFFF", r++, 0);
 
                 r = 0;
                 addStat(grid, "Cristales 💎:", String.valueOf(stats.getCristalesRecolectados()), "#00FBFF", r++, 1);
                 addStat(grid, "Bombas 💣:", String.valueOf(stats.getBombasRecolectadas()), "#FFFFFF", r++, 1);
                 addStat(grid, "Fósforos 🔥:", String.valueOf(stats.getFosforosUsados()), "#FF4500", r++, 1);
                 addStat(grid, "Trampas 💀:", String.valueOf(stats.getTrampasActivadas()), "#FF0000", r++, 1);
+                addStat(grid, "Muros 💥:", String.valueOf(stats.getMurosDestruidos()), "#FFFFFF", r++, 1);
 
                 String dificultadRaw = null;
                 try {
