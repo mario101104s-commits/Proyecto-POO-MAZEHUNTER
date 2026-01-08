@@ -8,6 +8,7 @@ import Main.modelo.Dominio.Celda;
 import Main.modelo.Dominio.Juego;
 import Main.modelo.Dominio.Jugador;
 import Main.modelo.Dominio.Laberinto;
+import Main.modelo.Constantes.TipoCelda;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -40,6 +41,8 @@ import Main.modelo.Transferencia.ResultadoJuego;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Representa la interfaz visual del entorno de juego activo para Maze Hunter.
@@ -72,6 +75,10 @@ public class VistaJuego extends BorderPane {
     private Label lblLlaves;
     private Label lblTiempo;
     private Timeline timer;
+    private Timeline explosionTimeline;
+    private boolean overlayExplosionsActive = false;
+    private boolean explosionJugador = false;
+    private List<int[]> explosionCoords = new ArrayList<>();
 
     private static final int TILE_SIZE = 32;
 
@@ -158,6 +165,11 @@ public class VistaJuego extends BorderPane {
             } catch (Exception e) {
                 System.err.println("Error cargando imagen: " + nombre);
             }
+        }
+        try {
+            imagenes.put("explosion", new Image(getClass().getResourceAsStream("/imagenes/explosion.png")));
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen: explosion");
         }
     }
 
@@ -377,10 +389,19 @@ public class VistaJuego extends BorderPane {
         }
 
         // Dibujar Jugador
-        gc.drawImage(imagenes.get("jugador"),
+        Image jugadorImg = overlayExplosionsActive && explosionJugador ? imagenes.get("explosion") : imagenes.get("jugador");
+        gc.drawImage(jugadorImg,
                 jugador.getPosY() * TILE_SIZE,
                 jugador.getPosX() * TILE_SIZE,
                 TILE_SIZE, TILE_SIZE);
+
+        if (overlayExplosionsActive && explosionCoords != null) {
+            for (int[] pos : explosionCoords) {
+                double ex = pos[1] * TILE_SIZE;
+                double ey = pos[0] * TILE_SIZE;
+                gc.drawImage(imagenes.get("explosion"), ex, ey, TILE_SIZE, TILE_SIZE);
+            }
+        }
 
         actualizarHUD();
     }
@@ -429,8 +450,38 @@ public class VistaJuego extends BorderPane {
             case A, LEFT -> movio = controlador.moverJugador(juego, Direccion.IZQUIERDA);
             case D, RIGHT -> movio = controlador.moverJugador(juego, Direccion.DERECHA);
             case K -> {
+                Jugador j = juego.getJugador();
+                Laberinto lab = juego.getLaberinto();
+                List<int[]> adyacentesRojos = new ArrayList<>();
+                int x = j.getPosX();
+                int y = j.getPosY();
+                int[][] dirs = {
+                        { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 },
+                        { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 }
+                };
+                for (int[] d : dirs) {
+                    int nx = x + d[0];
+                    int ny = y + d[1];
+                    if (lab.esPosicionValida(nx, ny) && lab.getCelda(nx, ny).getTipo() == TipoCelda.MURO_ROJO) {
+                        adyacentesRojos.add(new int[] { nx, ny });
+                    }
+                }
                 if (controlador.activarExplosion(juego)) {
+                    explosionCoords = adyacentesRojos;
+                    explosionJugador = true;
+                    overlayExplosionsActive = true;
                     dibujar();
+                    if (explosionTimeline != null) {
+                        explosionTimeline.stop();
+                    }
+                    explosionTimeline = new Timeline(
+                            new KeyFrame(Duration.seconds(0.5), e2 -> {
+                                overlayExplosionsActive = false;
+                                explosionJugador = false;
+                                explosionCoords.clear();
+                                dibujar();
+                            }));
+                    explosionTimeline.play();
                 }
             }
             case ESCAPE -> mostrarMenuPausa();

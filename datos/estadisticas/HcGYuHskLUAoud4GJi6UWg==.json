@@ -352,5 +352,35 @@
     "fosforosUsados": 0,
     "nieblaDeGuerra": false,
     "dificultad": "FACIL"
+  },
+  {
+    "usuario": "HcGYuHskLUAoud4GJi6UWg\u003d\u003d",
+    "fecha": "2026-01-08T03:08:06.489434",
+    "tiempoSegundos": 28,
+    "cristalesRecolectados": 4,
+    "trampasActivadas": 2,
+    "vidaRestante": 0,
+    "tamanioLaberinto": "5x25",
+    "ganado": false,
+    "bombasRecolectadas": 4,
+    "murosDestruidos": 3,
+    "fosforosUsados": 2,
+    "nieblaDeGuerra": false,
+    "dificultad": "FACIL"
+  },
+  {
+    "usuario": "HcGYuHskLUAoud4GJi6UWg\u003d\u003d",
+    "fecha": "2026-01-08T03:11:38.231344",
+    "tiempoSegundos": 69,
+    "cristalesRecolectados": 6,
+    "trampasActivadas": 0,
+    "vidaRestante": 5,
+    "tamanioLaberinto": "18x29",
+    "ganado": true,
+    "bombasRecolectadas": 6,
+    "murosDestruidos": 8,
+    "fosforosUsados": 3,
+    "nieblaDeGuerra": false,
+    "dificultad": "MEDIA"
   }
 ]
