@@ -147,7 +147,13 @@ public class VistaJuego extends BorderPane {
 
         for (String nombre : nombres) {
             try {
-                String path = "/imagenes/" + nombre + ".png";
+                String file = switch (nombre) {
+                    case "muro" -> "muro2.jpeg";
+                    case "muro_rojo" -> "muro_rojo2.png";
+                    case "fosforo", "bomba", "cristal", "energia", "jugador", "llave", "niebla", "salida", "suelo", "trampa" -> nombre + "2.png";
+                    default -> nombre + ".png";
+                };
+                String path = "/imagenes/" + file;
                 imagenes.put(nombre, new Image(getClass().getResourceAsStream(path)));
             } catch (Exception e) {
                 System.err.println("Error cargando imagen: " + nombre);
