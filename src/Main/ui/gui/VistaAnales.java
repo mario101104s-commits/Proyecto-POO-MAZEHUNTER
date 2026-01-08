@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -24,7 +25,7 @@ import java.util.List;
  * Representa la interfaz gráfica de los "Anales del Templo", donde se visualiza
  * el historial de partidas del usuario.
  * <p>
- * Esta clase extiende de {@link BorderPane} y utiliza un {@link TableView} para
+ * Esta clase extiende de {@link StackPane} y utiliza un {@link TableView} para
  * presentar de forma tabular métricas como el tiempo, cristales recolectados,
  * recursos usados y el resultado final (Victoria/Derrota).
  * </p>
@@ -33,7 +34,7 @@ import java.util.List;
  * @version 1.2
  * @since 22/12/25
  */
-public class VistaAnales extends BorderPane {
+public class VistaAnales extends StackPane {
 
     /** Acción a ejecutar para regresar al menú principal. */
     private Runnable onBack;
@@ -60,6 +61,8 @@ public class VistaAnales extends BorderPane {
      * * @param estadisticas Datos históricos para poblar la tabla.
      */
     private void inicializarGUI(List<EstadisticasJuego> estadisticas) {
+        BorderPane contentPane = new BorderPane();
+
         // Aplicar fondo de imagen
         try {
             Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/fondo4.jpg"));
@@ -69,24 +72,22 @@ public class VistaAnales extends BorderPane {
                     BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.CENTER,
                     new BackgroundSize(100, 100, true, true, false, true));
-            this.setBackground(new Background(bgImg));
+            contentPane.setBackground(new Background(bgImg));
         } catch (Exception e) {
             // Fallback a gradiente si no se encuentra la imagen
-            this.setStyle("-fx-background-color: linear-gradient(to bottom, #2a1a0a, #1a0a00);");
+            contentPane.setStyle("-fx-background-color: linear-gradient(to bottom, #2a1a0a, #1a0a00);");
             System.err.println("Error cargando fondo4.jpg: " + e.getMessage());
         }
-        this.setPadding(new Insets(20));
+        contentPane.setPadding(new Insets(20));
 
         // Título de la sección con tipografía jungle
         Label title = new Label("ANALES DEL TEMPLO");
         title.setStyle(
                 "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 12, 0, 0, 4);");
         BorderPane.setAlignment(title, Pos.CENTER);
-
-        ControladorAudioUI audioUI = new ControladorAudioUI();
-        StackPane topStack = new StackPane(title, audioUI);
-        StackPane.setAlignment(audioUI, Pos.TOP_RIGHT);
-        this.setTop(topStack);
+        
+        StackPane topStack = new StackPane(title);
+        contentPane.setTop(topStack);
         BorderPane.setMargin(topStack, new Insets(0, 0, 10, 0));
 
         // Configuración de la tabla de datos
@@ -190,7 +191,7 @@ public class VistaAnales extends BorderPane {
         ObservableList<EstadisticasJuego> data = FXCollections.observableArrayList(estadisticas);
         table.setItems(data);
 
-        this.setCenter(table);
+        contentPane.setCenter(table);
 
         // Botón de navegación para regresar al menú
         Button btnVolver = new Button("Volver");
@@ -243,6 +244,16 @@ public class VistaAnales extends BorderPane {
         HBox bottom = new HBox(btnVolver);
         bottom.setAlignment(Pos.CENTER);
         bottom.setPadding(new Insets(20, 0, 0, 0));
-        this.setBottom(bottom);
+        contentPane.setBottom(bottom);
+        
+        // Audio Control Overlay
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        AnchorPane overlay = new AnchorPane();
+        overlay.setPickOnBounds(false); // Permitir clics a través del overlay
+        overlay.getChildren().add(audioUI);
+        AnchorPane.setTopAnchor(audioUI, 20.0);
+        AnchorPane.setRightAnchor(audioUI, 20.0);
+
+        this.getChildren().addAll(contentPane, overlay);
     }
 }

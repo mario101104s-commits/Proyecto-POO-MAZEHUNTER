@@ -12,7 +12,7 @@ import Main.ui.gui.audio.ControladorAudioUI;
 /**
  * Vista de estadísticas de Maze Hunter con controles de audio integrados.
  */
-public class VentanaEstadisticasPartida extends BorderPane {
+public class VentanaEstadisticasPartida extends StackPane {
 
         private static final String BACKGROUND_IMAGE_PATH = "/imagenes/fondo4.jpg";
         private static final String BUTTON_IMAGE_PATH = "/imagenes/boton2.jpg";
@@ -22,26 +22,27 @@ public class VentanaEstadisticasPartida extends BorderPane {
         }
 
         private void inicializarGUI(EstadisticasJuego stats, Runnable onVolver) {
+                BorderPane contentPane = new BorderPane();
+
                 // Fondo
                 try {
                         Image fondo = new Image(getClass().getResourceAsStream(BACKGROUND_IMAGE_PATH));
-                        this.setBackground(new Background(new BackgroundImage(fondo,
+                        contentPane.setBackground(new Background(new BackgroundImage(fondo,
                                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
                                         new BackgroundSize(100, 100, true, true, false, true))));
                 } catch (Exception e) {
-                        this.setStyle("-fx-background-color: #1a150a;");
+                        contentPane.setStyle("-fx-background-color: #1a150a;");
                 }
-                this.setPadding(new Insets(40));
+                contentPane.setPadding(new Insets(40));
 
                 // Cabecera: Título + Audio
                 Label titulo = new Label("RESUMEN DE LA AVENTURA");
                 titulo.setStyle("-fx-font-family: 'Papyrus'; -fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: #FFD700; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 15, 0, 0, 5);");
 
-                ControladorAudioUI audioUI = new ControladorAudioUI();
-                StackPane top = new StackPane(titulo, audioUI);
-                StackPane.setAlignment(audioUI, Pos.TOP_RIGHT);
-                this.setTop(top);
+                StackPane top = new StackPane(titulo);
+                top.setAlignment(Pos.CENTER);
+                contentPane.setTop(top);
 
                 // Grid de Stats
                 GridPane grid = new GridPane();
@@ -66,7 +67,7 @@ public class VentanaEstadisticasPartida extends BorderPane {
                 addStat(grid, "Fósforos 🔥:", String.valueOf(stats.getFosforosUsados()), "#FF4500", r++, 1);
                 addStat(grid, "Trampas 💀:", String.valueOf(stats.getTrampasActivadas()), "#FF0000", r++, 1);
 
-                this.setCenter(grid);
+                contentPane.setCenter(grid);
 
                 // Botón
                 Button btn = new Button("VOLVER AL MENÚ");
@@ -75,7 +76,17 @@ public class VentanaEstadisticasPartida extends BorderPane {
                 HBox bot = new HBox(btn);
                 bot.setAlignment(Pos.CENTER);
                 bot.setPadding(new Insets(30, 0, 0, 0));
-                this.setBottom(bot);
+                contentPane.setBottom(bot);
+
+                // Audio Control Overlay
+                ControladorAudioUI audioUI = new ControladorAudioUI();
+                AnchorPane overlay = new AnchorPane();
+                overlay.setPickOnBounds(false); // Permitir clics a través del overlay
+                overlay.getChildren().add(audioUI);
+                AnchorPane.setTopAnchor(audioUI, 20.0);
+                AnchorPane.setRightAnchor(audioUI, 20.0);
+
+                this.getChildren().addAll(contentPane, overlay);
         }
 
         private void addStat(GridPane grid, String lblTxt, String valTxt, String color, int row, int col) {

@@ -21,6 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -113,11 +115,6 @@ public class VentanaPrincipal {
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
 
-        // Control de audio para esta pantalla
-        ControladorAudioUI audioUI = new ControladorAudioUI();
-        HBox topBox = new HBox(audioUI);
-        topBox.setAlignment(Pos.TOP_RIGHT);
-        BorderPane.setMargin(topBox, new Insets(15)); // Apply margin to the HBox containing audioUI
 
         // Aplicar fondo de imagen
         try {
@@ -227,8 +224,23 @@ public class VentanaPrincipal {
         btnRecuperar.setOnAction(e -> mostrarPantallaRecuperacion());
         btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
-        layout.getChildren().addAll(topBox, title, emailField, passField, botonesGrid);
-        root.setCenter(layout);
+        layout.getChildren().addAll(title, emailField, passField, botonesGrid);
+        
+        // Control de audio
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        
+        AnchorPane wrapper = new AnchorPane();
+        wrapper.getChildren().addAll(layout, audioUI);
+        
+        AnchorPane.setTopAnchor(layout, 0.0);
+        AnchorPane.setBottomAnchor(layout, 0.0);
+        AnchorPane.setLeftAnchor(layout, 0.0);
+        AnchorPane.setRightAnchor(layout, 0.0);
+        
+        AnchorPane.setTopAnchor(audioUI, 20.0);
+        AnchorPane.setRightAnchor(audioUI, 20.0);
+        
+        root.setCenter(wrapper);
     }
 
     /**
@@ -309,13 +321,23 @@ public class VentanaPrincipal {
 
         btnVolver.setOnAction(e -> mostrarPantallaLogin());
 
+        layout.getChildren().addAll(title, emailField, newPassField, btnRestablecer, btnVolver);
+
         // Control de audio
         ControladorAudioUI audioUI = new ControladorAudioUI();
-        HBox topBox = new HBox(audioUI);
-        topBox.setAlignment(Pos.TOP_RIGHT);
-
-        layout.getChildren().addAll(topBox, title, emailField, newPassField, btnRestablecer, btnVolver);
-        root.setCenter(layout);
+        
+        AnchorPane wrapper = new AnchorPane();
+        wrapper.getChildren().addAll(layout, audioUI);
+        
+        AnchorPane.setTopAnchor(layout, 0.0);
+        AnchorPane.setBottomAnchor(layout, 0.0);
+        AnchorPane.setLeftAnchor(layout, 0.0);
+        AnchorPane.setRightAnchor(layout, 0.0);
+        
+        AnchorPane.setTopAnchor(audioUI, 20.0);
+        AnchorPane.setRightAnchor(audioUI, 20.0);
+        
+        root.setCenter(wrapper);
     }
 
     /**
@@ -327,11 +349,6 @@ public class VentanaPrincipal {
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
 
-        // Control de audio
-        ControladorAudioUI audioUI = new ControladorAudioUI();
-        HBox topBox = new HBox(audioUI);
-        topBox.setAlignment(Pos.TOP_RIGHT);
-        BorderPane.setMargin(topBox, new Insets(15)); // Apply margin to the HBox containing audioUI
 
         // Aplicar fondo de imagen
         try {
@@ -401,8 +418,23 @@ public class VentanaPrincipal {
         btnLogout.setOnAction(e -> cerrarSesion());
         btnSalir.setOnAction(e -> cerrarSesion());
 
-        layout.getChildren().addAll(topBox, bienvenido, botonesGrid, salidaBox);
-        root.setCenter(layout);
+        layout.getChildren().addAll(bienvenido, botonesGrid, salidaBox);
+        
+        // Control de audio
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+        
+        AnchorPane wrapper = new AnchorPane();
+        wrapper.getChildren().addAll(layout, audioUI);
+        
+        AnchorPane.setTopAnchor(layout, 0.0);
+        AnchorPane.setBottomAnchor(layout, 0.0);
+        AnchorPane.setLeftAnchor(layout, 0.0);
+        AnchorPane.setRightAnchor(layout, 0.0);
+        
+        AnchorPane.setTopAnchor(audioUI, 20.0);
+        AnchorPane.setRightAnchor(audioUI, 20.0);
+        
+        root.setCenter(wrapper);
     }
 
     /**
@@ -416,8 +448,6 @@ public class VentanaPrincipal {
 
         // Control de audio
         ControladorAudioUI audioUI = new ControladorAudioUI();
-        HBox topBox = new HBox(audioUI);
-        topBox.setAlignment(Pos.TOP_RIGHT);
 
         // Aplicar fondo de imagen fondo2.jpg
         try {
@@ -475,8 +505,20 @@ public class VentanaPrincipal {
 
         btnVolver.setOnAction(e -> mostrarMenuPrincipal());
 
-        layout.getChildren().addAll(topBox, lbl, combo, checkNiebla, botonesGrid);
-        root.setCenter(layout);
+        layout.getChildren().addAll(lbl, combo, checkNiebla, botonesGrid);
+        
+        AnchorPane wrapper = new AnchorPane();
+        wrapper.getChildren().addAll(layout, audioUI);
+        
+        AnchorPane.setTopAnchor(layout, 0.0);
+        AnchorPane.setBottomAnchor(layout, 0.0);
+        AnchorPane.setLeftAnchor(layout, 0.0);
+        AnchorPane.setRightAnchor(layout, 0.0);
+        
+        AnchorPane.setTopAnchor(audioUI, 20.0);
+        AnchorPane.setRightAnchor(audioUI, 20.0);
+        
+        root.setCenter(wrapper);
     }
 
     /**
