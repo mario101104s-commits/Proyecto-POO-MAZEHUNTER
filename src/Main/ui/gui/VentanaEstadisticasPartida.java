@@ -14,7 +14,6 @@ import Main.ui.gui.audio.ControladorAudioUI;
  */
 public class VentanaEstadisticasPartida extends StackPane {
 
-        private static final String BACKGROUND_IMAGE_PATH = "/imagenes/fondo4.jpg";
         private static final String BUTTON_IMAGE_PATH = "/imagenes/boton2.jpg";
 
         public VentanaEstadisticasPartida(EstadisticasJuego stats, Runnable onVolver) {
@@ -26,7 +25,8 @@ public class VentanaEstadisticasPartida extends StackPane {
 
                 // Fondo
                 try {
-                        Image fondo = new Image(getClass().getResourceAsStream(BACKGROUND_IMAGE_PATH));
+                        String bgPath = stats.isGanado() ? "/imagenes/victoria.png" : "/imagenes/derrota.png";
+                        Image fondo = new Image(getClass().getResourceAsStream(bgPath));
                         contentPane.setBackground(new Background(new BackgroundImage(fondo,
                                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -67,7 +67,23 @@ public class VentanaEstadisticasPartida extends StackPane {
                 addStat(grid, "Fósforos 🔥:", String.valueOf(stats.getFosforosUsados()), "#FF4500", r++, 1);
                 addStat(grid, "Trampas 💀:", String.valueOf(stats.getTrampasActivadas()), "#FF0000", r++, 1);
 
-                contentPane.setCenter(grid);
+                String dificultadRaw = null;
+                try {
+                        dificultadRaw = stats.getDificultad();
+                } catch (Exception ignored) {}
+                String dificultadFmt = dificultadRaw == null ? "" : switch (dificultadRaw.toUpperCase()) {
+                        case "FACIL" -> "Fácil";
+                        case "MEDIA" -> "Media";
+                        case "DIFICIL" -> "Difícil";
+                        default -> dificultadRaw;
+                };
+                Label lblDif = new Label(dificultadFmt.isEmpty() ? "" : "Dificultad: " + dificultadFmt);
+                lblDif.setStyle("-fx-font-family: 'Papyrus'; -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FFD700; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 12, 0, 0, 4);");
+                lblDif.setAlignment(Pos.CENTER);
+                VBox centerBox = new VBox(10, lblDif, grid);
+                centerBox.setAlignment(Pos.CENTER);
+                centerBox.setPadding(new Insets(10, 0, 0, 0));
+                contentPane.setCenter(centerBox);
 
                 // Botón
                 Button btn = new Button("VOLVER AL MENÚ");
