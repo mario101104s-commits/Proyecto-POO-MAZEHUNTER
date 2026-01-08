@@ -79,6 +79,7 @@ public class VistaJuego extends BorderPane {
     private boolean overlayExplosionsActive = false;
     private boolean explosionJugador = false;
     private List<int[]> explosionCoords = new ArrayList<>();
+    private Direccion ultimaDireccion = Direccion.ABAJO; // Dirección inicial del jugador
 
     private static final int TILE_SIZE = 32;
 
@@ -150,14 +151,16 @@ public class VistaJuego extends BorderPane {
     private void cargarImagenes() {
         imagenes = new HashMap<>();
         String[] nombres = { "jugador", "muro", "muro_rojo", "suelo", "cristal", "bomba",
-                "llave", "fosforo", "salida", "trampa", "energia", "vida", "niebla" };
+                "llave", "fosforo", "salida", "trampa", "energia", "vida", "niebla",
+                "jugador2", "jugador3", "jugador4", "jugador5" };
 
         for (String nombre : nombres) {
             try {
                 String file = switch (nombre) {
                     case "muro" -> "muro2.jpeg";
                     case "muro_rojo" -> "muro_rojo2.png";
-                    case "fosforo", "bomba", "cristal", "energia", "jugador", "llave", "niebla", "salida", "suelo", "trampa" -> nombre + "2.png";
+                    case "fosforo", "bomba", "cristal", "energia", "llave", "niebla", "salida", "suelo", "trampa" -> nombre + "2.png";
+                    case "jugador2", "jugador3", "jugador4", "jugador5" -> nombre + ".png";
                     default -> nombre + ".png";
                 };
                 String path = "/imagenes/" + file;
@@ -388,8 +391,9 @@ public class VistaJuego extends BorderPane {
             }
         }
 
-        // Dibujar Jugador
-        Image jugadorImg = overlayExplosionsActive && explosionJugador ? imagenes.get("explosion") : imagenes.get("jugador");
+        // Dibujar Jugador con imagen direccional
+        String jugadorKey = overlayExplosionsActive && explosionJugador ? "explosion" : obtenerImagenJugador();
+        Image jugadorImg = imagenes.get(jugadorKey);
         gc.drawImage(jugadorImg,
                 jugador.getPosY() * TILE_SIZE,
                 jugador.getPosX() * TILE_SIZE,
@@ -445,10 +449,22 @@ public class VistaJuego extends BorderPane {
 
         boolean movio = false;
         switch (event.getCode()) {
-            case W, UP -> movio = controlador.moverJugador(juego, Direccion.ARRIBA);
-            case S, DOWN -> movio = controlador.moverJugador(juego, Direccion.ABAJO);
-            case A, LEFT -> movio = controlador.moverJugador(juego, Direccion.IZQUIERDA);
-            case D, RIGHT -> movio = controlador.moverJugador(juego, Direccion.DERECHA);
+            case W, UP -> {
+                ultimaDireccion = Direccion.ARRIBA;
+                movio = controlador.moverJugador(juego, Direccion.ARRIBA);
+            }
+            case S, DOWN -> {
+                ultimaDireccion = Direccion.ABAJO;
+                movio = controlador.moverJugador(juego, Direccion.ABAJO);
+            }
+            case A, LEFT -> {
+                ultimaDireccion = Direccion.IZQUIERDA;
+                movio = controlador.moverJugador(juego, Direccion.IZQUIERDA);
+            }
+            case D, RIGHT -> {
+                ultimaDireccion = Direccion.DERECHA;
+                movio = controlador.moverJugador(juego, Direccion.DERECHA);
+            }
             case K -> {
                 Jugador j = juego.getJugador();
                 Laberinto lab = juego.getLaberinto();
@@ -527,6 +543,20 @@ public class VistaJuego extends BorderPane {
                 onJuegoTerminado.accept(resultado.getEstadisticas());
             }
         }
+    }
+
+    /**
+     * Obtiene la clave de la imagen del jugador según su última dirección.
+     * 
+     * @return La clave de la imagen correspondiente a la dirección actual.
+     */
+    private String obtenerImagenJugador() {
+        return switch (ultimaDireccion) {
+            case ARRIBA -> "jugador3";    // jugador3.png para arriba
+            case ABAJO -> "jugador2";     // jugador2.png para abajo
+            case IZQUIERDA -> "jugador4"; // jugador4.png para izquierda
+            case DERECHA -> "jugador5";   // jugador5.png para derecha
+        };
     }
 
     /**
