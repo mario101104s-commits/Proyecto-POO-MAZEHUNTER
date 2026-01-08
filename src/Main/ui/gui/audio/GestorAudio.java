@@ -3,6 +3,9 @@ package Main.ui.gui.audio;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 /**
  * Gestor centralizado para la música de fondo del juego.
@@ -87,4 +90,40 @@ public class GestorAudio {
     public String getTrackActual() {
         return trackActual;
     }
-}
+
+    public void reproducirEfecto(String efecto) {
+        if (silenciado) return;
+        new Thread(() -> {
+            try {
+                String archivoWav = switch (efecto) {
+                    case "cristal" -> "cristal.wav";
+                    case "explosion" -> "explosion.wav";
+                    case "llave" -> "llave.wav";
+                    case "item" -> "recoger.wav"; // Para fosforos y bombas
+                    case "trampa" -> "trampa.wav";
+                    case "energia" -> "energia.wav";
+                    default -> "recoger.wav";
+                };
+                
+                URL resource = getClass().getResource("/audio/" + archivoWav);
+                if (resource != null) {
+                    AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioStream);
+                    clip.setFramePosition(0);
+                    clip.start();
+                    
+                    // Esperar a que termine el sonido para cerrar recursos
+                    Thread.sleep(clip.getMicrosecondLength() / 1000);
+                    clip.close();
+                    audioStream.close();
+                } else {
+                    System.err.println("⚠️ No se encontró el archivo de audio: " + archivoWav);
+                }
+            } catch (Exception e) {
+                System.err.println("❌ Error al reproducir efecto (" + efecto + "): " + e.getMessage());
+            }
+        }, "SFX-Thread").start();
+    }
+
+    }

@@ -8,6 +8,7 @@ import Main.modelo.Transferencia.ResultadoJuego;
 
 import Main.servicio.Interfaces.Persistencia;
 import Main.servicio.Interfaces.ServicioJuego;
+import Main.ui.gui.audio.GestorAudio;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
@@ -180,6 +181,9 @@ public class ServicioJuegoImpl implements ServicioJuego {
         // Destruir muros rojos adyacentes
         destruirMurosRojosAdyacentes(juego);
 
+        // SFX de explosión
+        GestorAudio.getInstancia().reproducirEfecto("explosion");
+
         // Guardar estado
         guardarJuego(juego);
 
@@ -239,6 +243,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
 
             // ✅ SOLO MOSTRAR MENSAJE AL USUARIO, NO DEBUG
             System.out.println("💀 ¡Trampa activada! Vida restante: " + jugador.getVida() + "%");
+            GestorAudio.getInstancia().reproducirEfecto("trampa");
             return;
         }
 
@@ -248,24 +253,28 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 jugador.recolectarCristal();
                 System.out.println("¡💎 Cristal recolectado! Total: " + jugador.getCristales());
                 celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("cristal");
                 break;
 
             case LLAVE:
                 jugador.recogerLlave();
                 System.out.println("🗝️ ¡Llave obtenida! Ahora puedes salir del laberinto");
                 celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("llave");
                 break;
 
             case ENERGIA:
                 jugador.setVida(Math.min(100, jugador.getVida() + 10)); // ✅ NO EXCEDER 100
                 System.out.println("⚡ ¡Energía obtenida! Vida: " + jugador.getVida() + "%");
                 celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("energia");
                 break;
 
             case VIDA:
                 jugador.setVida(Math.min(100, jugador.getVida() + 25)); // ✅ NO EXCEDER 100
                 System.out.println("➕ ¡Vida extra! Vida: " + jugador.getVida() + "%");
                 celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("energia");
                 break;
 
             case BOMBA:
@@ -273,6 +282,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 juego.incrementarBombasRecolectadasTotal(); // Registrar estadística
                 System.out.println("💣 ¡Bomba recolectada! Total: " + jugador.getBombas());
                 celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("item");
                 break;
 
             case FOSFORO:
@@ -280,6 +290,7 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 juego.incrementarFosforosRecolectadosTotal(); // Registrar estadística
                 System.out.println("🔑 ¡Fósforo obtenido! Total: " + jugador.getFosforos());
                 celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("item");
                 break;
             default:
                 break;
