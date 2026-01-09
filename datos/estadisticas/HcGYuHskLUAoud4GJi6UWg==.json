@@ -382,5 +382,20 @@
     "fosforosUsados": 3,
     "nieblaDeGuerra": false,
     "dificultad": "MEDIA"
+  },
+  {
+    "usuario": "HcGYuHskLUAoud4GJi6UWg\u003d\u003d",
+    "fecha": "2026-01-09T18:50:05.551258",
+    "tiempoSegundos": 110,
+    "cristalesRecolectados": 13,
+    "trampasActivadas": 4,
+    "vidaRestante": 0,
+    "tamanioLaberinto": "23x33",
+    "ganado": false,
+    "bombasRecolectadas": 6,
+    "murosDestruidos": 2,
+    "fosforosUsados": 1,
+    "nieblaDeGuerra": true,
+    "dificultad": "MEDIA"
   }
 ]

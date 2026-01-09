@@ -21,9 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -104,6 +103,144 @@ public class VentanaPrincipal {
      */
     public Parent getView() {
         return root;
+    }
+
+    /**
+     * Muestra la ventana de instrucciones desde el menú principal.
+     */
+    private void mostrarInstruccionesDesdeMenu() {
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(30));
+
+        // Control de audio
+        ControladorAudioUI audioUI = new ControladorAudioUI();
+
+        // Aplicar fondo de imagen fondo2.jpg
+        try {
+            Image fondoImg = new Image(getClass().getResourceAsStream("/imagenes/fondo2.jpg"));
+            BackgroundImage bgImg = new BackgroundImage(
+                    fondoImg,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true));
+            layout.setBackground(new Background(bgImg));
+        } catch (Exception e) {
+            layout.setStyle("-fx-background-color: linear-gradient(to bottom, #332b1a, #1a150a);");
+            System.err.println("Error cargando fondo2.jpg en instrucciones: " + e.getMessage());
+        }
+
+        // Título
+        Label titulo = new Label("¿Cómo jugar?");
+        titulo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #DAA520; -fx-font-size: 32px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0, 0, 3);");
+
+        // Contenedor de dos columnas
+        HBox columnasContainer = new HBox(20);
+        columnasContainer.setAlignment(Pos.CENTER);
+
+        // Columna izquierda
+        VBox columnaIzquierda = new VBox(12);
+        columnaIzquierda.setAlignment(Pos.CENTER_LEFT);
+        columnaIzquierda.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8); " +
+                "-fx-background-radius: 15; " +
+                "-fx-padding: 20; " +
+                "-fx-border-color: #DAA520; " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 15;");
+        columnaIzquierda.setPrefWidth(320);
+
+        // Columna derecha
+        VBox columnaDerecha = new VBox(12);
+        columnaDerecha.setAlignment(Pos.CENTER_LEFT);
+        columnaDerecha.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8); " +
+                "-fx-background-radius: 15; " +
+                "-fx-padding: 20; " +
+                "-fx-border-color: #DAA520; " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 15;");
+        columnaDerecha.setPrefWidth(320);
+
+        // CONTENIDO COLUMNA IZQUIERDA
+        Label controlesTitulo = new Label("🎮 CONTROLES");
+        controlesTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        Label controlesTexto = new Label(
+            "• W,A,S,D - Mover jugador\n" +
+            "• K - Activar bomba\n" +
+            "• ESC - Menú pausa"
+        );
+        controlesTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        Label objetivoTitulo = new Label("🏆 OBJETIVO");
+        objetivoTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        Label objetivoTexto = new Label(
+            "• Encuentra llave 🔑\n" +
+            "• Localiza salida 🚪\n" +
+            "• Escapa con vida"
+        );
+        objetivoTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        // CONTENIDO COLUMNA DERECHA
+        Label combateTitulo = new Label("💥 EXPLOSIÓN");
+        combateTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        Label combateTexto = new Label(
+            "• Necesitas: 1 bomba 💣\n" +
+            "• Necesitas: 1 fósforo 🔥\n" +
+            "• Rompen muros rojos\n" +
+            "• Úsalas estratégicamente"
+        );
+        combateTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        Label mecanicasTitulo = new Label("⚔️ MECÁNICAS");
+        mecanicasTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        Label mecanicasTexto = new Label(
+            "• 💀 Trampas: -20 vida\n" +
+            "• ⚡ Energía: +10 vida\n" +
+            "• 💎 Cristales: +puntos\n" +
+            "• 💣 Activar bomba: -35 vida"
+        );
+        mecanicasTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        // Agregar contenido a columnas
+        columnaIzquierda.getChildren().addAll(
+            controlesTitulo, controlesTexto,
+            objetivoTitulo, objetivoTexto
+        );
+
+        columnaDerecha.getChildren().addAll(
+            combateTitulo, combateTexto,
+            mecanicasTitulo, mecanicasTexto
+        );
+
+        // Ensamblar columnas
+        columnasContainer.getChildren().addAll(columnaIzquierda, columnaDerecha);
+
+        // Botón volver - copiado exactamente del selector de dificultad
+        Button btnVolver = new Button("Volver");
+        estilizarBotonConFondo(btnVolver, "salida");
+        btnVolver.setPrefSize(250, 60);
+
+        btnVolver.setOnAction(e -> mostrarMenuPrincipal());
+
+        layout.getChildren().addAll(titulo, columnasContainer, btnVolver);
+        
+        AnchorPane wrapper = new AnchorPane();
+        wrapper.getChildren().addAll(layout, audioUI);
+        
+        AnchorPane.setTopAnchor(layout, 0.0);
+        AnchorPane.setBottomAnchor(layout, 0.0);
+        AnchorPane.setLeftAnchor(layout, 0.0);
+        AnchorPane.setRightAnchor(layout, 0.0);
+        
+        AnchorPane.setTopAnchor(audioUI, 20.0);
+        AnchorPane.setRightAnchor(audioUI, 20.0);
+        
+        root.setCenter(wrapper);
     }
 
     /**
@@ -393,6 +530,10 @@ public class VentanaPrincipal {
         estilizarBotonConFondo(btnAnales, "anales");
         btnAnales.setPrefSize(250, 70);
 
+        Button btnInstrucciones = new Button("Instrucciones");
+        estilizarBotonConFondo(btnInstrucciones, "generico");
+        btnInstrucciones.setPrefSize(250, 70);
+
         Button btnLogout = new Button("Cerrar Sesión");
         estilizarBotonConFondo(btnLogout, "generico");
         btnLogout.setPrefSize(250, 70);
@@ -401,24 +542,22 @@ public class VentanaPrincipal {
         estilizarBotonConFondo(btnSalir, "salida");
         btnSalir.setPrefSize(250, 70);
 
-        // Colocar botones en grid
+        // Colocar botones en grid (3 botones por columna)
         botonesGrid.add(btnJugar, 0, 0);
         botonesGrid.add(btnCargar, 1, 0);
         botonesGrid.add(btnAnales, 0, 1);
-        botonesGrid.add(btnLogout, 1, 1);
-
-        // Botón salir centrado abajo
-        HBox salidaBox = new HBox(btnSalir);
-        salidaBox.setAlignment(Pos.CENTER);
-        salidaBox.setPadding(new Insets(10, 0, 0, 0));
+        botonesGrid.add(btnInstrucciones, 1, 1);
+        botonesGrid.add(btnLogout, 0, 2);
+        botonesGrid.add(btnSalir, 1, 2);
 
         btnJugar.setOnAction(e -> mostrarSelectorDificultad());
         btnCargar.setOnAction(e -> cargarJuego());
         btnAnales.setOnAction(e -> mostrarAnales());
+        btnInstrucciones.setOnAction(e -> mostrarInstruccionesDesdeMenu());
         btnLogout.setOnAction(e -> cerrarSesion());
         btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
-        layout.getChildren().addAll(bienvenido, botonesGrid, salidaBox);
+        layout.getChildren().addAll(bienvenido, botonesGrid);
         
         // Control de audio
         ControladorAudioUI audioUI = new ControladorAudioUI();
