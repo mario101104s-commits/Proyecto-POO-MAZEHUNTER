@@ -6,10 +6,28 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 
 /**
- * Componente UI reutilizable para controlar el volumen y silenciar la música.
+ * Componente de interfaz de usuario para controlar el audio del juego.
+ * <p>
+ * Proporciona controles intuitivos para silenciar/desilenciar la música y
+ * ajustar el volumen mediante un deslizador. El diseño es semi-transparente
+ * y se integra visualmente con la estética del juego, mostrando iconos
+ * representativos para el estado del audio.
+ * </p>
+ * 
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
  */
 public class ControladorAudioUI extends HBox {
 
+    /**
+     * Constructor que inicializa los controles de audio.
+     * <p>
+     * Crea un botón de silencio/desilencio con iconos dinámicos (🔇/🔊),
+     * un deslizador para ajustar el volumen y aplica el estilo temático
+     * semi-transparente consistente con el diseño del juego.
+     * </p>
+     */
     public ControladorAudioUI() {
         setAlignment(Pos.CENTER);
         setSpacing(10);

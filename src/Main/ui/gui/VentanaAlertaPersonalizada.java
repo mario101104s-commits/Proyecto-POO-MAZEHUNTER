@@ -16,16 +16,59 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * Diálogos con estética de Maze Hunter forzando fondos con ImageView.
+ * Ventana de diálogo personalizada con estética temática de Maze Hunter.
+ * <p>
+ * Proporciona diferentes tipos de alertas (información, confirmación, game over,
+ * pausa, victoria) con fondos personalizados y botones estilizados consistentes
+ * con el diseño del juego. Implementa ventanas modales que bloquean la interacción
+ * con la ventana principal hasta ser cerradas.
+ * </p>
+ * 
+ * @author Mario Sanchez
+ * @version 1.0
+ * @since 22/12/25
  */
 public class VentanaAlertaPersonalizada extends Stage {
 
-    public enum Tipo { INFO, CONFIRMACION, GAME_OVER, PAUSA, VICTORIA }
+    /**
+     * Enumeración que define los tipos de alertas disponibles.
+     * <p>
+     * Cada tipo tiene asociado un color temático y un comportamiento específico
+     * para los botones y el diseño de la ventana.
+     * </p>
+     */
+    public enum Tipo { 
+        /** Alerta informativa con botón de aceptación. */
+        INFO, 
+        /** Alerta de confirmación con botones sí/no. */
+        CONFIRMACION, 
+        /** Pantalla de fin de juego con botón de reinicio. */
+        GAME_OVER, 
+        /** Menú de pausa con opciones de reanudar/salir. */
+        PAUSA, 
+        /** Pantalla de victoria con botón de continuar. */
+        VICTORIA 
+    }
 
+    /** Almacena el resultado de la interacción del usuario (para confirmaciones). */
     private String resultado = null;
+    
+    /** Coordenadas para permitir arrastrar la ventana. */
     private double xOffset = 0;
     private double yOffset = 0;
 
+    /**
+     * Constructor que crea una ventana de alerta personalizada.
+     * <p>
+     * Configura la ventana como modal y sin decoraciones, aplica el fondo temático
+     * según el tipo de alerta y establece los botones apropiados para cada caso.
+     * </p>
+     * 
+     * @param owner Ventana principal que será bloqueada mientras esta alerta esté activa.
+     * @param titulo Título que se mostrará en la parte superior de la alerta.
+     * @param mensaje Mensaje descriptivo que se mostrará en el cuerpo de la alerta.
+     * @param tipo Tipo de alerta que determina el estilo y los botones disponibles.
+     */
     public VentanaAlertaPersonalizada(Stage owner, String titulo, String mensaje, Tipo tipo) {
         initOwner(owner);
         initModality(Modality.APPLICATION_MODAL);
