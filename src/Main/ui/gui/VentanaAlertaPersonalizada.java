@@ -75,8 +75,12 @@ public class VentanaAlertaPersonalizada extends Stage {
         initStyle(StageStyle.UNDECORATED); 
 
         StackPane root = new StackPane();
-        root.setMinWidth(600); // Un poco mas ancho para Papyrus
-        root.setMinHeight(380);
+        root.setMinWidth(700); 
+        root.setMinHeight(450); 
+        root.setPrefWidth(700);
+        root.setPrefHeight(450);
+        root.setMaxWidth(700);
+        root.setMaxHeight(450);
         
         root.setOnMousePressed(e -> { xOffset = e.getSceneX(); yOffset = e.getSceneY(); });
         root.setOnMouseDragged(e -> { setX(e.getScreenX() - xOffset); setY(e.getScreenY() - yOffset); });
@@ -94,9 +98,12 @@ public class VentanaAlertaPersonalizada extends Stage {
             if (is != null) {
                 Image img = new Image(is);
                 bg.setImage(img);
-                bg.setFitWidth(600);
-                bg.setFitHeight(380);
-                bg.setPreserveRatio(false);
+                bg.setFitWidth(700);
+                bg.setFitHeight(450);
+                bg.setPreserveRatio(false); // Ocupar todo el espacio
+                bg.setSmooth(true); // Suavizar la imagen
+                bg.setCache(true); // Mejorar rendimiento
+                StackPane.setMargin(bg, new Insets(0)); // Sin márgenes
             }
         } catch (Exception e) { }
 
@@ -112,7 +119,7 @@ public class VentanaAlertaPersonalizada extends Stage {
         lblT.setStyle("-fx-font-family: 'Papyrus', serif; -fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #FFD700; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0, 0, 3);");
 
         Label lblM = new Label(mensaje);
-        lblM.setWrapText(true); lblM.setMaxWidth(520); lblM.setAlignment(Pos.CENTER);
+        lblM.setWrapText(true); lblM.setMaxWidth(620); lblM.setAlignment(Pos.CENTER);
         lblM.setStyle("-fx-font-family: 'Papyrus', serif; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;");
 
         VBox btnBox = new VBox(15); btnBox.setAlignment(Pos.CENTER);

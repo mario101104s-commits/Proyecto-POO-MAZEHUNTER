@@ -1,0 +1,17 @@
+[
+  {
+    "usuario": "ton_VBJSZJN2TCdW4RGuI4oiG_kU2CN_j7euEQ-UJXE\u003d",
+    "fecha": "2026-01-09T19:28:24.385775",
+    "tiempoSegundos": 137,
+    "cristalesRecolectados": 15,
+    "trampasActivadas": 1,
+    "vidaRestante": 0,
+    "tamanioLaberinto": "19x33",
+    "ganado": false,
+    "bombasRecolectadas": 10,
+    "murosDestruidos": 8,
+    "fosforosUsados": 3,
+    "nieblaDeGuerra": true,
+    "dificultad": "MEDIA"
+  }
+]
