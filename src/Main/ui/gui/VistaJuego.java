@@ -318,9 +318,7 @@ public class VistaJuego extends BorderPane {
                     mostrarAlerta("ERROR", "No se pudo invocar el hechizo de guardado.");
                 }
             } else if (res.equals("SALIR")) {
-                // Actualizar tiempo antes de salir
-                long segundos = ChronoUnit.SECONDS.between(controlador.getJuego().getInicio(), LocalDateTime.now());
-                controlador.getJuego().setTiempoJugadoSegundos(segundos);
+                // Salir al menú sin guardar automáticamente
                 onSalir.run();
             }
         }

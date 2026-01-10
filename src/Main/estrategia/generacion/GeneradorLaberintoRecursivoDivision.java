@@ -6,6 +6,8 @@ import Main.modelo.Constantes.TipoCelda;
 import Main.servicio.Interfaces.GeneradorLaberinto;
 
 import java.util.*;
+import java.util.Queue;
+import java.util.LinkedList;
 
 /**
  * Implementación de la estrategia de generación de laberintos mediante el algoritmo de División Recursiva.
@@ -89,6 +91,11 @@ public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
         dividir(celdas, 1, 1, filas - 2, columnas - 2);
 
         colocarElementosEspeciales(celdas, filas, columnas);
+
+        // Verificar solubilidad y forzar si es necesario
+        if (!esSoluble(celdas, filas, columnas)) {
+            forzarCamino(celdas, filas, columnas);
+        }
 
         return new Laberinto(celdas, filas, columnas);
     }
@@ -222,5 +229,173 @@ public class GeneradorLaberintoRecursivoDivision implements GeneradorLaberinto {
             }
         }
         return null;
+    }
+
+    /**
+     * Verifica si el laberinto tiene solución usando BFS para encontrar un camino
+     * desde la entrada hasta la salida y asegurando que la llave sea accesible.
+     *
+     * @param celdas Matriz del laberinto.
+     * @param filas Número de filas.
+     * @param columnas Número de columnas.
+     * @return {@code true} si el laberinto es soluble.
+     */
+    private boolean esSoluble(Celda[][] celdas, int filas, int columnas) {
+        // Encontrar entrada, salida y llave
+        int startX = -1, startY = -1;
+        int endX = -1, endY = -1;
+        int keyX = -1, keyY = -1;
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (celdas[i][j].getTipo() == TipoCelda.ENTRADA) {
+                    startX = i;
+                    startY = j;
+                } else if (celdas[i][j].getTipo() == TipoCelda.SALIDA) {
+                    endX = i;
+                    endY = j;
+                } else if (celdas[i][j].getTipo() == TipoCelda.LLAVE) {
+                    keyX = i;
+                    keyY = j;
+                }
+            }
+        }
+
+        if (startX == -1 || endX == -1 || keyX == -1) {
+            return false;
+        }
+
+        // Verificar que se puede llegar desde entrada hasta la llave
+        if (!hayCaminoBFS(celdas, filas, columnas, startX, startY, keyX, keyY)) {
+            return false;
+        }
+
+        // Verificar que se puede llegar desde la llave hasta la salida
+        return hayCaminoBFS(celdas, filas, columnas, keyX, keyY, endX, endY);
+    }
+
+    /**
+     * Algoritmo BFS para verificar si existe un camino entre dos puntos.
+     *
+     * @param celdas Matriz del laberinto.
+     * @param filas Número de filas.
+     * @param columnas Número de columnas.
+     * @param startX Coordenada X inicial.
+     * @param startY Coordenada Y inicial.
+     * @param endX Coordenada X final.
+     * @param endY Coordenada Y final.
+     * @return {@code true} si hay camino.
+     */
+    private boolean hayCaminoBFS(Celda[][] celdas, int filas, int columnas, 
+                                int startX, int startY, int endX, int endY) {
+        boolean[][] visitado = new boolean[filas][columnas];
+        Queue<int[]> cola = new LinkedList<>();
+        cola.add(new int[]{startX, startY});
+        visitado[startX][startY] = true;
+
+        int[][] dirs = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+        while (!cola.isEmpty()) {
+            int[] actual = cola.poll();
+            int x = actual[0], y = actual[1];
+
+            if (x == endX && y == endY) {
+                return true;
+            }
+
+            for (int[] dir : dirs) {
+                int nx = x + dir[0];
+                int ny = y + dir[1];
+
+                if (esPosicionValida(nx, ny, filas, columnas) && !visitado[nx][ny]) {
+                    TipoCelda tipo = celdas[nx][ny].getTipo();
+                    if (tipo != TipoCelda.MURO) {
+                        visitado[nx][ny] = true;
+                        cola.add(new int[]{nx, ny});
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Fuerza la creación de un camino si el laberinto no tiene solución.
+     * Crea un camino directo desde la entrada hasta la llave y desde la llave hasta la salida.
+     *
+     * @param celdas Matriz del laberinto.
+     * @param filas Número de filas.
+     * @param columnas Número de columnas.
+     */
+    private void forzarCamino(Celda[][] celdas, int filas, int columnas) {
+        // Encontrar entrada, salida y llave
+        int startX = -1, startY = -1;
+        int endX = -1, endY = -1;
+        int keyX = -1, keyY = -1;
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (celdas[i][j].getTipo() == TipoCelda.ENTRADA) {
+                    startX = i;
+                    startY = j;
+                } else if (celdas[i][j].getTipo() == TipoCelda.SALIDA) {
+                    endX = i;
+                    endY = j;
+                } else if (celdas[i][j].getTipo() == TipoCelda.LLAVE) {
+                    keyX = i;
+                    keyY = j;
+                }
+            }
+        }
+
+        if (startX != -1 && keyX != -1) {
+            crearCaminoDirecto(celdas, startX, startY, keyX, keyY);
+        }
+        if (keyX != -1 && endX != -1) {
+            crearCaminoDirecto(celdas, keyX, keyY, endX, endY);
+        }
+    }
+
+    /**
+     * Crea un camino directo entre dos puntos convirtiendo muros en caminos.
+     *
+     * @param celdas Matriz del laberinto.
+     * @param x1 Coordenada X inicial.
+     * @param y1 Coordenada Y inicial.
+     * @param x2 Coordenada X final.
+     * @param y2 Coordenada Y final.
+     */
+    private void crearCaminoDirecto(Celda[][] celdas, int x1, int y1, int x2, int y2) {
+        // Camino horizontal primero
+        int minX = Math.min(y1, y2);
+        int maxX = Math.max(y1, y2);
+        for (int y = minX; y <= maxX; y++) {
+            if (celdas[x1][y].getTipo() == TipoCelda.MURO) {
+                celdas[x1][y].setTipo(TipoCelda.CAMINO);
+            }
+        }
+
+        // Camino vertical después
+        int minY = Math.min(x1, x2);
+        int maxY = Math.max(x1, x2);
+        for (int x = minY; x <= maxY; x++) {
+            if (celdas[x][y2].getTipo() == TipoCelda.MURO) {
+                celdas[x][y2].setTipo(TipoCelda.CAMINO);
+            }
+        }
+    }
+
+    /**
+     * Valida que las coordenadas se encuentren dentro de los límites de la matriz.
+     *
+     * @param x Fila.
+     * @param y Columna.
+     * @param filas Total filas.
+     * @param columnas Total columnas.
+     * @return {@code true} si la posición es segura de acceder.
+     */
+    private boolean esPosicionValida(int x, int y, int filas, int columnas) {
+        return x >= 0 && x < filas && y >= 0 && y < columnas;
     }
 }

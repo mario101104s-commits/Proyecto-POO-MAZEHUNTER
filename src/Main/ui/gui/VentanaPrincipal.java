@@ -697,7 +697,7 @@ public class VentanaPrincipal {
         if (controladorJuego.cargarJuegoGuardado(usuarioActual.getEmail()) != null) {
             mostrarVistaJuego();
         } else {
-            mostrarAlerta("Info", "No tienes partidas guardadas.");
+            mostrarAlerta("NO HAY PARTIDA GUARDADA", "No tienes ninguna partida guardada. Primero guarda una partida desde el menú de pausa.");
         }
     }
 
