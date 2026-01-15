@@ -190,6 +190,60 @@ public class ServicioJuegoImpl implements ServicioJuego {
         return true;
     }
 
+    /**
+     * Teletransporta al jugador a una posición específica del laberinto.
+     * <p>
+     * Valida que la posición sea válida y transitable antes de mover al jugador.
+     * Actualiza la visibilidad de las celdas adyacentes si hay niebla de guerra
+     * activa.
+     * </p>
+     *
+     * @param juego   El objeto Juego actual.
+     * @param fila    Fila destino del teletransporte.
+     * @param columna Columna destino del teletransporte.
+     * @return true si el teletransporte fue exitoso.
+     */
+    @Override
+    public boolean teletransportarJugador(Juego juego, int fila, int columna) {
+        if (juego.getEstado() != EstadoJuego.EN_CURSO) {
+            return false;
+        }
+
+        Jugador jugador = juego.getJugador();
+        Laberinto laberinto = juego.getLaberinto();
+
+        // Verificar si la posición es válida y transitable
+        if (!laberinto.esPosicionValida(fila, columna) || !laberinto.esTransitable(fila, columna)) {
+            return false;
+        }
+
+        // Teletransportar jugador
+        jugador.setPosX(fila);
+        jugador.setPosY(columna);
+
+        // Marcar celda de destino como visitada y visible
+        Celda celdaDestino = laberinto.getCelda(fila, columna);
+        celdaDestino.setVisitada(true);
+        celdaDestino.setVisible(true);
+
+        // Revelar celdas adyacentes
+        revelarCeldasAdyacentes(laberinto, fila, columna);
+
+        // Procesar la celda destino (por si hay objetos)
+        procesarCelda(juego, celdaDestino);
+
+        // Verificar condiciones de fin de juego
+        verificarEstadoJuego(juego);
+
+        // Guardar juego
+        guardarJuego(juego);
+
+        System.out.println("✨ ¡Teletransportado a [" + fila + ", " + columna + "]!");
+        GestorAudio.getInstancia().reproducirEfecto("item");
+
+        return true;
+    }
+
     private void destruirMurosRojosAdyacentes(Juego juego) {
         int x = juego.getJugador().getPosX();
         int y = juego.getJugador().getPosY();
@@ -291,6 +345,13 @@ public class ServicioJuegoImpl implements ServicioJuego {
                 System.out.println("🔑 ¡Fósforo obtenido! Total: " + jugador.getFosforos());
                 celda.setTipo(TipoCelda.CAMINO);
                 GestorAudio.getInstancia().reproducirEfecto("item");
+                break;
+
+            case LLAVE_NEGRA:
+                jugador.recogerLlaveNegra();
+                System.out.println("🗝️ ¡Llave Negra obtenida! Presiona 'L' para teletransportarte");
+                celda.setTipo(TipoCelda.CAMINO);
+                GestorAudio.getInstancia().reproducirEfecto("llave");
                 break;
             default:
                 break;

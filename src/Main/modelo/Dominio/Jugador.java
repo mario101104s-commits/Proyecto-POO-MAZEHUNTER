@@ -9,13 +9,17 @@ package Main.modelo.Dominio;
  * del inventario y la salud vital para la progresión del juego.
  * </p>
  * * @author Mario Sanchez
+ * 
  * @version 1.0
  * @since 15/11/2025
  */
 public class Jugador {
     /** Nivel de salud actual del jugador (0 a 100). */
     private int vida;
-    /** Cantidad de cristales recolectados por el jugador, utilizados para el puntaje. */
+    /**
+     * Cantidad de cristales recolectados por el jugador, utilizados para el
+     * puntaje.
+     */
     private int cristales;
     /** Indica si el jugador ha recogido la llave necesaria para abrir la salida. */
     private boolean tieneLlave;
@@ -23,6 +27,8 @@ public class Jugador {
     private int bombas;
     /** Cantidad de fósforos disponibles para disipar la niebla de guerra. */
     private int fosforos;
+    /** Indica si el jugador ha recogido la llave negra de teletransporte. */
+    private boolean tieneLlaveNegra;
     /** La coordenada X (columna) actual del jugador en el laberinto. */
     private int posX;
     /** La coordenada Y (fila) actual del jugador en el laberinto. */
@@ -34,9 +40,11 @@ public class Jugador {
      * Inicializa la posición en (0, 0) y establece los atributos iniciales del
      * juego. El inventario de herramientas comienza vacío.
      * </p>
-     * * @param vida       La vida inicial del jugador.
+     * * @param vida La vida inicial del jugador.
+     * 
      * @param cristales  La cantidad inicial de cristales.
-     * @param tieneLlave Indica si comienza la partida con la llave (normalmente {@code false}).
+     * @param tieneLlave Indica si comienza la partida con la llave (normalmente
+     *                   {@code false}).
      */
     public Jugador(int vida, int cristales, boolean tieneLlave) {
         this.vida = vida;
@@ -44,6 +52,7 @@ public class Jugador {
         this.tieneLlave = tieneLlave;
         this.bombas = 0;
         this.fosforos = 0;
+        this.tieneLlaveNegra = false;
         this.posX = 0;
         this.posY = 0;
     }
@@ -117,9 +126,24 @@ public class Jugador {
     }
 
     /**
+     * Establece que el jugador ha recogido la llave negra de teletransporte.
+     */
+    public void recogerLlaveNegra() {
+        this.tieneLlaveNegra = true;
+    }
+
+    /**
+     * Marca la llave negra como usada (ya no disponible).
+     */
+    public void usarLlaveNegra() {
+        this.tieneLlaveNegra = false;
+    }
+
+    /**
      * Verifica si el jugador aún tiene puntos de salud.
      *
-     * @return {@code true} si la vida es mayor a cero, {@code false} en caso contrario.
+     * @return {@code true} si la vida es mayor a cero, {@code false} en caso
+     *         contrario.
      */
     public boolean estaVivo() {
         return vida > 0;
@@ -200,5 +224,15 @@ public class Jugador {
     /** @param fosforos Cantidad de fósforos a establecer. */
     public void setFosforos(int fosforos) {
         this.fosforos = fosforos;
+    }
+
+    /** @return {@code true} si posee la llave negra, {@code false} si no. */
+    public boolean isTieneLlaveNegra() {
+        return tieneLlaveNegra;
+    }
+
+    /** @param tieneLlaveNegra Estado de posesión de la llave negra. */
+    public void setTieneLlaveNegra(boolean tieneLlaveNegra) {
+        this.tieneLlaveNegra = tieneLlaveNegra;
     }
 }

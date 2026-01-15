@@ -40,7 +40,11 @@ public enum TipoCelda {
     /** Muro rojo que puede ser destruido con explosiones. */
     MURO_ROJO('%', false, "Muro rojo"),
     /** Llave de explosión necesaria para activar bombas. */
-    FOSFORO('K', true, "Fósforo");
+    FOSFORO('K', true, "Fósforo"),
+    /**
+     * Llave mágica que permite teletransportarse a cualquier lugar del laberinto.
+     */
+    LLAVE_NEGRA('N', true, "Llave Negra");
 
     /**
      * El carácter que se utiliza para dibujar la celda en la consola.

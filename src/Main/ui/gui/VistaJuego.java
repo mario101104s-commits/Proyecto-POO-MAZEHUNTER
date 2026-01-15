@@ -73,6 +73,7 @@ public class VistaJuego extends BorderPane {
     private Label lblBombas;
     private Label lblFosforos;
     private Label lblLlaves;
+    private Label lblLlaveNegra;
     private Label lblTiempo;
     private Timeline timer;
     private Timeline explosionTimeline;
@@ -152,15 +153,17 @@ public class VistaJuego extends BorderPane {
         imagenes = new HashMap<>();
         String[] nombres = { "jugador", "muro", "muro_rojo", "suelo", "cristal", "bomba",
                 "llave", "fosforo", "salida", "trampa", "energia", "vida", "niebla",
-                "jugador2", "jugador3", "jugador4", "jugador5" };
+                "jugador2", "jugador3", "jugador4", "jugador5", "llavenegra" };
 
         for (String nombre : nombres) {
             try {
                 String file = switch (nombre) {
                     case "muro" -> "muro2.jpeg";
                     case "muro_rojo" -> "muro_rojo2.png";
-                    case "fosforo", "bomba", "cristal", "energia", "llave", "niebla", "salida", "suelo", "trampa" -> nombre + "2.png";
+                    case "fosforo", "bomba", "cristal", "energia", "llave", "niebla", "salida", "suelo", "trampa" ->
+                        nombre + "2.png";
                     case "jugador2", "jugador3", "jugador4", "jugador5" -> nombre + ".png";
+                    case "llavenegra" -> "llavenegra.png";
                     default -> nombre + ".png";
                 };
                 String path = "/imagenes/" + file;
@@ -241,6 +244,7 @@ public class VistaJuego extends BorderPane {
         lblBombas = crearLabelHUD("💣 0");
         lblFosforos = crearLabelHUD("🔥 0");
         lblLlaves = crearLabelHUD("🔑 No");
+        lblLlaveNegra = crearLabelHUD("🗝️ No");
         lblTiempo = crearLabelHUD("⏱️ 00:00");
 
         // Espaciador para empujar el botón a la derecha
@@ -255,7 +259,8 @@ public class VistaJuego extends BorderPane {
         // Control de audio
         ControladorAudioUI audioControl = new ControladorAudioUI();
 
-        hud.getChildren().addAll(lblVida, pbVida, lblCristales, lblBombas, lblFosforos, lblLlaves, lblTiempo, spacer,
+        hud.getChildren().addAll(lblVida, pbVida, lblCristales, lblBombas, lblFosforos, lblLlaves, lblLlaveNegra,
+                lblTiempo, spacer,
                 audioControl, btnMenu);
         this.setTop(hud);
 
@@ -268,8 +273,9 @@ public class VistaJuego extends BorderPane {
                 "-fx-border-width: 2 0 0 0;");
         Label lblMov = crearLabelHUD("🎮 WASD: Mover");
         Label lblBomba = crearLabelHUD("💣 K: Activar Bomba");
+        Label lblTeleport = crearLabelHUD("🗝️ L: Teletransporte");
         Label lblEsc = crearLabelHUD("⚙️ ESC: Pausa");
-        instructionsHud.getChildren().addAll(lblMov, lblBomba, lblEsc);
+        instructionsHud.getChildren().addAll(lblMov, lblBomba, lblTeleport, lblEsc);
         this.setBottom(instructionsHud);
 
         // Canvas Central con ScrollPane
@@ -376,6 +382,7 @@ public class VistaJuego extends BorderPane {
                     case BOMBA -> imagenes.get("bomba");
                     case LLAVE -> imagenes.get("llave");
                     case FOSFORO -> imagenes.get("fosforo");
+                    case LLAVE_NEGRA -> imagenes.get("llavenegra");
                     case SALIDA -> imagenes.get("salida");
                     case TRAMPA -> imagenes.get("trampa"); // Podría ser invisible si no se ha pisado
                     case ENERGIA -> imagenes.get("energia");
@@ -424,6 +431,7 @@ public class VistaJuego extends BorderPane {
         lblBombas.setText("💣 " + j.getBombas());
         lblFosforos.setText("🔥 " + j.getFosforos());
         lblLlaves.setText("🔑 " + (j.isTieneLlave() ? "Sí" : "No") + (j.isTieneLlave() ? " (Busca la SALIDA)" : ""));
+        lblLlaveNegra.setText("🗝️ " + (j.isTieneLlaveNegra() ? "Sí (Presiona L)" : "No"));
 
         // Actualizar Tiempo
         LocalDateTime inicio = controlador.getJuego().getInicio();
@@ -498,6 +506,29 @@ public class VistaJuego extends BorderPane {
                     explosionTimeline.play();
                 }
             }
+            case L -> {
+                Jugador j = juego.getJugador();
+                if (j.isTieneLlaveNegra()) {
+                    VentanaTeletransporte ventana = new VentanaTeletransporte(
+                            (Stage) this.getScene().getWindow(),
+                            juego.getLaberinto(),
+                            j.getPosX(),
+                            j.getPosY());
+                    int[] posicion = ventana.mostrarYObtenerPosicion();
+
+                    if (posicion != null) {
+                        // Teletransportar al jugador
+                        boolean exito = controlador.teletransportarJugador(juego, posicion[0], posicion[1]);
+                        if (exito) {
+                            j.usarLlaveNegra();
+                            dibujar();
+                            mostrarAlerta("TELETRANSPORTE", "¡Has sido teletransportado exitosamente!");
+                        } else {
+                            mostrarAlerta("ERROR", "No se pudo realizar el teletransporte a esa posición.");
+                        }
+                    }
+                }
+            }
             case ESCAPE -> mostrarMenuPausa();
             default -> {
             }
@@ -550,10 +581,10 @@ public class VistaJuego extends BorderPane {
      */
     private String obtenerImagenJugador() {
         return switch (ultimaDireccion) {
-            case ARRIBA -> "jugador3";    // jugador3.png para arriba
-            case ABAJO -> "jugador2";     // jugador2.png para abajo
+            case ARRIBA -> "jugador3"; // jugador3.png para arriba
+            case ABAJO -> "jugador2"; // jugador2.png para abajo
             case IZQUIERDA -> "jugador4"; // jugador4.png para izquierda
-            case DERECHA -> "jugador5";   // jugador5.png para derecha
+            case DERECHA -> "jugador5"; // jugador5.png para derecha
         };
     }
 

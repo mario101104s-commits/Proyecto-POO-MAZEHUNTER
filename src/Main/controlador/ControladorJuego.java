@@ -207,6 +207,23 @@ public class ControladorJuego {
     }
 
     /**
+     * Teletransporta al jugador a una posición específica del laberinto.
+     * <p>
+     * Este método valida que la posición sea válida y transitable antes de
+     * actualizar la ubicación del jugador. También actualiza la visibilidad
+     * de las celdas si hay niebla de guerra activa.
+     * </p>
+     *
+     * @param juego   Instancia del juego actual.
+     * @param fila    Fila destino del teletransporte.
+     * @param columna Columna destino del teletransporte.
+     * @return {@code true} si el teletransporte fue exitoso.
+     */
+    public boolean teletransportarJugador(Juego juego, int fila, int columna) {
+        return servicioJuego.teletransportarJugador(juego, fila, columna);
+    }
+
+    /**
      * Persiste el estado actual de la partida en el almacenamiento.
      *
      * @param juego Instancia del juego a guardar.

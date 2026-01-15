@@ -8,11 +8,15 @@ import Main.servicio.Interfaces.GeneradorLaberinto;
 import java.util.*;
 
 /**
- * Estrategia de generación de laberintos basada en niveles de dificultad paramétricos.
+ * Estrategia de generación de laberintos basada en niveles de dificultad
+ * paramétricos.
  * <p>
- * Esta clase es responsable de crear laberintos equilibrados ajustando dinámicamente
- * la cantidad de trampas, energías, bombas y muros especiales (muros rojos) según el
- * nivel seleccionado (FÁCIL, MEDIA, DIFÍCIL). Además, garantiza que cada laberinto
+ * Esta clase es responsable de crear laberintos equilibrados ajustando
+ * dinámicamente
+ * la cantidad de trampas, energías, bombas y muros especiales (muros rojos)
+ * según el
+ * nivel seleccionado (FÁCIL, MEDIA, DIFÍCIL). Además, garantiza que cada
+ * laberinto
  * generado sea resoluble mediante un algoritmo de búsqueda en anchura (BFS).
  * </p>
  *
@@ -23,7 +27,7 @@ import java.util.*;
 public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
 
     /**
-     *  Generador de aleatoriedad para la disposición de elementos.
+     * Generador de aleatoriedad para la disposición de elementos.
      */
     private Random random;
 
@@ -36,7 +40,7 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
      * Construye un generador con una dificultad específica.
      *
      * @param dificultad Cadena que representa el nivel (ej. "FACIL").
-     * Si es nula, se establece "MEDIA" por defecto.
+     *                   Si es nula, se establece "MEDIA" por defecto.
      */
     public GeneradorLaberintoDificultad(String dificultad) {
         this.random = new Random();
@@ -46,7 +50,7 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
     /**
      * Genera un laberinto utilizando el tiempo del sistema como semilla.
      *
-     * @param filas Cantidad de filas solicitadas.
+     * @param filas    Cantidad de filas solicitadas.
      * @param columnas Cantidad de columnas solicitadas.
      * @return Un objeto {@link Laberinto} configurado según la dificultad.
      */
@@ -56,21 +60,25 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
     }
 
     /**
-     * Genera un laberinto con una semilla específica para consistencia de resultados.
+     * Genera un laberinto con una semilla específica para consistencia de
+     * resultados.
      * <p>
      * El flujo incluye:
      * 1. Validación estricta de dimensiones según la dificultad.
      * 2. Creación de una matriz con distribución de caminos y muros normales/rojos.
      * 3. Garantía de conectividad física mediante un algoritmo de camino directo.
-     * 4. Colocación de recursos (Llaves, Bombas, Fósforos) calculados por dificultad.
-     * 5. Prueba de solubilidad y corrección automática si el laberinto está bloqueado.
+     * 4. Colocación de recursos (Llaves, Bombas, Fósforos) calculados por
+     * dificultad.
+     * 5. Prueba de solubilidad y corrección automática si el laberinto está
+     * bloqueado.
      * </p>
      *
-     * @param filas Número de filas.
+     * @param filas    Número de filas.
      * @param columnas Número de columnas.
-     * @param semilla Valor para controlar la aleatoriedad.
+     * @param semilla  Valor para controlar la aleatoriedad.
      * @return Un objeto {@link Laberinto} listo para jugar.
-     * @throws IllegalArgumentException si las dimensiones no corresponden a la dificultad.
+     * @throws IllegalArgumentException si las dimensiones no corresponden a la
+     *                                  dificultad.
      */
     @Override
     public Laberinto generarConSemilla(int filas, int columnas, long semilla) {
@@ -128,6 +136,7 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
     /**
      * Verifica que el tamaño del laberinto sea coherente con la dificultad elegida.
      * * @param filas Número de filas.
+     * 
      * @param columnas Número de columnas.
      * @throws IllegalArgumentException Si las dimensiones están fuera de rango.
      */
@@ -155,7 +164,8 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
     }
 
     /**
-     * Traza una ruta básica para asegurar que no existan áreas completamente aisladas.
+     * Traza una ruta básica para asegurar que no existan áreas completamente
+     * aisladas.
      */
     private void asegurarConectividad(Celda[][] celdas, int filas, int columnas) {
         int x = 1;
@@ -211,90 +221,124 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
         // Colocación secuencial de elementos en posiciones barajadas
         for (int i = 0; i < numCristales; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
-            if (pos != null) celdas[pos[0]][pos[1]].setTipo(TipoCelda.CRISTAL);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.CRISTAL);
         }
 
         for (int i = 0; i < numTrampas; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
-            if (pos != null) celdas[pos[0]][pos[1]].setTipo(TipoCelda.TRAMPA);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.TRAMPA);
         }
 
         int[] posLlave = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
-        if (posLlave != null) celdas[posLlave[0]][posLlave[1]].setTipo(TipoCelda.LLAVE);
+        if (posLlave != null)
+            celdas[posLlave[0]][posLlave[1]].setTipo(TipoCelda.LLAVE);
 
         for (int i = 0; i < numEnergias; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
-            if (pos != null) celdas[pos[0]][pos[1]].setTipo(TipoCelda.ENERGIA);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.ENERGIA);
         }
 
         for (int i = 0; i < numBombas; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
-            if (pos != null) celdas[pos[0]][pos[1]].setTipo(TipoCelda.BOMBA);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.BOMBA);
         }
 
         for (int i = 0; i < numFosforos; i++) {
             int[] pos = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
-            if (pos != null) celdas[pos[0]][pos[1]].setTipo(TipoCelda.FOSFORO);
+            if (pos != null)
+                celdas[pos[0]][pos[1]].setTipo(TipoCelda.FOSFORO);
         }
+
+        // Colocar exactamente 1 llave negra
+        int[] posLlaveNegra = encontrarPosicionValida(celdas, posicionesCaminos, contadorPos++);
+        if (posLlaveNegra != null)
+            celdas[posLlaveNegra[0]][posLlaveNegra[1]].setTipo(TipoCelda.LLAVE_NEGRA);
     }
 
     /**
-     * Determina el número de trampas basándose en el nivel de dificultad y la altura del laberinto.
+     * Determina el número de trampas basándose en el nivel de dificultad y la
+     * altura del laberinto.
+     * 
      * @param filas Número de filas.
      * @return Cantidad de trampas.
      */
     private int calcularTrampas(int filas) {
         switch (dificultad.toUpperCase()) {
-            case "FACIL": return (filas >= 5 && filas <= 10) ? 2 : 3;
-            case "MEDIA": return (filas >= 16 && filas <= 20) ? 4 : 5;
+            case "FACIL":
+                return (filas >= 5 && filas <= 10) ? 2 : 3;
+            case "MEDIA":
+                return (filas >= 16 && filas <= 20) ? 4 : 5;
             case "DIFICIL":
-                if (filas >= 26 && filas <= 30) return 6;
-                if (filas >= 31 && filas <= 40) return 12;
+                if (filas >= 26 && filas <= 30)
+                    return 6;
+                if (filas >= 31 && filas <= 40)
+                    return 12;
                 return 18;
-            default: return 3;
+            default:
+                return 3;
         }
     }
 
     /**
      * Determina la cantidad de energías disponibles para el jugador.
+     * 
      * @param filas Altura del mapa.
      * @return Número de celdas de energía.
      */
     private int calcularEnergias(int filas) {
         switch (dificultad.toUpperCase()) {
-            case "FACIL": return (filas >= 5 && filas <= 10) ? 2 : 3;
-            case "MEDIA": return (filas >= 16 && filas <= 20) ? 4 : 5;
+            case "FACIL":
+                return (filas >= 5 && filas <= 10) ? 2 : 3;
+            case "MEDIA":
+                return (filas >= 16 && filas <= 20) ? 4 : 5;
             case "DIFICIL":
-                if (filas >= 26 && filas <= 30) return 6;
-                if (filas >= 31 && filas <= 40) return 12;
+                if (filas >= 26 && filas <= 30)
+                    return 6;
+                if (filas >= 31 && filas <= 40)
+                    return 12;
                 return 18;
-            default: return 3;
+            default:
+                return 3;
         }
     }
 
     /**
      * Define el inventario inicial de bombas según la dificultad.
+     * 
      * @return Cantidad de bombas.
      */
     private int calcularBombas() {
         switch (dificultad.toUpperCase()) {
-            case "FACIL": return 5;
-            case "MEDIA": return 15;
-            case "DIFICIL": return 20;
-            default: return 15;
+            case "FACIL":
+                return 5;
+            case "MEDIA":
+                return 15;
+            case "DIFICIL":
+                return 20;
+            default:
+                return 15;
         }
     }
 
     /**
      * Define el inventario de fósforos (usados para la niebla).
+     * 
      * @return Cantidad de fósforos.
      */
     private int calcularFosforos() {
         switch (dificultad.toUpperCase()) {
-            case "FACIL": return 3;
-            case "MEDIA": return 5;
-            case "DIFICIL": return 6;
-            default: return 5;
+            case "FACIL":
+                return 3;
+            case "MEDIA":
+                return 5;
+            case "DIFICIL":
+                return 6;
+            default:
+                return 5;
         }
     }
 
@@ -324,14 +368,17 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 if (celdas[i][j].getTipo() == TipoCelda.ENTRADA) {
-                    startX = i; startY = j;
+                    startX = i;
+                    startY = j;
                 } else if (celdas[i][j].getTipo() == TipoCelda.SALIDA) {
-                    endX = i; endY = j;
+                    endX = i;
+                    endY = j;
                 }
             }
         }
 
-        if (startX == -1 || endX == -1) return false;
+        if (startX == -1 || endX == -1)
+            return false;
 
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[] { startX, startY });
@@ -342,7 +389,8 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
 
         while (!queue.isEmpty()) {
             int[] current = queue.poll();
-            if (current[0] == endX && current[1] == endY) return true;
+            if (current[0] == endX && current[1] == endY)
+                return true;
 
             for (int[] d : dirs) {
                 int ni = current[0] + d[0];
@@ -371,23 +419,30 @@ public class GeneradorLaberintoDificultad implements GeneradorLaberinto {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 if (celdas[i][j].getTipo() == TipoCelda.ENTRADA) {
-                    startX = i; startY = j;
+                    startX = i;
+                    startY = j;
                 } else if (celdas[i][j].getTipo() == TipoCelda.SALIDA) {
-                    endX = i; endY = j;
+                    endX = i;
+                    endY = j;
                 }
             }
         }
 
-        if (startX == -1 || endX == -1) return;
+        if (startX == -1 || endX == -1)
+            return;
 
         int currX = startX;
         int currY = startY;
 
         while (currX != endX || currY != endY) {
-            if (currX < endX) currX++;
-            else if (currX > endX) currX--;
-            else if (currY < endY) currY++;
-            else if (currY > endY) currY--;
+            if (currX < endX)
+                currX++;
+            else if (currX > endX)
+                currX--;
+            else if (currY < endY)
+                currY++;
+            else if (currY > endY)
+                currY--;
 
             if (celdas[currX][currY].getTipo() == TipoCelda.MURO ||
                     celdas[currX][currY].getTipo() == TipoCelda.MURO_ROJO) {
