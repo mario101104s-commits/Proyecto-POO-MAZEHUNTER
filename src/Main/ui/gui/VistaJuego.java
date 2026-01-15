@@ -79,6 +79,7 @@ public class VistaJuego extends BorderPane {
     private Timeline explosionTimeline;
     private boolean overlayExplosionsActive = false;
     private boolean explosionJugador = false;
+    private boolean animacionPortalActiva = false;
     private List<int[]> explosionCoords = new ArrayList<>();
     private Direccion ultimaDireccion = Direccion.ABAJO; // Dirección inicial del jugador
 
@@ -153,7 +154,7 @@ public class VistaJuego extends BorderPane {
         imagenes = new HashMap<>();
         String[] nombres = { "jugador", "muro", "muro_rojo", "suelo", "cristal", "bomba",
                 "llave", "fosforo", "salida", "trampa", "energia", "vida", "niebla",
-                "jugador2", "jugador3", "jugador4", "jugador5", "llavenegra" };
+                "jugador2", "jugador3", "jugador4", "jugador5", "llavenegra", "portal" };
 
         for (String nombre : nombres) {
             try {
@@ -164,6 +165,7 @@ public class VistaJuego extends BorderPane {
                         nombre + "2.png";
                     case "jugador2", "jugador3", "jugador4", "jugador5" -> nombre + ".png";
                     case "llavenegra" -> "llavenegra.png";
+                    case "portal" -> "portal2.png";
                     default -> nombre + ".png";
                 };
                 String path = "/imagenes/" + file;
@@ -396,8 +398,15 @@ public class VistaJuego extends BorderPane {
             }
         }
 
-        // Dibujar Jugador con imagen direccional
-        String jugadorKey = overlayExplosionsActive && explosionJugador ? "explosion" : obtenerImagenJugador();
+        // Dibujar Jugador con imagen direccional o efectos
+        String jugadorKey;
+        if (overlayExplosionsActive && explosionJugador) {
+            jugadorKey = "explosion";
+        } else if (animacionPortalActiva) {
+            jugadorKey = "portal";
+        } else {
+            jugadorKey = obtenerImagenJugador();
+        }
         Image jugadorImg = imagenes.get(jugadorKey);
         gc.drawImage(jugadorImg,
                 jugador.getPosY() * TILE_SIZE,
@@ -509,24 +518,33 @@ public class VistaJuego extends BorderPane {
             case L -> {
                 Jugador j = juego.getJugador();
                 if (j.isTieneLlaveNegra()) {
-                    VentanaTeletransporte ventana = new VentanaTeletransporte(
-                            (Stage) this.getScene().getWindow(),
-                            juego.getLaberinto(),
-                            j.getPosX(),
-                            j.getPosY());
-                    int[] posicion = ventana.mostrarYObtenerPosicion();
+                    // 1. Animación PRE-Teletransporte
+                    animarTeletransporte(() -> {
+                        // 2. Abrir Ventana
+                        VentanaTeletransporte ventana = new VentanaTeletransporte(
+                                (Stage) this.getScene().getWindow(),
+                                juego.getLaberinto(),
+                                j.getPosX(),
+                                j.getPosY());
+                        int[] posicion = ventana.mostrarYObtenerPosicion();
 
-                    if (posicion != null) {
-                        // Teletransportar al jugador
-                        boolean exito = controlador.teletransportarJugador(juego, posicion[0], posicion[1]);
-                        if (exito) {
-                            j.usarLlaveNegra();
-                            dibujar();
-                            mostrarAlerta("TELETRANSPORTE", "¡Has sido teletransportado exitosamente!");
-                        } else {
-                            mostrarAlerta("ERROR", "No se pudo realizar el teletransporte a esa posición.");
+                        if (posicion != null) {
+                            // 3. Teletransportar lógica
+                            boolean exito = controlador.teletransportarJugador(juego, posicion[0], posicion[1]);
+
+                            if (exito) {
+                                j.usarLlaveNegra();
+                                dibujar(); // Actualizar posición visual
+
+                                // 4. Animación POST-Teletransporte
+                                animarTeletransporte(() -> {
+                                    mostrarAlerta("TELETRANSPORTE", "¡Has sido teletransportado exitosamente!");
+                                });
+                            } else {
+                                mostrarAlerta("ERROR", "No se pudo realizar el teletransporte a esa posición.");
+                            }
                         }
-                    }
+                    });
                 }
             }
             case ESCAPE -> mostrarMenuPausa();
@@ -601,5 +619,25 @@ public class VistaJuego extends BorderPane {
                 mensaje,
                 VentanaAlertaPersonalizada.Tipo.INFO);
         alert.showAndWait();
+    }
+
+    /**
+     * Ejecuta una animación donde el jugador se transforma en un portal
+     * temporalmente.
+     * 
+     * @param onFinished Acción a ejecutar al terminar la animación.
+     */
+    private void animarTeletransporte(Runnable onFinished) {
+        animacionPortalActiva = true;
+        dibujar();
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {
+            animacionPortalActiva = false;
+            dibujar();
+            if (onFinished != null) {
+                onFinished.run();
+            }
+        }));
+        timeline.play();
     }
 }
