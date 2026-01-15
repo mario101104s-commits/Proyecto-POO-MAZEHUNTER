@@ -629,6 +629,9 @@ public class VistaJuego extends BorderPane {
      */
     private void animarTeletransporte(Runnable onFinished) {
         animacionPortalActiva = true;
+        // Reproducir sonido de teletransporte
+        Main.ui.gui.audio.GestorAudio.getInstancia().reproducirEfecto("teleport");
+
         dibujar();
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {

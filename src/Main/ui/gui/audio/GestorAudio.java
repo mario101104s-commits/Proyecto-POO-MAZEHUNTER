@@ -22,16 +22,16 @@ import javax.sound.sampled.Clip;
 public class GestorAudio {
     /** Instancia única del gestor (Singleton). */
     private static GestorAudio instancia;
-    
+
     /** Reproductor de JavaFX para música de fondo. */
     private MediaPlayer mediaPlayer;
-    
+
     /** Nombre de la pista actualmente en reproducción. */
     private String trackActual = "";
-    
+
     /** Nivel de volumen actual (0.0 a 1.0). */
     private double volumen = 0.5;
-    
+
     /** Estado de silencio del audio. */
     private boolean silenciado = false;
 
@@ -104,7 +104,8 @@ public class GestorAudio {
     /**
      * Verifica si el audio está actualmente silenciado.
      * 
-     * @return {@code true} si el audio está silenciado, {@code false} en caso contrario.
+     * @return {@code true} si el audio está silenciado, {@code false} en caso
+     *         contrario.
      */
     public boolean isSilenciado() {
         return silenciado;
@@ -153,7 +154,8 @@ public class GestorAudio {
     /**
      * Obtiene el nombre de la pista de música actualmente en reproducción.
      * 
-     * @return Nombre de la pista actual o cadena vacía si no hay música reproduciéndose.
+     * @return Nombre de la pista actual o cadena vacía si no hay música
+     *         reproduciéndose.
      */
     public String getTrackActual() {
         return trackActual;
@@ -166,7 +168,8 @@ public class GestorAudio {
      * explícitamente el estado sin alternarlo.
      * </p>
      * 
-     * @param silenciado {@code true} para silenciar el audio, {@code false} para reactivarlo.
+     * @param silenciado {@code true} para silenciar el audio, {@code false} para
+     *                   reactivarlo.
      */
     public void setSilenciado(boolean silenciado) {
         this.silenciado = silenciado;
@@ -186,7 +189,8 @@ public class GestorAudio {
      * @param efecto Nombre lógico del efecto (ej: "cristal", "explosion", "llave").
      */
     public void reproducirEfecto(String efecto) {
-        if (silenciado) return;
+        if (silenciado)
+            return;
         new Thread(() -> {
             try {
                 String archivoWav = switch (efecto) {
@@ -196,9 +200,10 @@ public class GestorAudio {
                     case "item" -> "recoger.wav"; // Para fosforos y bombas
                     case "trampa" -> "trampa.wav";
                     case "energia" -> "energia.wav";
+                    case "teleport" -> "teleport.wav";
                     default -> "recoger.wav";
                 };
-                
+
                 URL resource = getClass().getResource("/audio/" + archivoWav);
                 if (resource != null) {
                     AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
@@ -206,7 +211,7 @@ public class GestorAudio {
                     clip.open(audioStream);
                     clip.setFramePosition(0);
                     clip.start();
-                    
+
                     // Esperar a que termine el sonido para cerrar recursos
                     Thread.sleep(clip.getMicrosecondLength() / 1000);
                     clip.close();
