@@ -10,6 +10,7 @@ import Main.modelo.Dominio.Jugador;
 import Main.modelo.Dominio.Laberinto;
 import Main.modelo.Constantes.TipoCelda;
 
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -638,7 +639,7 @@ public class VistaJuego extends BorderPane {
             animacionPortalActiva = false;
             dibujar();
             if (onFinished != null) {
-                onFinished.run();
+                Platform.runLater(onFinished);
             }
         }));
         timeline.play();
