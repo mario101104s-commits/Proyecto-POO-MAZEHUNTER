@@ -19,6 +19,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Ventana emergente que muestra el laberinto completo y permite al jugador
  * seleccionar una celda de suelo para teletransportarse.
@@ -62,6 +65,12 @@ public class VentanaTeletransporte extends Stage {
      * Label para mostrar las coordenadas de la celda sobre la que está el cursor.
      */
     private Label lblCoordenadas;
+
+    /** Mapa de imágenes para renderizar el laberinto. */
+    private Map<String, Image> imagenes;
+
+    /** Posición actual del cursor [fila, columna]. */
+    private int[] posicionCursor = null;
 
     /**
      * Constructor que crea la ventana de teletransporte.
@@ -141,6 +150,10 @@ public class VentanaTeletransporte extends Stage {
         // Canvas para el mapa
         canvas = new Canvas(laberinto.getColumnas() * TILE_SIZE, laberinto.getFilas() * TILE_SIZE);
         gc = canvas.getGraphicsContext2D();
+
+        // Cargar imágenes
+        cargarImagenes();
+
         dibujarMapa();
 
         // Eventos del canvas
@@ -151,7 +164,17 @@ public class VentanaTeletransporte extends Stage {
                 Celda celda = laberinto.getCelda(fila, col);
                 String tipo = celda.isTransitable() ? "TRANSITABLE" : "BLOQUEADO";
                 lblCoordenadas.setText(String.format("Posición: [%d, %d] - %s", fila, col, tipo));
+
+                // Actualizar posición del cursor y redibujar
+                posicionCursor = new int[] { fila, col };
+                dibujarMapa();
             }
+        });
+
+        canvas.setOnMouseExited(e -> {
+            // Limpiar posición del cursor cuando sale del canvas
+            posicionCursor = null;
+            dibujarMapa();
         });
 
         canvas.setOnMouseClicked(e -> {
@@ -216,7 +239,32 @@ public class VentanaTeletransporte extends Stage {
     }
 
     /**
-     * Dibuja el mapa del laberinto mostrando solo muros y suelos.
+     * Carga las imágenes necesarias para renderizar el mapa.
+     */
+    private void cargarImagenes() {
+        imagenes = new HashMap<>();
+        String[] nombres = { "muro", "muro_rojo", "suelo", "portal", "jugador" };
+
+        for (String nombre : nombres) {
+            try {
+                String file = switch (nombre) {
+                    case "muro" -> "muro2.jpeg";
+                    case "muro_rojo" -> "muro_rojo2.png";
+                    case "suelo" -> "suelo2.png";
+                    case "portal" -> "portal2.png";
+                    case "jugador" -> "jugador2.png";
+                    default -> nombre + ".png";
+                };
+                String path = "/imagenes/" + file;
+                imagenes.put(nombre, new Image(getClass().getResourceAsStream(path)));
+            } catch (Exception e) {
+                System.err.println("Error cargando imagen: " + nombre);
+            }
+        }
+    }
+
+    /**
+     * Dibuja el mapa del laberinto mostrando solo muros y suelos con texturas.
      */
     private void dibujarMapa() {
         gc.setFill(Color.BLACK);
@@ -228,34 +276,39 @@ public class VentanaTeletransporte extends Stage {
                 double x = j * TILE_SIZE;
                 double y = i * TILE_SIZE;
 
-                // Colorear según el tipo de celda
+                // Dibujar según el tipo de celda con texturas
+                Image imgCelda = null;
                 if (celda.getTipo() == TipoCelda.MURO) {
-                    gc.setFill(Color.rgb(50, 50, 50)); // Gris oscuro
+                    imgCelda = imagenes.get("muro");
                 } else if (celda.getTipo() == TipoCelda.MURO_ROJO) {
-                    gc.setFill(Color.rgb(139, 0, 0)); // Rojo oscuro
+                    imgCelda = imagenes.get("muro_rojo");
                 } else if (celda.isTransitable()) {
-                    gc.setFill(Color.rgb(180, 180, 180)); // Gris claro (suelo)
-                } else {
-                    gc.setFill(Color.rgb(100, 100, 100)); // Gris medio
+                    imgCelda = imagenes.get("suelo");
                 }
 
-                gc.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                if (imgCelda != null) {
+                    gc.drawImage(imgCelda, x, y, TILE_SIZE, TILE_SIZE);
+                }
 
-                // Dibujar borde de celda
-                gc.setStroke(Color.rgb(30, 30, 30));
-                gc.setLineWidth(0.5);
-                gc.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+                // Si es la posición del cursor y es transitable, dibujar portal
+                if (posicionCursor != null &&
+                        posicionCursor[0] == i && posicionCursor[1] == j &&
+                        celda.isTransitable()) {
+                    Image imgPortal = imagenes.get("portal");
+                    if (imgPortal != null) {
+                        gc.drawImage(imgPortal, x, y, TILE_SIZE, TILE_SIZE);
+                    }
+                }
             }
         }
 
-        // Marcar posición actual del jugador con un círculo dorado
-        double jugadorX = posicionJugador[1] * TILE_SIZE + TILE_SIZE / 2.0;
-        double jugadorY = posicionJugador[0] * TILE_SIZE + TILE_SIZE / 2.0;
-        gc.setFill(Color.GOLD);
-        gc.fillOval(jugadorX - 6, jugadorY - 6, 12, 12);
-        gc.setStroke(Color.ORANGE);
-        gc.setLineWidth(2);
-        gc.strokeOval(jugadorX - 6, jugadorY - 6, 12, 12);
+        // Marcar posición actual del jugador con su imagen
+        double jugadorX = posicionJugador[1] * TILE_SIZE;
+        double jugadorY = posicionJugador[0] * TILE_SIZE;
+        Image jugadorImg = imagenes.get("jugador");
+        if (jugadorImg != null) {
+            gc.drawImage(jugadorImg, jugadorX, jugadorY, TILE_SIZE, TILE_SIZE);
+        }
     }
 
     /**
