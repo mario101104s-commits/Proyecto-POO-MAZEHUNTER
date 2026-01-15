@@ -129,8 +129,8 @@ public class VentanaTeletransporte extends Stage {
 
         // Instrucciones
         Label lblInstrucciones = new Label(
-                "Selecciona una celda de SUELO (gris claro) para teletransportarte.\n" +
-                        "Las celdas de MURO (gris oscuro/rojo) no se pueden seleccionar.");
+                "Selecciona una celda de SUELO para teletransportarte.\n" +
+                        "Las celdas de MURO no se pueden seleccionar.");
         lblInstrucciones.setWrapText(true);
         lblInstrucciones.setMaxWidth(750);
         lblInstrucciones.setAlignment(Pos.CENTER);
