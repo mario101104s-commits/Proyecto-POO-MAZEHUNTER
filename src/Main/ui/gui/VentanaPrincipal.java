@@ -164,58 +164,72 @@ public class VentanaPrincipal {
 
         // CONTENIDO COLUMNA IZQUIERDA
         Label controlesTitulo = new Label("🎮 CONTROLES");
-        controlesTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+        controlesTitulo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
 
         Label controlesTexto = new Label(
-            "• W,A,S,D - Mover jugador\n" +
-            "• K - Activar bomba\n" +
-            "• ESC - Menú pausa"
-        );
-        controlesTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+                "• W,A,S,D - Mover jugador\n" +
+                        "• K - Activar bomba\n" +
+                        "• L - Activar Teletransporte\n" +
+                        "• ESC - Menú pausa");
+        controlesTexto.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
 
         Label objetivoTitulo = new Label("🏆 OBJETIVO");
-        objetivoTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+        objetivoTitulo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
 
         Label objetivoTexto = new Label(
-            "• Encuentra llave 🔑\n" +
-            "• Localiza salida 🚪\n" +
-            "• Escapa con vida"
-        );
-        objetivoTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+                "• Encuentra llave 🔑\n" +
+                        "• Localiza salida 🚪\n" +
+                        "• Escapa con vida");
+        objetivoTexto.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+
+        Label TeleportTitulo = new Label("TELETRANSPORTE");
+        TeleportTitulo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+
+        Label TeleportTexto = new Label(
+                "• Necesitas: Llave Negra 🗝️\n" +
+                        "• Limitado a 1 uso por partida");
+        TeleportTexto.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
 
         // CONTENIDO COLUMNA DERECHA
         Label combateTitulo = new Label("💥 EXPLOSIÓN");
-        combateTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+        combateTitulo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
 
         Label combateTexto = new Label(
-            "• Necesitas: 1 bomba 💣\n" +
-            "• Necesitas: 1 fósforo 🔥\n" +
-            "• Rompen muros rojos\n" +
-            "• Úsalas estratégicamente"
-        );
-        combateTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+                "• Necesitas: 1 bomba 💣\n" +
+                        "• Necesitas: 1 fósforo 🔥\n" +
+                        "• Rompen muros rojos\n" +
+                        "• Úsalas estratégicamente");
+        combateTexto.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
 
         Label mecanicasTitulo = new Label("⚔️ MECÁNICAS");
-        mecanicasTitulo.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
+        mecanicasTitulo.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: #FFD700; -fx-font-size: 20px; -fx-font-weight: bold;");
 
         Label mecanicasTexto = new Label(
-            "• 💀 Trampas: -20 vida\n" +
-            "• ⚡ Energía: +10 vida\n" +
-            "• 💎 Cristales: +puntos\n" +
-            "• 💣 Activar bomba: -35 vida"
-        );
-        mecanicasTexto.setStyle("-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
+                "• 💀 Trampas: -20 vida\n" +
+                        "• ⚡ Energía: +10 vida\n" +
+                        "• 💎 Cristales: +puntos\n" +
+                        "• 💣 Activar bomba: -35 vida");
+        mecanicasTexto.setStyle(
+                "-fx-font-family: 'Papyrus', 'Copperplate', serif; -fx-text-fill: white; -fx-font-size: 16px;");
 
         // Agregar contenido a columnas
         columnaIzquierda.getChildren().addAll(
-            controlesTitulo, controlesTexto,
-            objetivoTitulo, objetivoTexto
-        );
+                controlesTitulo, controlesTexto,
+                objetivoTitulo, objetivoTexto,
+                TeleportTitulo, TeleportTexto);
 
         columnaDerecha.getChildren().addAll(
-            combateTitulo, combateTexto,
-            mecanicasTitulo, mecanicasTexto
-        );
+                combateTitulo, combateTexto,
+                mecanicasTitulo, mecanicasTexto);
 
         // Ensamblar columnas
         columnasContainer.getChildren().addAll(columnaIzquierda, columnaDerecha);
@@ -228,18 +242,18 @@ public class VentanaPrincipal {
         btnVolver.setOnAction(e -> mostrarMenuPrincipal());
 
         layout.getChildren().addAll(titulo, columnasContainer, btnVolver);
-        
+
         AnchorPane wrapper = new AnchorPane();
         wrapper.getChildren().addAll(layout, audioUI);
-        
+
         AnchorPane.setTopAnchor(layout, 0.0);
         AnchorPane.setBottomAnchor(layout, 0.0);
         AnchorPane.setLeftAnchor(layout, 0.0);
         AnchorPane.setRightAnchor(layout, 0.0);
-        
+
         AnchorPane.setTopAnchor(audioUI, 20.0);
         AnchorPane.setRightAnchor(audioUI, 20.0);
-        
+
         root.setCenter(wrapper);
     }
 
@@ -251,7 +265,6 @@ public class VentanaPrincipal {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
-
 
         // Aplicar fondo de imagen
         try {
@@ -362,21 +375,21 @@ public class VentanaPrincipal {
         btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
         layout.getChildren().addAll(title, emailField, passField, botonesGrid);
-        
+
         // Control de audio
         ControladorAudioUI audioUI = new ControladorAudioUI();
-        
+
         AnchorPane wrapper = new AnchorPane();
         wrapper.getChildren().addAll(layout, audioUI);
-        
+
         AnchorPane.setTopAnchor(layout, 0.0);
         AnchorPane.setBottomAnchor(layout, 0.0);
         AnchorPane.setLeftAnchor(layout, 0.0);
         AnchorPane.setRightAnchor(layout, 0.0);
-        
+
         AnchorPane.setTopAnchor(audioUI, 20.0);
         AnchorPane.setRightAnchor(audioUI, 20.0);
-        
+
         root.setCenter(wrapper);
     }
 
@@ -462,18 +475,18 @@ public class VentanaPrincipal {
 
         // Control de audio
         ControladorAudioUI audioUI = new ControladorAudioUI();
-        
+
         AnchorPane wrapper = new AnchorPane();
         wrapper.getChildren().addAll(layout, audioUI);
-        
+
         AnchorPane.setTopAnchor(layout, 0.0);
         AnchorPane.setBottomAnchor(layout, 0.0);
         AnchorPane.setLeftAnchor(layout, 0.0);
         AnchorPane.setRightAnchor(layout, 0.0);
-        
+
         AnchorPane.setTopAnchor(audioUI, 20.0);
         AnchorPane.setRightAnchor(audioUI, 20.0);
-        
+
         root.setCenter(wrapper);
     }
 
@@ -485,7 +498,6 @@ public class VentanaPrincipal {
         VBox layout = new VBox(25);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(40));
-
 
         // Aplicar fondo de imagen
         try {
@@ -558,21 +570,21 @@ public class VentanaPrincipal {
         btnSalir.setOnAction(e -> javafx.application.Platform.exit());
 
         layout.getChildren().addAll(bienvenido, botonesGrid);
-        
+
         // Control de audio
         ControladorAudioUI audioUI = new ControladorAudioUI();
-        
+
         AnchorPane wrapper = new AnchorPane();
         wrapper.getChildren().addAll(layout, audioUI);
-        
+
         AnchorPane.setTopAnchor(layout, 0.0);
         AnchorPane.setBottomAnchor(layout, 0.0);
         AnchorPane.setLeftAnchor(layout, 0.0);
         AnchorPane.setRightAnchor(layout, 0.0);
-        
+
         AnchorPane.setTopAnchor(audioUI, 20.0);
         AnchorPane.setRightAnchor(audioUI, 20.0);
-        
+
         root.setCenter(wrapper);
     }
 
@@ -645,18 +657,18 @@ public class VentanaPrincipal {
         btnVolver.setOnAction(e -> mostrarMenuPrincipal());
 
         layout.getChildren().addAll(lbl, combo, checkNiebla, botonesGrid);
-        
+
         AnchorPane wrapper = new AnchorPane();
         wrapper.getChildren().addAll(layout, audioUI);
-        
+
         AnchorPane.setTopAnchor(layout, 0.0);
         AnchorPane.setBottomAnchor(layout, 0.0);
         AnchorPane.setLeftAnchor(layout, 0.0);
         AnchorPane.setRightAnchor(layout, 0.0);
-        
+
         AnchorPane.setTopAnchor(audioUI, 20.0);
         AnchorPane.setRightAnchor(audioUI, 20.0);
-        
+
         root.setCenter(wrapper);
     }
 
@@ -697,7 +709,8 @@ public class VentanaPrincipal {
         if (controladorJuego.cargarJuegoGuardado(usuarioActual.getEmail()) != null) {
             mostrarVistaJuego();
         } else {
-            mostrarAlerta("NO HAY PARTIDA GUARDADA", "No tienes ninguna partida guardada. Primero guarda una partida desde el menú de pausa.");
+            mostrarAlerta("NO HAY PARTIDA GUARDADA",
+                    "No tienes ninguna partida guardada. Primero guarda una partida desde el menú de pausa.");
         }
     }
 
