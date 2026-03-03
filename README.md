@@ -11,6 +11,7 @@ Con respecto a la arquitectura del proyecto, el código de este proyecto fue dis
 
 ---
 
+## GAMEPLAY
 ![Gameplay](src/resources/video/Gameplay.gif)
 
 ---
@@ -24,11 +25,17 @@ Con respecto a la arquitectura del proyecto, el código de este proyecto fue dis
 ## JUEGO EN CURSO
 ![CapturaJuego](src/resources/imagenes/CapturaJuego.png)
 
-## ANALES DEL TEMPLO/ESTADÍSTICAS
+## ANALES DEL TEMPLO
 ![CapturaAnales](src/resources/imagenes/CapturaAnales.png)
+
+## SELECTOR DE DIFICULTAD
+![CapturaSelector](src/resources/imagenes/CapturaSelector.png)
+
+## ESTADÍSTICAS
+![CapturaEstadisticas](src/resources/imagenes/CapturaEstadisticas.png)
 
 <br>
 
 <div align="center">
-  <i>Desarrollado usando JavaFX</i>
+  <i>Desarrollado usando Java 22 yJavaFX</i>
 </div>
